@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    env_file: .env
+    restart: no
+    ports:
+      - "0.0.0.0:8088:8088"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    networks:
+      - app
+      - signoz-net
+
+networks:
+  app:
+    driver: bridge
+  signoz-net:
+    external: true

@@ -1,0 +1,152 @@
+package bank_mega.corsys.infrastructure.adapter.in.api.v1;
+
+import bank_mega.corsys.application.assembler.RoleAssembler;
+import bank_mega.corsys.application.common.dto.DeleteResponse;
+import bank_mega.corsys.application.common.dto.PaginationResponse;
+import bank_mega.corsys.application.common.dto.ReadListResponse;
+import bank_mega.corsys.application.common.dto.ReadRetrieveResponse;
+import bank_mega.corsys.application.role.command.CreateRoleCommand;
+import bank_mega.corsys.application.role.command.SoftDeleteRoleCommand;
+import bank_mega.corsys.application.role.command.UpdateRoleCommand;
+import bank_mega.corsys.application.role.dto.RoleResponse;
+import bank_mega.corsys.application.role.usecase.*;
+import bank_mega.corsys.domain.model.role.Role;
+import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.user.User;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+
+@Tag(name = "Roles")
+@RestController
+@RequestMapping("/api/v1/roles")
+@RequiredArgsConstructor
+@SecurityRequirement(name = "Bearer Authorization")
+@RateLimiter(name = "global")
+public class RoleApi {
+
+    private final PageRoleUseCase pageRoleUseCase;
+    private final RetrieveRoleUseCase retrieveRoleUseCase;
+    private final CreateRoleUseCase createRoleUseCase;
+    private final UpdateRoleUseCase updateRoleUseCase;
+    private final SoftDeleteRoleUseCase softDeleteRoleUseCase;
+    private final DeleteRoleUseCase deleteRoleUseCase;
+
+    @GetMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ReadListResponse<List<RoleResponse>> list(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "perPage", required = false, defaultValue = "5") int perPage,
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "sort", required = false) String sort
+    ) {
+        Page<@NonNull Role> pageable = this.pageRoleUseCase.execute(page, perPage, sort, filter);
+        List<RoleResponse> data = pageable.stream()
+                .map(RoleAssembler::toResponse)
+                .toList();
+        return ReadListResponse.<List<RoleResponse>>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .pagination(
+                        PaginationResponse.builder()
+                                .currentPage(pageable.getNumber() + 1)
+                                .totalPage(pageable.getTotalPages())
+                                .perPage(pageable.getSize())
+                                .total(pageable.getTotalElements())
+                                .count(pageable.getNumberOfElements())
+                                .hasNext(pageable.hasNext())
+                                .hasPrevious(pageable.hasPrevious())
+                                .hasContent(pageable.hasContent())
+                                .build()
+                )
+                .build();
+    }
+
+    @GetMapping(
+            path = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ReadRetrieveResponse<RoleResponse> retrieve(@PathVariable Long id) {
+        RoleResponse data = this.retrieveRoleUseCase.execute(id);
+        return ReadRetrieveResponse.<RoleResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .build();
+    }
+
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ReadRetrieveResponse<RoleResponse> create(
+            @AuthenticationPrincipal User authPrincipal,
+            @RequestBody CreateRoleCommand command
+    ) {
+        RoleResponse data = this.createRoleUseCase.execute(command, authPrincipal);
+        return ReadRetrieveResponse.<RoleResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .build();
+    }
+
+    @PutMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ReadRetrieveResponse<RoleResponse> update(
+            @AuthenticationPrincipal User authPrincipal,
+            @RequestBody UpdateRoleCommand command
+    ) {
+        RoleResponse data = this.updateRoleUseCase.execute(command, authPrincipal);
+        return ReadRetrieveResponse.<RoleResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .build();
+    }
+
+    @DeleteMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ReadRetrieveResponse<RoleResponse> softDelete(
+            @AuthenticationPrincipal User authPrincipal,
+            @RequestBody SoftDeleteRoleCommand command
+    ) {
+        RoleResponse data = this.softDeleteRoleUseCase.execute(command, authPrincipal);
+        return ReadRetrieveResponse.<RoleResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .build();
+    }
+
+    @DeleteMapping(
+            path = "/{id}/destroy",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public DeleteResponse<RoleId> delete(@PathVariable Long id) {
+        RoleId pk = this.deleteRoleUseCase.execute(id);
+        return DeleteResponse.<RoleId>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .id(pk)
+                .build();
+    }
+
+}

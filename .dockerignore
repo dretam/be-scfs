@@ -1,0 +1,10 @@
+.idea
+.vscode
+.env.example
+.gitignore
+target
+docker-compose.dev.yml
+docker-compose.local.yml
+docker-compose.staging.yml
+docker-compose.production.yml
+docker-compose.yml
