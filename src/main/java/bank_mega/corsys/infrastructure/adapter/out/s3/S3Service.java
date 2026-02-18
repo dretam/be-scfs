@@ -39,7 +39,9 @@ public class S3Service implements StorageRepository {
                     .contentType(contentType)
                     .build();
 
-            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, inputStream.available()));
+            // Convert InputStream to byte array to get the content length
+            byte[] content = inputStream.readAllBytes();
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(content));
             log.info("File uploaded successfully: {}", key);
         } catch (Exception e) {
             log.error("Error uploading file: {}", e.getMessage());

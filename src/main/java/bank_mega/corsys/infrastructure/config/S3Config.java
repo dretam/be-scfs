@@ -1,6 +1,7 @@
 package bank_mega.corsys.infrastructure.config;
 
 import jakarta.annotation.PreDestroy;
+import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -9,13 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.services.s3.S3ClientBuilder;
+import software.amazon.awssdk.services.s3.S3Configuration;
 
 
 @Configuration
+@RequiredArgsConstructor
 public class S3Config {
 
-    @Autowired
-    private S3ConfigProperties s3ConfigProperties;
+    private final S3ConfigProperties s3ConfigProperties;
 
     private S3Client s3Client;
 
@@ -28,11 +30,18 @@ public class S3Config {
 
         S3ClientBuilder builder = S3Client.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
-                .region(Region.of(s3ConfigProperties.getRegion()));
+                .region(Region.of(s3ConfigProperties.getRegion()))
+                .serviceConfiguration(
+                        S3Configuration.builder()
+                                .pathStyleAccessEnabled(true)
+                                .build()
+                );
 
-        // If using custom endpoint (e.g., for MinIO compatibility), set it
-        if (s3ConfigProperties.getEndpoint() != null && !s3ConfigProperties.getEndpoint().isEmpty()) {
-            builder.endpointOverride(java.net.URI.create(s3ConfigProperties.getEndpoint()));
+        if (s3ConfigProperties.getEndpoint() != null &&
+            !s3ConfigProperties.getEndpoint().isEmpty()) {
+            builder.endpointOverride(
+                    java.net.URI.create(s3ConfigProperties.getEndpoint())
+            );
         }
 
         s3Client = builder.build();

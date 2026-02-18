@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "aws.s3")
 public class S3ConfigProperties {
-    
     private String accessKeyId;
     private String secretAccessKey;
     private String region;
