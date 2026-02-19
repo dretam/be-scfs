@@ -4,7 +4,6 @@ import bank_mega.corsys.application.accesslog.command.CreateAccessLogCommand;
 import bank_mega.corsys.application.common.annotation.UseCase;
 import bank_mega.corsys.domain.model.accesslog.*;
 import bank_mega.corsys.domain.repository.AccessLogRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

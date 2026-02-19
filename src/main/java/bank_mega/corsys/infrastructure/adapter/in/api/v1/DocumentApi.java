@@ -5,18 +5,10 @@ import bank_mega.corsys.application.common.dto.DeleteResponse;
 import bank_mega.corsys.application.common.dto.PaginationResponse;
 import bank_mega.corsys.application.common.dto.ReadListResponse;
 import bank_mega.corsys.application.common.dto.ReadRetrieveResponse;
-import bank_mega.corsys.application.document.command.CreateDocumentMultipartCommand;
-import bank_mega.corsys.application.document.command.SoftDeleteDocumentCommand;
-import bank_mega.corsys.application.document.command.UpdateDocumentMultipartCommand;
-import bank_mega.corsys.application.document.command.UploadDocumentCommand;
+import bank_mega.corsys.application.document.command.*;
 import bank_mega.corsys.application.document.dto.DocumentResponse;
 import bank_mega.corsys.application.document.dto.UploadDocumentResponse;
-import bank_mega.corsys.application.document.usecase.CreateDocumentUseCase;
-import bank_mega.corsys.application.document.usecase.DeleteDocumentUseCase;
-import bank_mega.corsys.application.document.usecase.GetDocumentUseCase;
-import bank_mega.corsys.application.document.usecase.RetrieveDocumentUseCase;
-import bank_mega.corsys.application.document.usecase.SoftDeleteDocumentUseCase;
-import bank_mega.corsys.application.document.usecase.UpdateDocumentUseCase;
+import bank_mega.corsys.application.document.usecase.*;
 import bank_mega.corsys.domain.model.common.Id;
 import bank_mega.corsys.domain.model.document.Document;
 import bank_mega.corsys.domain.model.user.User;
@@ -50,6 +42,7 @@ public class DocumentApi {
     private final GetDocumentUseCase getDocumentUseCase;
     private final RetrieveDocumentUseCase retrieveDocumentUseCase;
     private final CreateDocumentUseCase createDocumentUseCase;
+    private final CreateMultipleDocumentUseCase createMultipleDocumentUseCase;
     private final UpdateDocumentUseCase updateDocumentUseCase;
     private final SoftDeleteDocumentUseCase softDeleteDocumentUseCase;
     private final DeleteDocumentUseCase deleteDocumentUseCase;
@@ -128,6 +121,31 @@ public class DocumentApi {
                 .data(data)
                 .build();
     }
+
+    @PostMapping(
+            value = "/multiple",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ReadRetrieveResponse<List<DocumentResponse>> createMultiple(
+            @AuthenticationPrincipal User authPrincipal,
+            @RequestParam("files") List<MultipartFile> files
+    ) throws Exception {
+
+        var command = CreateDocumentMultipartMultipleCommand.builder()
+                .files(files)
+                .build();
+
+        List<DocumentResponse> data =
+                this.createMultipleDocumentUseCase.execute(command, authPrincipal);
+
+        return ReadRetrieveResponse.<List<DocumentResponse>>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .build();
+    }
+
 
     @PutMapping(
             path = "/{id}",

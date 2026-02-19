@@ -102,6 +102,13 @@ aws:
     bucket-name: ${AWS_S3_BUCKET_NAME}
     endpoint: ${AWS_S3_ENDPOINT:} # Optional, for custom endpoints like MinIO
 
+ocr:
+  url: ${OCR_URL}
+  partner-id: ${OCR_PARTNER_ID}
+  channel-id: ${OCR_CHANNEL_ID}
+  api-version: ${OCR_API_VERSION}
+  host: ${OCR_HOST}
+
 resilience4j:
   ratelimiter:
     instances:
