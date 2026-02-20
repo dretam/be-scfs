@@ -2,6 +2,7 @@ package bank_mega.corsys.infrastructure.adapter.out.repo;
 
 import bank_mega.corsys.domain.model.ocr.OCRData;
 import bank_mega.corsys.domain.repository.OCRDataRepository;
+import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.OCRDataJpaEntity;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.repository.SpringDataOCRDataJpaRepository;
 import bank_mega.corsys.infrastructure.adapter.out.mapper.OCRDataMapper;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,20 @@ public class OCRDataRepositoryImpl implements OCRDataRepository {
         springDataRepository.delete(
                 OCRDataMapper.toJpaEntity(ocrData)
         );
+    }
+
+    @Override
+    public List<OCRData> saveAll(List<OCRData> ocrDataList) {
+
+        List<OCRDataJpaEntity> entities = ocrDataList.stream()
+                .map(OCRDataMapper::toJpaEntity)
+                .toList();
+
+        return springDataRepository
+                .saveAll(entities)
+                .stream()
+                .map(OCRDataMapper::toDomain)
+                .toList();
     }
 
 }

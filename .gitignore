@@ -37,3 +37,6 @@ docker/settings.xml
 .env.example.mysql
 .env.example.postgresql
 *.local.*
+
+*.cer
+*.jks

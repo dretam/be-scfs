@@ -1,6 +1,6 @@
 package bank_mega.corsys.infrastructure.adapter.out.s3;
 
-import bank_mega.corsys.domain.repository.StorageRepository;
+import bank_mega.corsys.domain.port.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class S3Service implements StorageRepository {
+public class S3Service implements StorageService {
 
     private final S3Client s3Client;
     

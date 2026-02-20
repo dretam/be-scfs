@@ -118,3 +118,9 @@ Untuk bergabung dalam kontribusi pengembangan aplikasi ini dapat mengabari admin
 ## License
 
 [GNU AGPL 3.0](https://choosealicense.com/licenses/agpl-3.0/)
+
+## Integration to Open API in local
+```bash
+openssl s_client -connect openapidev2.bankmega.local:15000 -showcerts </dev/null 2>/dev/null \
+| sed -n '/BEGIN CERTIFICATE/,/END CERTIFICATE/p' > bankmega-dev.cer
+```

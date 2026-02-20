@@ -10,9 +10,10 @@ import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.document.Document;
 import bank_mega.corsys.domain.model.ocr.OCRData;
 import bank_mega.corsys.domain.model.user.User;
+import bank_mega.corsys.domain.port.OCRService;
 import bank_mega.corsys.domain.repository.DocumentRepository;
-import bank_mega.corsys.domain.repository.OCRClientRepository;
-import bank_mega.corsys.domain.repository.StorageRepository;
+import bank_mega.corsys.domain.port.StorageService;
+import bank_mega.corsys.domain.repository.OCRDataRepository;
 import bank_mega.corsys.infrastructure.config.S3ConfigProperties;
 import bank_mega.corsys.infrastructure.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,10 @@ import java.util.List;
 public class CreateDocumentUseCase {
 
     private final DocumentRepository documentRepository;
-    private final StorageRepository storageRepository;
+    private final OCRDataRepository ocrDataRepository;
+    private final StorageService storageService;
     private final S3ConfigProperties s3ConfigProperties;
-    private final OCRClientRepository ocrClientRepository;
+    private final OCRService ocrService;
 
     @Transactional
     public DocumentResponse execute(
@@ -47,7 +49,6 @@ public class CreateDocumentUseCase {
         String originalFileName = file.getOriginalFilename();
         String uniqueFileName = FileUploadUtil.generateUniqueFilename(originalFileName);
         String filePath = FileUploadUtil.generateFilePath(uniqueFileName);
-
         try {
             if (s3ConfigProperties.getBucketName() == null
                 || s3ConfigProperties.getBucketName().isEmpty()) {
@@ -56,7 +57,7 @@ public class CreateDocumentUseCase {
                 );
             }
 
-            storageRepository.uploadFile(
+            storageService.uploadFile(
                     s3ConfigProperties.getBucketName(),
                     filePath,
                     file.getInputStream(),
@@ -77,9 +78,10 @@ public class CreateDocumentUseCase {
         List<OCRData> ocrResults;
 
         try {
-            ocrResults = ocrClientRepository.upload(
+            ocrResults = ocrService.upload(
                     file.getBytes(),
-                    originalFileName
+                    originalFileName,
+                    authPrincipal.getId()
             );
 
             log.info("OCR extracted {} records", ocrResults.size());
@@ -89,7 +91,6 @@ public class CreateDocumentUseCase {
             throw new DomainRuleViolationException("OCR processing failed");
         }
 
-        OCRData firstResult = ocrResults.isEmpty() ? null : ocrResults.getFirst();
 
         Document newDocument = Document.builder()
                 .filename(uniqueFileName)
@@ -104,9 +105,9 @@ public class CreateDocumentUseCase {
 
         Document savedDocument = documentRepository.save(newDocument);
 
-        // if (firstResult != null) {
-        //     savedDocument.attachOcrData(firstResult);
-        // }
+         if (!ocrResults.isEmpty()) {
+            ocrDataRepository.saveAll(ocrResults);
+         }
 
         return DocumentAssembler.toResponse(savedDocument);
     }

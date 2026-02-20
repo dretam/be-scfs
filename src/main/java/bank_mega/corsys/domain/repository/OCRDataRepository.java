@@ -9,6 +9,8 @@ public interface OCRDataRepository {
 
     OCRData save(OCRData ocrData);
 
+    List<OCRData> saveAll(List<OCRData> ocrDataList);
+
     Optional<OCRData> findFirstById(Long id);
 
     void delete(OCRData ocrData);

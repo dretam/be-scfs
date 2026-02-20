@@ -9,7 +9,7 @@ import bank_mega.corsys.domain.exception.DomainRuleViolationException;
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.document.Document;
 import bank_mega.corsys.domain.repository.DocumentRepository;
-import bank_mega.corsys.domain.repository.StorageRepository;
+import bank_mega.corsys.domain.port.StorageService;
 import bank_mega.corsys.infrastructure.config.S3ConfigProperties;
 import bank_mega.corsys.infrastructure.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import java.util.List;
 public class CreateMultipleDocumentUseCase {
 
     private final DocumentRepository documentRepository;
-    private final StorageRepository storageRepository;
+    private final StorageService storageService;
     private final S3ConfigProperties s3ConfigProperties;
 
     @Transactional
@@ -64,7 +64,7 @@ public class CreateMultipleDocumentUseCase {
                     FileUploadUtil.generateFilePath(uniqueFileName);
 
             try {
-                storageRepository.uploadFile(
+                storageService.uploadFile(
                         s3ConfigProperties.getBucketName(),
                         filePath,
                         file.getInputStream(),
