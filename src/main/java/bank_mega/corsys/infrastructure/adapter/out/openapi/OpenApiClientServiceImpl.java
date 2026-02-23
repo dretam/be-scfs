@@ -47,14 +47,12 @@ public class OpenApiClientServiceImpl implements OpenApiService {
                          + "/realms/bpsecurity/protocol/openid-connect/token";
 
             log.info("========== TOKEN REQUEST START ==========");
-            log.info("Token URL        : {}", url);
             log.info("Client ID        : {}", openApiProperties.getClientId());
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.set("Host", openApiProperties.getHost());
             headers.set("Authorization", getAuthorization());
-            headers.forEach((k, v) -> log.info("Header: {} -> {}", k, v));
 
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("grant_type", "client_credentials");
@@ -64,16 +62,6 @@ public class OpenApiClientServiceImpl implements OpenApiService {
 
             ResponseEntity<String> response =
                     restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
-            long duration = System.currentTimeMillis() - start;
-
-            log.info("Token Response Headers:");
-            response.getHeaders().forEach((k, v) ->
-                    log.info("  {} -> {}", k, v)
-            );
-
-            log.info("Token Raw Body:");
-            log.info("{}", response.getBody());
 
             JsonNode json = objectMapper.readTree(response.getBody());
 
@@ -91,33 +79,18 @@ public class OpenApiClientServiceImpl implements OpenApiService {
 
             log.error("========== TOKEN HTTP ERROR ==========");
             log.error("Status Code : {}", e.getStatusCode());
-            log.error("Status Text : {}", e.getStatusText());
-
-            log.error("Response Headers:");
-            if (e.getResponseHeaders() != null) {
-                e.getResponseHeaders().forEach((k, v) ->
-                        log.error("  {} -> {}", k, v)
-                );
-            }
-
             log.error("Response Body:");
-            log.error("{}", e.getResponseBodyAsString());
-
-            log.error("Stacktrace:", e);
             return null;
 
         } catch (ResourceAccessException e) {
-
             log.error("========== TOKEN CONNECTION ERROR ==========");
             log.error("Message: {}", e.getMessage());
-            log.error("Stacktrace:", e);
             return null;
 
         } catch (Exception e) {
 
             log.error("========== TOKEN UNKNOWN ERROR ==========");
             log.error("Message: {}", e.getMessage());
-            log.error("Stacktrace:", e);
             return null;
         }
     }

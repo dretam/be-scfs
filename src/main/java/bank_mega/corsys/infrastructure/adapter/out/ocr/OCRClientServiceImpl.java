@@ -44,16 +44,12 @@ public class OCRClientServiceImpl implements OCRService {
         String timestamp = getISODateTime();
         String externalId = String.valueOf(System.currentTimeMillis());
 
-        long startTime = System.currentTimeMillis();
-
         try {
 
             log.info("========== OCR UPLOAD START ==========");
             log.info("Filename        : {}", filename);
             log.info("File Size       : {} bytes", fileBytes.length);
             log.info("Timestamp       : {}", timestamp);
-            log.info("External ID     : {}", externalId);
-            log.info("OCR URL         : {}", ocrProperties.getUrl());
 
             // 1️⃣ Headers
             HttpHeaders headers = new HttpHeaders();
@@ -65,11 +61,6 @@ public class OCRClientServiceImpl implements OCRService {
             headers.set("CHANNEL-ID", ocrProperties.getChannelId());
             headers.set("API-VERSION", ocrProperties.getApiVersion());
             headers.set("Host", ocrProperties.getHost());
-
-            log.info("OCR Headers:");
-            headers.forEach((key, value) ->
-                    log.info("  {} : {}", key, value)
-            );
 
             // 2️⃣ Multipart Body
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -101,7 +92,6 @@ public class OCRClientServiceImpl implements OCRService {
 
             log.error("========== OCR HTTP ERROR ==========");
             log.error("Status Code     : {}", e.getStatusCode());
-            log.error("Status Text     : {}", e.getStatusText());
 
             log.error("Response Headers:");
             if (e.getResponseHeaders() != null) {
@@ -111,15 +101,12 @@ public class OCRClientServiceImpl implements OCRService {
             }
 
             log.error("Response Body   : {}", e.getResponseBodyAsString());
-            log.error("Stacktrace:", e);
-
             throw new RuntimeException("OCR upload failed", e);
 
         } catch (ResourceAccessException e) {
 
             log.error("========== OCR CONNECTION ERROR ==========");
             log.error("Message         : {}", e.getMessage());
-            log.error("Stacktrace:", e);
 
             throw new RuntimeException("OCR connection failed", e);
 
@@ -127,7 +114,6 @@ public class OCRClientServiceImpl implements OCRService {
 
             log.error("========== OCR UNKNOWN ERROR ==========");
             log.error("Message         : {}", e.getMessage());
-            log.error("Stacktrace:", e);
 
             throw new RuntimeException("OCR upload failed", e);
         }
