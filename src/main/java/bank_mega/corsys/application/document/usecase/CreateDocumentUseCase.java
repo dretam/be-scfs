@@ -1,9 +1,9 @@
 package bank_mega.corsys.application.document.usecase;
 
-import bank_mega.corsys.application.assembler.DocumentAssembler;
+import bank_mega.corsys.application.assembler.OCRAssembler;
 import bank_mega.corsys.application.common.annotation.UseCase;
 import bank_mega.corsys.application.document.command.CreateDocumentMultipartCommand;
-import bank_mega.corsys.application.document.dto.DocumentResponse;
+import bank_mega.corsys.application.document.dto.OCRResponse;
 import bank_mega.corsys.domain.exception.DocumentAlreadyExistsException;
 import bank_mega.corsys.domain.exception.DomainRuleViolationException;
 import bank_mega.corsys.domain.model.common.AuditTrail;
@@ -36,7 +36,7 @@ public class CreateDocumentUseCase {
     private final OCRService ocrService;
 
     @Transactional
-    public DocumentResponse execute(
+    public List<OCRResponse> execute(
             CreateDocumentMultipartCommand command,
             User authPrincipal
     ) throws IOException {
@@ -105,10 +105,11 @@ public class CreateDocumentUseCase {
 
         Document savedDocument = documentRepository.save(newDocument);
 
-         if (!ocrResults.isEmpty()) {
-            ocrDataRepository.saveAll(ocrResults);
-         }
+        List<OCRData> ocrDataList = ocrDataRepository.saveAll(ocrResults);
 
-        return DocumentAssembler.toResponse(savedDocument);
+        return ocrDataList
+                .stream()
+                .map(OCRAssembler::toResponse)
+                .toList();
     }
 }

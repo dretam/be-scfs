@@ -7,6 +7,7 @@ import bank_mega.corsys.application.common.dto.ReadListResponse;
 import bank_mega.corsys.application.common.dto.ReadRetrieveResponse;
 import bank_mega.corsys.application.document.command.*;
 import bank_mega.corsys.application.document.dto.DocumentResponse;
+import bank_mega.corsys.application.document.dto.OCRResponse;
 import bank_mega.corsys.application.document.dto.UploadDocumentResponse;
 import bank_mega.corsys.application.document.usecase.*;
 import bank_mega.corsys.domain.model.common.Id;
@@ -106,7 +107,7 @@ public class DocumentApi {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ReadRetrieveResponse<DocumentResponse> create(
+    public ReadRetrieveResponse<List<OCRResponse>> create(
             @AuthenticationPrincipal User authPrincipal,
             @RequestParam("file") MultipartFile file
     ) throws Exception {
@@ -114,8 +115,9 @@ public class DocumentApi {
                 .file(file)
                 .build();
 
-        DocumentResponse data = this.createDocumentUseCase.execute(command, authPrincipal);
-        return ReadRetrieveResponse.<DocumentResponse>builder()
+        List<OCRResponse> data = this.createDocumentUseCase.execute(command, authPrincipal);
+
+        return ReadRetrieveResponse.<List<OCRResponse>>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(data)
