@@ -8,6 +8,7 @@ import lombok.Getter;
 @Builder
 public class OCRData {
     private Long id;
+    private Long documentId;
     private String atasNama;
     private String nominal;
     private String jangkaWaktu;

@@ -105,9 +105,26 @@ public class CreateDocumentUseCase {
 
         Document savedDocument = documentRepository.save(newDocument);
 
-        List<OCRData> ocrDataList = ocrDataRepository.saveAll(ocrResults);
+        List<OCRData> ocrDataList = ocrResults.stream()
+                .map(ocrData -> OCRData.builder()
+                        .documentId(savedDocument.getId())
+                        .atasNama(ocrData.getAtasNama())
+                        .nominal(ocrData.getNominal())
+                        .jangkaWaktu(ocrData.getJangkaWaktu())
+                        .periode(ocrData.getPeriode())
+                        .rate(ocrData.getRate())
+                        .alokasi(ocrData.getAlokasi())
+                        .namaRekeningTujuanPencairan(ocrData.getNamaRekeningTujuanPencairan())
+                        .nomorRekeningTujuanPencairan(ocrData.getNomorRekeningTujuanPencairan())
+                        .nomorRekeningPengirim(ocrData.getNomorRekeningPengirim())
+                        .nomorRekeningPlacement(ocrData.getNomorRekeningPlacement())
+                        .audit(ocrData.getAudit())
+                        .build())
+                .toList();
 
-        return ocrDataList
+        List<OCRData> savedOcrDataList = ocrDataRepository.saveAll(ocrDataList);
+
+        return savedOcrDataList
                 .stream()
                 .map(OCRAssembler::toResponse)
                 .toList();

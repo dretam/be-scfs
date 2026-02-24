@@ -7,6 +7,7 @@ import java.time.Instant;
 @Builder
 public record OCRResponse(
         Long id,
+        Long documentId,
         String atasNama,
         String nominal,
         String jangkaWaktu,

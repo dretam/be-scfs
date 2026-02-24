@@ -17,6 +17,7 @@ public class OCRAssembler {
 
         OCRResponse.OCRResponseBuilder builder = OCRResponse.builder()
                 .id(saved.getId())
+                .documentId(saved.getDocumentId())
                 .atasNama(saved.getAtasNama())
                 .nominal(saved.getNominal())
                 .jangkaWaktu(saved.getJangkaWaktu())
