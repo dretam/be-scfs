@@ -2,7 +2,6 @@ package bank_mega.corsys.infrastructure.adapter.out.ocr;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.ocr.OCRData;
-import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.domain.model.user.UserId;
 import bank_mega.corsys.domain.port.OCRService;
 import bank_mega.corsys.domain.port.OpenApiService;
@@ -39,17 +38,15 @@ public class OCRClientServiceImpl implements OCRService {
     @Override
     public List<OCRData> upload(byte[] fileBytes, String filename, UserId userId) {
 
-        String accessToken = openApiService.getAccessToken();
 
         String timestamp = getISODateTime();
         String externalId = String.valueOf(System.currentTimeMillis());
 
         try {
+            String accessToken = openApiService.getAccessToken();
 
-            log.info("========== OCR UPLOAD START ==========");
-            log.info("Filename        : {}", filename);
-            log.info("File Size       : {} bytes", fileBytes.length);
-            log.info("Timestamp       : {}", timestamp);
+            log.info("OCR Upload - File: {}, Size: {} bytes, Timestamp: {}",
+                    filename, fileBytes.length, timestamp);
 
             // 1️⃣ Headers
             HttpHeaders headers = new HttpHeaders();
@@ -85,37 +82,19 @@ public class OCRClientServiceImpl implements OCRService {
                     String.class
             );
 
-            log.info(response.getBody());
-
             return parseResponse(response.getBody(), userId);
 
         } catch (HttpStatusCodeException e) {
-
-            log.error("========== OCR HTTP ERROR ==========");
-            log.error("Status Code     : {}", e.getStatusCode());
-
-            log.error("Response Headers:");
-            if (e.getResponseHeaders() != null) {
-                e.getResponseHeaders().forEach((key, value) ->
-                        log.error("  {} : {}", key, value)
-                );
-            }
-
-            log.error("Response Body   : {}", e.getResponseBodyAsString());
+            log.error("OCR HTTP Error - Status: {}, Body: {}",
+                    e.getStatusCode(), e.getResponseBodyAsString(), e);
             throw new RuntimeException("OCR upload failed", e);
 
         } catch (ResourceAccessException e) {
-
-            log.error("========== OCR CONNECTION ERROR ==========");
-            log.error("Message         : {}", e.getMessage());
-
+            log.error("OCR Connection Error - Message: {}", e.getMessage(), e);
             throw new RuntimeException("OCR connection failed", e);
 
         } catch (Exception e) {
-
-            log.error("========== OCR UNKNOWN ERROR ==========");
-            log.error("Message         : {}", e.getMessage());
-
+            log.error("OCR Unknown Error - Message: {}", e.getMessage(), e);
             throw new RuntimeException("OCR upload failed", e);
         }
     }
@@ -153,6 +132,6 @@ public class OCRClientServiceImpl implements OCRService {
 
     public static String getISODateTime() {
         return ZonedDateTime.of(LocalDateTime.now(),
-                ZoneId.of("Asia/Jakarta")).format(DateTimeFormatter.ofPattern("yyyy-MM dd'T'HH:mm:ssXXX"));
+                ZoneId.of("Asia/Jakarta")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"));
     }
 }

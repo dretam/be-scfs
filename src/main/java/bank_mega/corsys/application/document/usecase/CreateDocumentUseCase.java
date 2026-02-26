@@ -87,6 +87,8 @@ public class CreateDocumentUseCase {
             log.info("OCR extracted {} records", ocrResults.size());
 
         } catch (Exception e) {
+            storageService.deleteFile(s3ConfigProperties.getBucketName(), filePath);
+
             log.error("OCR processing failed", e);
             throw new DomainRuleViolationException("OCR processing failed");
         }
