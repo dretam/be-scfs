@@ -85,6 +85,7 @@ public class OCRClientServiceImpl implements OCRService {
                     String.class
             );
 
+            log.info(response.getBody());
 
             return parseResponse(response.getBody(), userId);
 

@@ -47,6 +47,10 @@ public class OCRDataJpaEntity {
     @Column(name = "nomor_rekening_placement")
     private String nomorRekeningPlacement;
 
+    @OneToOne
+    @JoinColumn(name = "document_id", referencedColumnName = "id")
+    private DocumentJpaEntity document;
+
     @Embedded
     private AuditTrailEmbeddable audit;
 }

@@ -28,7 +28,7 @@ Get a paginated list of all documents.
 **Request Example:**
 ```http
 GET /api/v1/documents?page=1&perPage=5&filter=invoice&sort=audit.createdAt HTTP/1.1
-Authorization: Bearer <access_token>
+Authorization: Bearer <access_token>    
 ```
 
 **Response Example:**

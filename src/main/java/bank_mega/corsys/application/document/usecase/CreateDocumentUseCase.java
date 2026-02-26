@@ -107,7 +107,7 @@ public class CreateDocumentUseCase {
 
         List<OCRData> ocrDataList = ocrResults.stream()
                 .map(ocrData -> OCRData.builder()
-                        .documentId(savedDocument.getId())
+                        .document(savedDocument)
                         .atasNama(ocrData.getAtasNama())
                         .nominal(ocrData.getNominal())
                         .jangkaWaktu(ocrData.getJangkaWaktu())
@@ -121,6 +121,7 @@ public class CreateDocumentUseCase {
                         .audit(ocrData.getAudit())
                         .build())
                 .toList();
+
 
         List<OCRData> savedOcrDataList = ocrDataRepository.saveAll(ocrDataList);
 

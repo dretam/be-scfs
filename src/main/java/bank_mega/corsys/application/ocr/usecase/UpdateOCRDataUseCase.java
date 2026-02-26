@@ -25,7 +25,6 @@ public class UpdateOCRDataUseCase {
         // Update fields if provided
         OCRData updatedData = OCRData.builder()
                 .id(ocrData.getId())
-                .documentId(command.documentId() != null ? command.documentId() : ocrData.getDocumentId())
                 .atasNama(command.atasNama() != null ? command.atasNama() : ocrData.getAtasNama())
                 .nominal(command.nominal() != null ? command.nominal() : ocrData.getNominal())
                 .jangkaWaktu(command.jangkaWaktu() != null ? command.jangkaWaktu() : ocrData.getJangkaWaktu())

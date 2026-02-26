@@ -12,6 +12,7 @@ public class OCRDataMapper {
 
         return OCRData.builder()
                 .id(entity.getId())
+                .document(DocumentMapper.toDomain(entity.getDocument()))
                 .atasNama(entity.getAtasNama())
                 .nominal(entity.getNominal())
                 .jangkaWaktu(entity.getJangkaWaktu())
@@ -31,6 +32,7 @@ public class OCRDataMapper {
 
         return OCRDataJpaEntity.builder()
                 .id(domain.getId())
+                .document(DocumentMapper.toJpaEntity(domain.getDocument()))
                 .atasNama(domain.getAtasNama())
                 .nominal(domain.getNominal())
                 .jangkaWaktu(domain.getJangkaWaktu())

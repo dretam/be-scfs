@@ -33,18 +33,4 @@ public class DocumentAssembler {
 
         return builder.build();
     }
-
-    public static UploadDocumentResponse toUploadResponse(Document saved, Boolean success, String message) {
-        if (saved == null) return null;
-        return UploadDocumentResponse.builder()
-                .id(saved.getId())
-                .filename(saved.getFilename())
-                .originalName(saved.getOriginalName())
-                .filePath(saved.getFilePath())
-                .fileSize(saved.getFileSize())
-                .mimeType(saved.getMimeType())
-                .success(success)
-                .message(message)
-                .build();
-    }
 }

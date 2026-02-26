@@ -24,9 +24,4 @@ public class RetrieveOCRDataUseCase {
 
         return OCRAssembler.toResponse(ocrData, expands);
     }
-
-    @Transactional(readOnly = true)
-    public OCRResponse execute(Long id) {
-        return execute(id, Set.of());
-    }
 }
