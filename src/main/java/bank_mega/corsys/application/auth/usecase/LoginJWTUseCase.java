@@ -11,6 +11,7 @@ import bank_mega.corsys.domain.model.token.TokenType;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.domain.model.user.UserEmail;
 import bank_mega.corsys.domain.model.user.UserName;
+import bank_mega.corsys.domain.model.user.UserType;
 import bank_mega.corsys.domain.port.LDAPService;
 import bank_mega.corsys.domain.repository.TokenRepository;
 import bank_mega.corsys.domain.repository.UserRepository;
@@ -42,29 +43,41 @@ public class LoginJWTUseCase {
     @Transactional
     public LoginJWTResponse execute(LoginJWTCommand command) {
 
-        LDAPResponse ldapResponse = ldapService.verifyPassword(command.username(), command.password());
-
-        // 1. Check username atau email
         User user = userRepository
                 .findFirstByNameAndAuditDeletedAtIsNull(new UserName(command.username()))
                 .orElse(null);
+
         if (user == null) {
             user = userRepository
                     .findFirstByEmailAndAuditDeletedAtIsNull(new UserEmail(command.username()))
                     .orElseThrow(() -> new AuthorizationServiceException("Invalid username or password"));
         }
 
-        // 2. Validasi password
-        boolean checkPassword = BCrypt.checkpw(command.password(), user.getPassword().value());
-        if (!checkPassword) {
+        boolean isPasswordValid;
+
+        if (user.getType() == UserType.INTERNAL) {
+            try {
+                LDAPResponse ldapResponse = ldapService.verifyPassword(command.username(), command.password());
+                isPasswordValid = ldapResponse.getVerified(); // Assuming LDAPResponse has isSuccess() method
+
+            } catch (Exception e) {
+                log.error("LDAP authentication failed for user: {}", user.getId(), e);
+                throw new AuthorizationServiceException("Authentication failed");
+            }
+        } else {
+            isPasswordValid = BCrypt.checkpw(command.password(), user.getPassword().value());
+        }
+
+        if (!isPasswordValid) {
+            // Log failed attempt for security monitoring
+            log.warn("Failed login attempt for user: {}", user.getId());
             throw new AuthorizationServiceException("Invalid username or password");
         }
 
-        // 3. Revoke token pengguna terkait apabila ada yang aktif
         tokenRepository.revokeAllTokenRefreshByUser(user);
 
-        // 4. Generate refresh dan JWT Token
         Instant refreshTokenExpiresAt = Instant.now().plus(command.rememberMe() ? 30 : 1, ChronoUnit.DAYS);
+
         String refreshToken = generateTokenUseCase.execute(
                 GenerateTokenCommand.builder()
                         .type(TokenType.REFRESH)
@@ -72,17 +85,17 @@ public class LoginJWTUseCase {
                         .user(user)
                         .build()
         );
+
         String accessToken = generateJWTUseCase.execute(GenerateJWTCommand.builder()
                 .user(user)
                 .expiresAt(Instant.now().plusSeconds(jwtExpiresSeconds))
                 .build());
 
-        // 5. Catat penggunaan refresh token
         tokenRepository.lastUsingTokenRefreshByTokenHash(
-                new TokenHash(
-                        tokenRepository.hashToken(refreshToken)
-                )
+                new TokenHash(tokenRepository.hashToken(refreshToken))
         );
+
+        log.info("User logged in successfully: {}", user.getId());
 
         return LoginJWTResponse.builder()
                 .status(HttpStatus.OK.value())
