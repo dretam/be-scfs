@@ -5,10 +5,7 @@ import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.role.Role;
 import bank_mega.corsys.domain.model.role.RoleIcon;
 import bank_mega.corsys.domain.model.role.RoleName;
-import bank_mega.corsys.domain.model.user.User;
-import bank_mega.corsys.domain.model.user.UserEmail;
-import bank_mega.corsys.domain.model.user.UserName;
-import bank_mega.corsys.domain.model.user.UserPassword;
+import bank_mega.corsys.domain.model.user.*;
 import bank_mega.corsys.domain.repository.RoleRepository;
 import bank_mega.corsys.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +51,7 @@ public class UserSeeder implements ApplicationRunner {
                 email,
                 new UserPassword(userRepository.hashPassword("Qwerty123456")),
                 role,
+                UserType.EXTERNAL,
                 AuditTrail.create(0L)
         );
         this.userRepository.save(user);

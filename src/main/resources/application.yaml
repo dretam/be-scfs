@@ -115,6 +115,19 @@ ocr:
   api-version: ${OCR_API_VERSION}
   host: ${OCR_HOST}
 
+ldap:
+  url: ${LDAP_SERVICE_URL}
+  host: ${LDAP_HOST}
+  client-secret: ${LDAP_CLIENT_SECRET}
+  aes_key: ${LDAP_AES_KEY}
+  partner_id: ${LDAP_PARTNER_ID}
+  channel_id: ${LDAP_CHANNEL_ID}
+  encrypt_type: ${LDAP_ENCRYPT_VERSION}
+  host_url: ${LDAP_HOST_URL}
+  token_username: ${LDAP_TOKEN_USERNAME}
+  token_password: ${LDAP_TOKEN_PASSWORD}
+  client_id: ${LDAP_CLIENT_ID}
+
 resilience4j:
   ratelimiter:
     instances:

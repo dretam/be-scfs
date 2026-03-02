@@ -37,6 +37,7 @@ public class CreateUserUseCase {
                 new UserEmail(command.email()),
                 new UserPassword(userRepository.hashPassword(command.password())),
                 role,
+                UserType.INTERNAL,
                 AuditTrail.create(authPrincipal.getId().value())
         );
 

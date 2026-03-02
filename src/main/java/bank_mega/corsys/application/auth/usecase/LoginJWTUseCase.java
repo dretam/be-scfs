@@ -5,14 +5,17 @@ import bank_mega.corsys.application.auth.command.GenerateTokenCommand;
 import bank_mega.corsys.application.auth.command.LoginJWTCommand;
 import bank_mega.corsys.application.auth.dto.LoginJWTResponse;
 import bank_mega.corsys.application.common.annotation.UseCase;
+import bank_mega.corsys.domain.model.ldap.LDAPResponse;
 import bank_mega.corsys.domain.model.token.TokenHash;
 import bank_mega.corsys.domain.model.token.TokenType;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.domain.model.user.UserEmail;
 import bank_mega.corsys.domain.model.user.UserName;
+import bank_mega.corsys.domain.port.LDAPService;
 import bank_mega.corsys.domain.repository.TokenRepository;
 import bank_mega.corsys.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AuthorizationServiceException;
@@ -23,6 +26,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 
+@Slf4j
 @UseCase
 @RequiredArgsConstructor
 public class LoginJWTUseCase {
@@ -33,9 +37,12 @@ public class LoginJWTUseCase {
     private final TokenRepository tokenRepository;
     private final GenerateTokenUseCase generateTokenUseCase;
     private final GenerateJWTUseCase generateJWTUseCase;
+    private final LDAPService ldapService;
 
     @Transactional
     public LoginJWTResponse execute(LoginJWTCommand command) {
+
+        LDAPResponse ldapResponse = ldapService.verifyPassword(command.username(), command.password());
 
         // 1. Check username atau email
         User user = userRepository

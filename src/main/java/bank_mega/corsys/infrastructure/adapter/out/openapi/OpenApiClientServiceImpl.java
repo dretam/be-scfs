@@ -38,11 +38,7 @@ public class OpenApiClientServiceImpl implements OpenApiService {
 
     @Override
     public String getAccessToken() {
-
-        long start = System.currentTimeMillis();
-
         try {
-
             String url = openApiProperties.getHostUrl()
                          + "/realms/bpsecurity/protocol/openid-connect/token";
 

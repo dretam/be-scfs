@@ -17,6 +17,7 @@ public class UserMapper {
                 new UserEmail(jpaEntity.getEmail()),
                 new UserPassword(jpaEntity.getPassword()),
                 RoleMapper.toDomain(jpaEntity.getRole()),
+                jpaEntity.getType(),
                 AuditTrailEmbeddableMapper.toDomain(jpaEntity.getAudit())
         );
     }
@@ -31,6 +32,7 @@ public class UserMapper {
                 expands.contains("role") && jpaEntity.getRole() != null
                         ? RoleMapper.toDomain(jpaEntity.getRole())
                         : null,
+                jpaEntity.getType(),
                 AuditTrailEmbeddableMapper.toDomain(jpaEntity.getAudit())
         );
     }

@@ -2,6 +2,7 @@ package bank_mega.corsys.domain.model.user;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.role.Role;
+import lombok.Getter;
 
 public class User {
 
@@ -10,6 +11,7 @@ public class User {
     private UserEmail email;
     private UserPassword password;
     private Role role;
+    private UserType type;
     private AuditTrail audit;
 
     public User(
@@ -18,6 +20,7 @@ public class User {
             UserEmail email,
             UserPassword password,
             Role role,
+            UserType type,
             AuditTrail audit
     ) {
         this.id = id;
@@ -25,6 +28,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.type = type;
         this.audit = audit;
     }
 
@@ -50,6 +54,10 @@ public class User {
 
     public Role getRole() {
         return this.role;
+    }
+
+    public UserType getType() {
+        return type;
     }
 
     public void changeName(UserName newName) {
