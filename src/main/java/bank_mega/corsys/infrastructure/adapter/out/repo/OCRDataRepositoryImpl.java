@@ -32,6 +32,7 @@ public class OCRDataRepositoryImpl implements OCRDataRepository {
             "id",
             "atasNama",
             "nominal",
+            "status",
             "audit.createdAt"
     };
     @Override

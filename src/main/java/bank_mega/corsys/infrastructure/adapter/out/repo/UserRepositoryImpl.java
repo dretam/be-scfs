@@ -73,6 +73,8 @@ public class UserRepositoryImpl implements UserRepository {
         // Expands fetching
         if (expands.contains("role")) root.fetch("role", JoinType.LEFT);
 
+        if (expands.contains("cabang")) root.fetch("cabang", JoinType.LEFT);
+
         // Filter and Sorting
         cQuery.where(UserPredicate.listBuild(cBuilder, root, filter));
         cQuery.orderBy(ParserUtil.toOrders(sortBy, cBuilder, root));

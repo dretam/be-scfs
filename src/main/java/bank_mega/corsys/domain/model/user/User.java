@@ -3,7 +3,10 @@ package bank_mega.corsys.domain.model.user;
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.role.Role;
 import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class User {
 
     private final UserId id;
@@ -30,34 +33,6 @@ public class User {
         this.role = role;
         this.type = type;
         this.audit = audit;
-    }
-
-    public UserId getId() {
-        return this.id;
-    }
-
-    public UserName getName() {
-        return this.name;
-    }
-
-    public UserEmail getEmail() {
-        return this.email;
-    }
-
-    public UserPassword getPassword() {
-        return this.password;
-    }
-
-    public AuditTrail getAudit() {
-        return this.audit;
-    }
-
-    public Role getRole() {
-        return this.role;
-    }
-
-    public UserType getType() {
-        return type;
     }
 
     public void changeName(UserName newName) {

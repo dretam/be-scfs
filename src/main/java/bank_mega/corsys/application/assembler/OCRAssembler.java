@@ -28,6 +28,7 @@ public class OCRAssembler {
                 .nomorRekeningTujuanPencairan(saved.getNomorRekeningTujuanPencairan() != null ? saved.getNomorRekeningTujuanPencairan() : "-")
                 .nomorRekeningPengirim(saved.getNomorRekeningPengirim() != null ? saved.getNomorRekeningPengirim() : "-")
                 .nomorRekeningPlacement(saved.getNomorRekeningPlacement() != null ? saved.getNomorRekeningPlacement() : "-")
+                .status(saved.getStatus())
                 .createdAt(saved.getAudit() != null ? saved.getAudit().createdAt() : null)
                 .createdBy(saved.getAudit() != null ? saved.getAudit().createdBy() : null)
                 .updatedAt(saved.getAudit() != null ? saved.getAudit().updatedAt() : null)

@@ -23,6 +23,7 @@ public class OCRDataMapper {
                 .nomorRekeningTujuanPencairan(entity.getNomorRekeningTujuanPencairan() != null ? entity.getNomorRekeningTujuanPencairan() : "-")
                 .nomorRekeningPengirim(entity.getNomorRekeningPengirim() != null ? entity.getNomorRekeningPengirim() : "-")
                 .nomorRekeningPlacement(entity.getNomorRekeningPlacement() != null ? entity.getNomorRekeningPlacement() : "-")
+                .status(entity.getStatus())
                 .audit(AuditTrailEmbeddableMapper.toDomain(entity.getAudit()))
                 .build();
     }
@@ -43,6 +44,7 @@ public class OCRDataMapper {
                 .nomorRekeningTujuanPencairan(domain.getNomorRekeningTujuanPencairan())
                 .nomorRekeningPengirim(domain.getNomorRekeningPengirim())
                 .nomorRekeningPlacement(domain.getNomorRekeningPlacement())
+                .status(domain.getStatus())
                 .audit(AuditTrailEmbeddableMapper.toJpa(domain.getAudit()))
                 .build();
     }

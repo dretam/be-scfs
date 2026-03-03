@@ -1,8 +1,11 @@
 package bank_mega.corsys.infrastructure.adapter.out.jpa.entity;
 
+import bank_mega.corsys.domain.model.ocr.OCRStatus;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.embeddable.AuditTrailEmbeddable;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 @Getter
 @Setter
@@ -46,6 +49,11 @@ public class OCRDataJpaEntity {
 
     @Column(name = "nomor_rekening_placement")
     private String nomorRekeningPlacement;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    @Column(name = "status", nullable = false)
+    private OCRStatus status;
 
     @OneToOne
     @JoinColumn(name = "document_id", referencedColumnName = "id")

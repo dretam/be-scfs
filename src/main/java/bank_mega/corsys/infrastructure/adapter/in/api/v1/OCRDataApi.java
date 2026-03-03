@@ -6,9 +6,13 @@ import bank_mega.corsys.application.common.dto.PaginationResponse;
 import bank_mega.corsys.application.common.dto.ReadListResponse;
 import bank_mega.corsys.application.common.dto.ReadRetrieveResponse;
 import bank_mega.corsys.application.document.dto.OCRResponse;
+import bank_mega.corsys.application.ocr.command.ApproveOCRDataCommand;
+import bank_mega.corsys.application.ocr.command.RejectOCRDataCommand;
 import bank_mega.corsys.application.ocr.command.UpdateOCRDataCommand;
+import bank_mega.corsys.application.ocr.usecase.ApproveOCRDataUseCase;
 import bank_mega.corsys.application.ocr.usecase.DeleteOCRDataUseCase;
 import bank_mega.corsys.application.ocr.usecase.GetOCRDataUseCase;
+import bank_mega.corsys.application.ocr.usecase.RejectOCRDataUseCase;
 import bank_mega.corsys.application.ocr.usecase.RetrieveOCRDataUseCase;
 import bank_mega.corsys.application.ocr.usecase.UpdateOCRDataUseCase;
 import bank_mega.corsys.domain.model.ocr.OCRData;
@@ -44,6 +48,8 @@ public class OCRDataApi {
     private final RetrieveOCRDataUseCase retrieveOCRDataUseCase;
     private final UpdateOCRDataUseCase updateOCRDataUseCase;
     private final DeleteOCRDataUseCase deleteOCRDataUseCase;
+    private final ApproveOCRDataUseCase approveOCRDataUseCase;
+    private final RejectOCRDataUseCase rejectOCRDataUseCase;
 
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -110,6 +116,40 @@ public class OCRDataApi {
     ) {
         OCRResponse data = this.updateOCRDataUseCase.execute(command, authPrincipal);
         return ReadRetrieveResponse.<OCRResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .build();
+    }
+
+    @PostMapping(
+            path = "/approve",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ReadListResponse<List<OCRResponse>> approve(
+            @AuthenticationPrincipal User authPrincipal,
+            @RequestBody @Valid ApproveOCRDataCommand command
+    ) {
+        List<OCRResponse> data = this.approveOCRDataUseCase.execute(command, authPrincipal);
+        return ReadListResponse.<List<OCRResponse>>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .build();
+    }
+
+    @PostMapping(
+            path = "/reject",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ReadListResponse<List<OCRResponse>> reject(
+            @AuthenticationPrincipal User authPrincipal,
+            @RequestBody @Valid RejectOCRDataCommand command
+    ) {
+        List<OCRResponse> data = this.rejectOCRDataUseCase.execute(command, authPrincipal);
+        return ReadListResponse.<List<OCRResponse>>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(data)

@@ -1,39 +1,64 @@
-# OCR Data API
+# OCR Data API Documentation
 
-Base URL: `/api/v1/ocr-data`
+## Overview
 
-All endpoints require JWT Bearer token authentication.
+The OCR Data API provides endpoints to manage OCR (Optical Character Recognition) data extracted from uploaded documents. This API allows you to retrieve, update, approve, reject, and delete OCR data records.
 
-> **Note:** OCR data is automatically extracted when uploading documents. This API provides read and management access to the extracted OCR data.
+**Base URL:** `/api/v1/ocr-data`
+
+**Authentication:** All endpoints require JWT Bearer token authentication.
 
 ---
 
-## Endpoints
+## Table of Contents
 
-### 1. List OCR Data
+1. [Get List of OCR Data](#get-list-of-ocr-data)
+2. [Get OCR Data by ID](#get-ocr-data-by-id)
+3. [Update OCR Data](#update-ocr-data)
+4. [Bulk Approve OCR Data](#bulk-approve-ocr-data)
+5. [Bulk Reject OCR Data](#bulk-reject-ocr-data)
+6. [Delete OCR Data](#delete-ocr-data)
+7. [Error Responses](#error-responses)
 
-Get a paginated list of all OCR data.
+---
 
-**Endpoint:** `GET /api/v1/ocr-data`
+## Get List of OCR Data
 
-**Authentication:** Required (Bearer Token)
+Retrieve a paginated list of OCR data records with optional filtering and sorting.
 
-**Query Parameters:**
-| Parameter | Type   | Required | Default | Description                                      |
-|-----------|--------|----------|---------|--------------------------------------------------|
-| page      | int    | No       | 1       | Page number                                      |
-| perPage   | int    | No       | 5       | Items per page                                   |
-| filter    | string | No       | -       | Search filter (atasNama, nominal, periode, alokasi) |
-| sort      | string | No       | -       | Sort field (audit.createdAt, atasNama, nominal, periode) |
-| expands   | string | No       | -       | Related entities to load                         |
+### Endpoint
 
-**Request Example:**
-```http
-GET /api/v1/ocr-data?page=1&perPage=5&filter=john&sort=audit.createdAt HTTP/1.1
-Authorization: Bearer <access_token>
+```
+GET /api/v1/ocr-data
 ```
 
-**Response Example:**
+### Query Parameters
+
+| Parameter | Type   | Required | Default | Description                              |
+|-----------|--------|----------|---------|------------------------------------------|
+| page      | int    | No       | 1       | Page number (1-indexed)                  |
+| perPage   | int    | No       | 5       | Number of items per page                 |
+| filter    | string | No       | -       | Filter query string                      |
+| sort      | string | No       | -       | Sort field (prefix with `-` for DESC)    |
+| expands   | string | No       | -       | Comma-separated list of relations to expand |
+
+### Sortable Fields
+
+- `id`
+- `atasNama`
+- `nominal`
+- `status`
+- `audit.createdAt`
+
+### Example Request
+
+```bash
+curl -X GET "http://localhost:8080/api/v1/ocr-data?page=1&perPage=10&sort=-audit.createdAt&expands=document" \
+  -H "Authorization: Bearer <your-token>"
+```
+
+### Success Response (200 OK)
+
 ```json
 {
   "status": 200,
@@ -41,38 +66,34 @@ Authorization: Bearer <access_token>
   "data": [
     {
       "id": 1,
-      "documentId": 1,
+      "document": {
+        "id": 1,
+        "filename": "ocr_result_123.json",
+        "originalName": "document.pdf",
+        "filePath": "/uploads/2024/01/ocr_result_123.json",
+        "fileSize": 2048,
+        "mimeType": "application/json",
+        "uploadedBy": 1,
+        "userId": 1,
+        "createdAt": "2024-01-15T10:30:00Z",
+        "createdBy": 1,
+        "updatedAt": null,
+        "updatedBy": null,
+        "deletedAt": null,
+        "deletedBy": null
+      },
       "atasNama": "John Doe",
       "nominal": "100000000",
-      "jangkaWaktu": "12 bulan",
-      "periode": "Januari 2024",
-      "rate": "5.5%",
-      "alokasi": "Deposito",
+      "jangkaWaktu": "12",
+      "periode": "Bulanan",
+      "rate": "5.5",
+      "alokasi": "Investasi",
       "namaRekeningTujuanPencairan": "John Doe",
       "nomorRekeningTujuanPencairan": "1234567890",
       "nomorRekeningPengirim": "0987654321",
       "nomorRekeningPlacement": "1122334455",
-      "createdAt": "2024-01-01T10:00:00Z",
-      "createdBy": 1,
-      "updatedAt": null,
-      "updatedBy": null,
-      "deletedAt": null,
-      "deletedBy": null
-    },
-    {
-      "id": 2,
-      "documentId": 2,
-      "atasNama": "Jane Smith",
-      "nominal": "250000000",
-      "jangkaWaktu": "24 bulan",
-      "periode": "Februari 2024",
-      "rate": "6.0%",
-      "alokasi": "Investasi",
-      "namaRekeningTujuanPencairan": "Jane Smith",
-      "nomorRekeningTujuanPencairan": "5555666677",
-      "nomorRekeningPengirim": "4444333322",
-      "nomorRekeningPlacement": "9988776655",
-      "createdAt": "2024-01-02T11:00:00Z",
+      "status": "PENDING",
+      "createdAt": "2024-01-15T10:30:00Z",
       "createdBy": 1,
       "updatedAt": null,
       "updatedBy": null,
@@ -82,11 +103,11 @@ Authorization: Bearer <access_token>
   ],
   "pagination": {
     "currentPage": 1,
-    "totalPage": 1,
-    "perPage": 5,
-    "total": 2,
-    "count": 2,
-    "hasNext": false,
+    "totalPage": 5,
+    "perPage": 10,
+    "total": 50,
+    "count": 10,
+    "hasNext": true,
     "hasPrevious": false,
     "hasContent": true
   }
@@ -95,49 +116,71 @@ Authorization: Bearer <access_token>
 
 ---
 
-### 2. Get OCR Data by ID
+## Get OCR Data by ID
 
-Get a single OCR data record by its ID.
+Retrieve a single OCR data record by its ID.
 
-**Endpoint:** `GET /api/v1/ocr-data/{id}`
+### Endpoint
 
-**Authentication:** Required (Bearer Token)
-
-**Path Parameters:**
-| Parameter | Type | Required | Description     |
-|-----------|------|----------|-----------------|
-| id        | long | Yes      | OCR Data ID     |
-
-**Query Parameters:**
-| Parameter | Type   | Required | Description              |
-|-----------|--------|----------|--------------------------|
-| expands   | string | No       | Related entities to load |
-
-**Request Example:**
-```http
-GET /api/v1/ocr-data/1 HTTP/1.1
-Authorization: Bearer <access_token>
+```
+GET /api/v1/ocr-data/{id}
 ```
 
-**Response Example:**
+### Path Parameters
+
+| Parameter | Type | Required | Description        |
+|-----------|------|----------|--------------------|
+| id        | Long | Yes      | OCR Data ID        |
+
+### Query Parameters
+
+| Parameter | Type   | Required | Description                              |
+|-----------|--------|----------|------------------------------------------|
+| expands   | string | No       | Comma-separated list of relations to expand |
+
+### Example Request
+
+```bash
+curl -X GET "http://localhost:8080/api/v1/ocr-data/1?expands=document" \
+  -H "Authorization: Bearer <your-token>"
+```
+
+### Success Response (200 OK)
+
 ```json
 {
   "status": 200,
   "message": "OK",
   "data": {
     "id": 1,
-    "documentId": 1,
+    "document": {
+      "id": 1,
+      "filename": "ocr_result_123.json",
+      "originalName": "document.pdf",
+      "filePath": "/uploads/2024/01/ocr_result_123.json",
+      "fileSize": 2048,
+      "mimeType": "application/json",
+      "uploadedBy": 1,
+      "userId": 1,
+      "createdAt": "2024-01-15T10:30:00Z",
+      "createdBy": 1,
+      "updatedAt": null,
+      "updatedBy": null,
+      "deletedAt": null,
+      "deletedBy": null
+    },
     "atasNama": "John Doe",
     "nominal": "100000000",
-    "jangkaWaktu": "12 bulan",
-    "periode": "Januari 2024",
-    "rate": "5.5%",
-    "alokasi": "Deposito",
+    "jangkaWaktu": "12",
+    "periode": "Bulanan",
+    "rate": "5.5",
+    "alokasi": "Investasi",
     "namaRekeningTujuanPencairan": "John Doe",
     "nomorRekeningTujuanPencairan": "1234567890",
     "nomorRekeningPengirim": "0987654321",
     "nomorRekeningPlacement": "1122334455",
-    "createdAt": "2024-01-01T10:00:00Z",
+    "status": "PENDING",
+    "createdAt": "2024-01-15T10:30:00Z",
     "createdBy": 1,
     "updatedAt": null,
     "updatedBy": null,
@@ -149,52 +192,76 @@ Authorization: Bearer <access_token>
 
 ---
 
-### 3. Update OCR Data
+## Update OCR Data
 
-Update an existing OCR data record (e.g., to correct OCR extraction errors).
+Update an existing OCR data record.
 
-**Endpoint:** `PUT /api/v1/ocr-data`
+### Endpoint
 
-**Authentication:** Required (Bearer Token)
+```
+PUT /api/v1/ocr-data
+```
 
-**Request Body:**
+### Request Body
+
 ```json
 {
   "id": 1,
-  "atasNama": "John D. Doe",
+  "atasNama": "Jane Doe",
   "nominal": "150000000",
-  "jangkaWaktu": "18 bulan",
-  "periode": "Januari 2024 - Juni 2025",
-  "rate": "5.75%",
-  "alokasi": "Deposito Berjangka",
-  "namaRekeningTujuanPencairan": "John Doe",
-  "nomorRekeningTujuanPencairan": "1234567890",
-  "nomorRekeningPengirim": "0987654321",
-  "nomorRekeningPlacement": "1122334455"
+  "jangkaWaktu": "24",
+  "periode": "Bulanan",
+  "rate": "6.0",
+  "alokasi": "Deposito",
+  "namaRekeningTujuanPencairan": "Jane Doe",
+  "nomorRekeningTujuanPencairan": "9876543210",
+  "nomorRekeningPengirim": "1234567890",
+  "nomorRekeningPlacement": "5544332211"
 }
 ```
 
-**Response Example:**
+| Field                              | Type   | Required | Description                           |
+|------------------------------------|--------|----------|---------------------------------------|
+| id                                 | Long   | Yes      | OCR Data ID (must exist)              |
+| atasNama                           | String | No       | Account holder name                   |
+| nominal                            | String | No       | Nominal amount                        |
+| jangkaWaktu                        | String | No       | Duration/term                         |
+| periode                            | String | No       | Period                                |
+| rate                               | String | No       | Interest rate                         |
+| alokasi                            | String | No       | Allocation                            |
+| namaRekeningTujuanPencairan        | String | No       | Target account name for disbursement  |
+| nomorRekeningTujuanPencairan       | String | No       | Target account number for disbursement|
+| nomorRekeningPengirim              | String | No       | Sender account number                 |
+| nomorRekeningPlacement             | String | No       | Placement account number              |
+
+### Example Request
+
+```bash
+curl -X PUT "http://localhost:8080/api/v1/ocr-data" \
+  -H "Authorization: Bearer <your-token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": 1,
+    "atasNama": "Jane Doe",
+    "nominal": "150000000"
+  }'
+```
+
+### Success Response (200 OK)
+
 ```json
 {
   "status": 200,
   "message": "OK",
   "data": {
     "id": 1,
-    "documentId": 1,
-    "atasNama": "John D. Doe",
+    "document": {...},
+    "atasNama": "Jane Doe",
     "nominal": "150000000",
-    "jangkaWaktu": "18 bulan",
-    "periode": "Januari 2024 - Juni 2025",
-    "rate": "5.75%",
-    "alokasi": "Deposito Berjangka",
-    "namaRekeningTujuanPencairan": "John Doe",
-    "nomorRekeningTujuanPencairan": "1234567890",
-    "nomorRekeningPengirim": "0987654321",
-    "nomorRekeningPlacement": "1122334455",
-    "createdAt": "2024-01-01T10:00:00Z",
+    "status": "PENDING",
+    "createdAt": "2024-01-15T10:30:00Z",
     "createdBy": 1,
-    "updatedAt": "2024-01-02T15:00:00Z",
+    "updatedAt": "2024-01-15T11:00:00Z",
     "updatedBy": 1,
     "deletedAt": null,
     "deletedBy": null
@@ -204,26 +271,201 @@ Update an existing OCR data record (e.g., to correct OCR extraction errors).
 
 ---
 
-### 4. Hard Delete OCR Data
+## Bulk Approve OCR Data
 
-Permanently delete an OCR data record from the database.
+Approve multiple OCR data records at once. Changes the status to `APPROVED`.
 
-**Endpoint:** `DELETE /api/v1/ocr-data/{id}/destroy`
+### Endpoint
 
-**Authentication:** Required (Bearer Token)
-
-**Path Parameters:**
-| Parameter | Type | Required | Description     |
-|-----------|------|----------|-----------------|
-| id        | long | Yes      | OCR Data ID     |
-
-**Request Example:**
-```http
-DELETE /api/v1/ocr-data/1/destroy HTTP/1.1
-Authorization: Bearer <access_token>
+```
+POST /api/v1/ocr-data/approve
 ```
 
-**Response Example:**
+### Request Body
+
+```json
+{
+  "ids": [1, 2, 3, 4, 5]
+}
+```
+
+| Parameter | Type       | Required | Description                          |
+|-----------|------------|----------|--------------------------------------|
+| ids       | List<Long> | Yes      | List of OCR Data IDs to approve (cannot be empty) |
+
+### Example Request
+
+```bash
+curl -X POST "http://localhost:8080/api/v1/ocr-data/approve" \
+  -H "Authorization: Bearer <your-token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ids": [1, 2, 3]
+  }'
+```
+
+### Success Response (200 OK)
+
+```json
+{
+  "status": 200,
+  "message": "OK",
+  "data": [
+    {
+      "id": 1,
+      "document": {...},
+      "atasNama": "John Doe",
+      "nominal": "100000000",
+      "status": "APPROVED",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "createdBy": 1,
+      "updatedAt": "2024-01-15T12:00:00Z",
+      "updatedBy": 1,
+      "deletedAt": null,
+      "deletedBy": null
+    },
+    {
+      "id": 2,
+      "document": {...},
+      "atasNama": "Jane Smith",
+      "nominal": "200000000",
+      "status": "APPROVED",
+      "createdAt": "2024-01-15T10:35:00Z",
+      "createdBy": 1,
+      "updatedAt": "2024-01-15T12:00:00Z",
+      "updatedBy": 1,
+      "deletedAt": null,
+      "deletedBy": null
+    },
+    {
+      "id": 3,
+      "document": {...},
+      "atasNama": "Bob Wilson",
+      "nominal": "150000000",
+      "status": "APPROVED",
+      "createdAt": "2024-01-15T10:40:00Z",
+      "createdBy": 1,
+      "updatedAt": "2024-01-15T12:00:00Z",
+      "updatedBy": 1,
+      "deletedAt": null,
+      "deletedBy": null
+    }
+  ]
+}
+```
+
+---
+
+## Bulk Reject OCR Data
+
+Reject multiple OCR data records at once. Changes the status to `REJECTED`.
+
+### Endpoint
+
+```
+POST /api/v1/ocr-data/reject
+```
+
+### Request Body
+
+```json
+{
+  "ids": [1, 2, 3, 4, 5]
+}
+```
+
+| Parameter | Type       | Required | Description                          |
+|-----------|------------|----------|--------------------------------------|
+| ids       | List<Long> | Yes      | List of OCR Data IDs to reject (cannot be empty) |
+
+### Example Request
+
+```bash
+curl -X POST "http://localhost:8080/api/v1/ocr-data/reject" \
+  -H "Authorization: Bearer <your-token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ids": [1, 2, 3]
+  }'
+```
+
+### Success Response (200 OK)
+
+```json
+{
+  "status": 200,
+  "message": "OK",
+  "data": [
+    {
+      "id": 1,
+      "document": {...},
+      "atasNama": "John Doe",
+      "nominal": "100000000",
+      "status": "REJECTED",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "createdBy": 1,
+      "updatedAt": "2024-01-15T12:00:00Z",
+      "updatedBy": 1,
+      "deletedAt": null,
+      "deletedBy": null
+    },
+    {
+      "id": 2,
+      "document": {...},
+      "atasNama": "Jane Smith",
+      "nominal": "200000000",
+      "status": "REJECTED",
+      "createdAt": "2024-01-15T10:35:00Z",
+      "createdBy": 1,
+      "updatedAt": "2024-01-15T12:00:00Z",
+      "updatedBy": 1,
+      "deletedAt": null,
+      "deletedBy": null
+    },
+    {
+      "id": 3,
+      "document": {...},
+      "atasNama": "Bob Wilson",
+      "nominal": "150000000",
+      "status": "REJECTED",
+      "createdAt": "2024-01-15T10:40:00Z",
+      "createdBy": 1,
+      "updatedAt": "2024-01-15T12:00:00Z",
+      "updatedBy": 1,
+      "deletedAt": null,
+      "deletedBy": null
+    }
+  ]
+}
+```
+
+---
+
+## Delete OCR Data
+
+Permanently delete an OCR data record by its ID.
+
+### Endpoint
+
+```
+DELETE /api/v1/ocr-data/{id}/destroy
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description        |
+|-----------|------|----------|--------------------|
+| id        | Long | Yes      | OCR Data ID        |
+
+### Example Request
+
+```bash
+curl -X DELETE "http://localhost:8080/api/v1/ocr-data/1/destroy" \
+  -H "Authorization: Bearer <your-token>"
+```
+
+### Success Response (200 OK)
+
 ```json
 {
   "status": 200,
@@ -234,82 +476,143 @@ Authorization: Bearer <access_token>
 
 ---
 
-## OCRResponse Schema
-
-| Field                              | Type    | Description                                      |
-|------------------------------------|---------|--------------------------------------------------|
-| id                                 | long    | OCR data unique identifier                       |
-| documentId                         | long    | Associated document ID (one-to-one relationship) |
-| atasNama                           | string  | Account holder name                              |
-| nominal                            | string  | Nominal amount                                   |
-| jangkaWaktu                        | string  | Duration/term (e.g., "12 bulan")                 |
-| periode                            | string  | Period (e.g., "Januari 2024")                    |
-| rate                               | string  | Interest rate (e.g., "5.5%")                     |
-| alokasi                            | string  | Allocation purpose                               |
-| namaRekeningTujuanPencairan        | string  | Target account name for disbursement             |
-| nomorRekeningTujuanPencairan       | string  | Target account number for disbursement           |
-| nomorRekeningPengirim              | string  | Sender account number                            |
-| nomorRekeningPlacement             | string  | Placement account number                         |
-| createdAt                          | datetime| Creation timestamp                               |
-| createdBy                          | long    | User ID who created                              |
-| updatedAt                          | datetime| Last update timestamp                            |
-| updatedBy                          | long    | User ID who last updated                         |
-| deletedAt                          | datetime| Soft delete timestamp                            |
-| deletedBy                          | long    | User ID who soft deleted                         |
-
----
-
-## Field Descriptions
-
-| Field                              | Description                                           | Example                    |
-|------------------------------------|-------------------------------------------------------|----------------------------|
-| atasNama                           | Name of the account holder                          | "John Doe"                 |
-| nominal                            | Amount in IDR (Indonesian Rupiah)                    | "100000000"                |
-| jangkaWaktu                        | Investment duration                                  | "12 bulan"                 |
-| periode                            | Investment period                                    | "Januari 2024"             |
-| rate                               | Interest rate per annum                              | "5.5%"                     |
-| alokasi                            | Fund allocation purpose                              | "Deposito"                 |
-| namaRekeningTujuanPencairan        | Name on the target disbursement account             | "John Doe"                 |
-| nomorRekeningTujuanPencairan       | Target disbursement account number                   | "1234567890"               |
-| nomorRekeningPengirim              | Sender's account number                              | "0987654321"               |
-| nomorRekeningPlacement             | Placement account number                             | "1122334455"               |
-
----
-
-## Relationship with Documents
-
-OCR data has a **one-to-one relationship** with documents:
-- Each document can have one or more OCR data records
-- Each OCR data record belongs to exactly one document (via `documentId`)
-- When a document is uploaded, OCR processing automatically creates associated OCR data records
-
----
-
 ## Error Responses
 
 ### 400 Bad Request
+
+Returned when the request contains invalid data or missing required fields.
+
 ```json
 {
   "status": 400,
   "message": "Bad Request",
-  "errors": ["id is required"]
+  "errors": [
+    {
+      "field": "ids",
+      "message": "ids cannot be empty"
+    }
+  ]
 }
 ```
 
+**Common Causes:**
+- Empty `ids` array in approve/reject requests
+- Missing required `id` in update request
+- Invalid data format
+
+---
+
+### 401 Unauthorized
+
+Returned when the authentication token is missing or invalid.
+
+```json
+{
+  "status": 401,
+  "message": "Unauthorized",
+  "error": "Invalid or missing authentication token"
+}
+```
+
+**Common Causes:**
+- Missing `Authorization` header
+- Expired JWT token
+- Invalid token format
+
+---
+
+### 403 Forbidden
+
+Returned when the authenticated user doesn't have permission to perform the action.
+
+```json
+{
+  "status": 403,
+  "message": "Forbidden",
+  "error": "Access denied"
+}
+```
+
+**Common Causes:**
+- Insufficient user role/permissions
+- Resource belongs to another user
+
+---
+
 ### 404 Not Found
+
+Returned when the requested OCR data record doesn't exist.
+
 ```json
 {
   "status": 404,
   "message": "Not Found",
-  "errors": ["OCR Data not found with id: 999"]
+  "error": "OCR Data not found with id: 999"
 }
 ```
 
-### 422 Unprocessable Entity
+**Common Causes:**
+- Invalid OCR Data ID
+- Record has been soft-deleted or permanently deleted
+
+---
+
+### 429 Too Many Requests
+
+Returned when the rate limit is exceeded (default: 50 requests/second).
+
 ```json
 {
-  "status": 422,
-  "message": "Unprocessable Entity",
-  "errors": ["Invalid OCR data format"]
+  "status": 429,
+  "message": "Too Many Requests",
+  "error": "Rate limit exceeded. Please try again later."
 }
 ```
+
+**Common Causes:**
+- Exceeding 50 requests per second
+- Bulk operations with very large ID lists
+
+---
+
+### 500 Internal Server Error
+
+Returned when an unexpected error occurs on the server.
+
+```json
+{
+  "status": 500,
+  "message": "Internal Server Error",
+  "error": "An unexpected error occurred"
+}
+```
+
+**Common Causes:**
+- Database connection issues
+- Unexpected exceptions in business logic
+
+---
+
+## OCR Status Values
+
+| Status     | Description                                    |
+|------------|------------------------------------------------|
+| PENDING    | OCR data is awaiting review/approval           |
+| APPROVED   | OCR data has been approved for processing      |
+| REJECTED   | OCR data has been rejected and needs correction|
+
+---
+
+## Best Practices
+
+1. **Bulk Operations**: Use bulk approve/reject endpoints for processing multiple records efficiently instead of making individual API calls.
+
+2. **Pagination**: Always use pagination when retrieving lists to avoid performance issues with large datasets.
+
+3. **Error Handling**: Implement proper error handling for all HTTP status codes, especially 401, 403, 404, and 429.
+
+4. **Rate Limiting**: Be mindful of the rate limit (50 req/s). For bulk operations, consider batching large ID lists.
+
+5. **Soft Delete**: The API uses soft delete by default. Deleted records can be filtered out using `audit.deletedAt` field.
+
+6. **Audit Trail**: All changes are tracked with `createdBy`, `updatedBy`, `createdAt`, and `updatedAt` fields for audit purposes.

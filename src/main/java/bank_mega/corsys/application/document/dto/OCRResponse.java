@@ -1,5 +1,6 @@
 package bank_mega.corsys.application.document.dto;
 
+import bank_mega.corsys.domain.model.ocr.OCRStatus;
 import lombok.Builder;
 
 import java.time.Instant;
@@ -18,6 +19,7 @@ public record OCRResponse(
         String nomorRekeningTujuanPencairan,
         String nomorRekeningPengirim,
         String nomorRekeningPlacement,
+        OCRStatus status,
         Instant createdAt,
         Long createdBy,
         Instant updatedAt,

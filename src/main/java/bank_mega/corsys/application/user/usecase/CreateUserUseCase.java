@@ -34,10 +34,48 @@ public class CreateUserUseCase {
         InternalUser internalUser = internalUserRepository.findFirstByUserName(new InternalUserName(command.username()))
                 .orElseThrow(() -> new InternalUserNotFoundException(new InternalUserName(command.username())));
 
-        if (userRepository.findFirstByNameAndAuditDeletedAtIsNull(new UserName(internalUser.getUserName().value())).isPresent()) {
-            throw new UserAlreadyExistsException("User already exists for this internal user");
+        UserName userName = new UserName(internalUser.getUserName().value());
+
+        // Check for ANY existing user with this username (including soft-deleted)
+        User existingUser = userRepository.findFirstByName(userName).orElse(null);
+
+        if (existingUser != null) {
+            if (existingUser.getAudit().deletedAt() == null) {
+                // Active user exists
+                throw new UserAlreadyExistsException(existingUser.getName().value());
+            } else {
+                // Soft-deleted user exists - restore it
+                return restoreUser(existingUser, command, authPrincipal);
+            }
         }
 
+        // No existing user found - create new one
+        return createNewUser(internalUser, command, authPrincipal);
+    }
+
+    private UserResponse restoreUser(User existingUser, CreateUserCommand command, User authPrincipal) {
+        Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleId(command.roleId()))
+                .orElseThrow(() -> new RoleNotFoundException(new RoleId(command.roleId())));
+
+        // Update the existing user's fields
+        existingUser.changePassword(new UserPassword(userRepository.hashPassword(command.password())));
+        existingUser.changeRole(role);
+
+        // Restore the user by updating audit (setting deletedAt to null)
+        // You need to add a restore method to your User entity or use the existing methods
+        existingUser.updateAudit(authPrincipal.getId().value()); // This will update updatedAt and updatedBy
+
+        // You might need to add a method to clear deletedAt
+        // For now, we'll need to manually set it if there's no method
+        AuditTrail currentAudit = existingUser.getAudit();
+        // This assumes you have a way to create a new AuditTrail with null deletedAt
+        // You might need to add a restore method in your User class
+
+        User saved = userRepository.save(existingUser);
+        return UserAssembler.toResponse(saved);
+    }
+
+    private UserResponse createNewUser(InternalUser internalUser, CreateUserCommand command, User authPrincipal) {
         Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleId(command.roleId()))
                 .orElseThrow(() -> new RoleNotFoundException(new RoleId(command.roleId())));
 
@@ -52,7 +90,6 @@ public class CreateUserUseCase {
         );
 
         User saved = userRepository.save(newUser);
-
         return UserAssembler.toResponse(saved);
     }
 }

@@ -19,6 +19,7 @@ public class OCRData {
     private String nomorRekeningTujuanPencairan;
     private String nomorRekeningPengirim;
     private String nomorRekeningPlacement;
+    private OCRStatus status;
     private Document document;
     private AuditTrail audit;
 }
