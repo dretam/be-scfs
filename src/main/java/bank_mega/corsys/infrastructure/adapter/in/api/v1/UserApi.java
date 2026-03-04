@@ -4,6 +4,7 @@ import bank_mega.corsys.application.assembler.UserAssembler;
 import bank_mega.corsys.application.common.dto.PaginationResponse;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.infrastructure.adapter.in.validation.user.UserIdExist;
+import bank_mega.corsys.infrastructure.config.security.HasPermission;
 import bank_mega.corsys.infrastructure.util.ParserUtil;
 import bank_mega.corsys.application.common.dto.DeleteResponse;
 import bank_mega.corsys.application.common.dto.ReadListResponse;
@@ -50,6 +51,7 @@ public class UserApi {
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @HasPermission("USER_READ")
     public ReadListResponse<List<UserResponse>> list(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "perPage", required = false, defaultValue = "5") int perPage,
@@ -90,6 +92,7 @@ public class UserApi {
             path = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @HasPermission("USER_READ")
     public ReadRetrieveResponse<UserResponse> retrieve(
             @PathVariable @NotNull @UserIdExist Long id,
             @RequestParam(value = "expands", required = false) String expand
@@ -106,6 +109,7 @@ public class UserApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @HasPermission("USER_CREATE")
     public ReadRetrieveResponse<UserResponse> create(
             @AuthenticationPrincipal User authPrincipal,
             @Valid @RequestBody CreateUserCommand command
@@ -122,6 +126,7 @@ public class UserApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @HasPermission("USER_UPDATE")
     public ReadRetrieveResponse<UserResponse> update(
             @AuthenticationPrincipal User authPrincipal,
             @Valid @RequestBody UpdateUserCommand command
@@ -138,6 +143,7 @@ public class UserApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @HasPermission("USER_DELETE")
     public ReadRetrieveResponse<UserResponse> softDelete(
             @AuthenticationPrincipal User authPrincipal,
             @Valid @RequestBody SoftDeleteUserCommand command
@@ -155,6 +161,7 @@ public class UserApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @HasPermission("USER_DELETE")
     public DeleteResponse<UserId> delete(@PathVariable @NotNull @UserIdExist Long id) {
         UserId pk = this.deleteUserUseCase.execute(id);
         return DeleteResponse.<UserId>builder()

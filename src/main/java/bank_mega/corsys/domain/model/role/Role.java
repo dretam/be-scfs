@@ -1,6 +1,12 @@
 package bank_mega.corsys.domain.model.role;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
+import bank_mega.corsys.domain.model.menu.Menu;
+import bank_mega.corsys.domain.model.permission.Permission;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Role {
 
@@ -8,6 +14,8 @@ public class Role {
     private RoleName name;
     private RoleIcon icon;
     private String description;
+    private Set<Permission> permissions;
+    private Set<Menu> menus;
     private AuditTrail audit;
 
     public Role(
@@ -22,6 +30,8 @@ public class Role {
         this.icon = icon;
         this.description = description;
         this.audit = audit;
+        this.permissions = new HashSet<>();
+        this.menus = new HashSet<>();
     }
 
     public RoleId getId() {
@@ -38,6 +48,14 @@ public class Role {
 
     public String getDescription() {
         return description;
+    }
+
+    public Set<Permission> getPermissions() {
+        return Collections.unmodifiableSet(permissions);
+    }
+
+    public Set<Menu> getMenus() {
+        return Collections.unmodifiableSet(menus);
     }
 
     public AuditTrail getAudit() {
@@ -59,6 +77,30 @@ public class Role {
     public void changeDescription(String description) {
         if (description != null) {
             this.description = description;
+        }
+    }
+
+    public void addPermission(Permission permission) {
+        if (permission != null) {
+            this.permissions.add(permission);
+        }
+    }
+
+    public void removePermission(Permission permission) {
+        if (permission != null) {
+            this.permissions.remove(permission);
+        }
+    }
+
+    public void addMenu(Menu menu) {
+        if (menu != null) {
+            this.menus.add(menu);
+        }
+    }
+
+    public void removeMenu(Menu menu) {
+        if (menu != null) {
+            this.menus.remove(menu);
         }
     }
 

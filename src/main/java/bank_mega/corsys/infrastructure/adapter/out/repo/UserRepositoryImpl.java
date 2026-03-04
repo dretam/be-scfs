@@ -127,7 +127,16 @@ public class UserRepositoryImpl implements UserRepository {
         Root<UserJpaEntity> root = cQuery.from(UserJpaEntity.class);
 
         // Expands fetching
-        if (expand.contains("role")) root.fetch("role", JoinType.LEFT);
+        if (expand != null && expand.contains("role")) {
+            Fetch<UserJpaEntity, ?> roleFetch = root.fetch("role", JoinType.LEFT);
+
+            if (expand.contains("permissions")) {
+                roleFetch.fetch("permissions", JoinType.LEFT);
+            }
+            if (expand.contains("menus")) {
+                roleFetch.fetch("menus", JoinType.LEFT);
+            }
+        }
 
         // Filter Primary Key
         cQuery.where(UserPredicate.retrieveBuild(cBuilder, root, id));

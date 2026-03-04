@@ -15,6 +15,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Repository
@@ -61,13 +63,23 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public Page<@NonNull Role> findAllPageable(int page, int size, String sort, String filter) {
+    public Page<@NonNull Role> findAllPageable(int page, int size, Set<String> expands, String sort, String filter) {
         int pageIndex = page - 1;
         Sort sortBy = ParserUtil.sortParse(this.availableSort, sort, this.availableSort[0]);
         CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<RoleJpaEntity> cQuery = cBuilder.createQuery(RoleJpaEntity.class);
         Root<RoleJpaEntity> root = cQuery.from(RoleJpaEntity.class);
+
+        // Expands fetching
+        if (expands != null) {
+            if (expands.contains("permissions")) {
+                root.fetch("permissions", JoinType.LEFT);
+            }
+            if (expands.contains("menus")) {
+                root.fetch("menus", JoinType.LEFT);
+            }
+        }
 
         // Filter and Sorting
         cQuery.where(RolePredicate.listBuild(cBuilder, root, filter));
@@ -82,7 +94,7 @@ public class RoleRepositoryImpl implements RoleRepository {
 
         // Mapping ke domain
         List<Role> list = resultList.stream()
-                .map(RoleMapper::toDomain)
+                .map(jpa -> RoleMapper.toDomain(jpa, expands))
                 .toList();
 
         return new PageImpl<>(
@@ -108,10 +120,25 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleId id) {
+        return findFirstByIdAndAuditDeletedAtIsNull(id, null);
+    }
+
+    @Override
+    public Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleId id, Set<String> expands) {
         CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<RoleJpaEntity> cQuery = cBuilder.createQuery(RoleJpaEntity.class);
         Root<RoleJpaEntity> root = cQuery.from(RoleJpaEntity.class);
+
+        // Expands fetching
+        if (expands != null && !expands.isEmpty()) {
+            if (expands.contains("permissions")) {
+                root.fetch("permissions", JoinType.LEFT);
+            }
+            if (expands.contains("menus")) {
+                root.fetch("menus", JoinType.LEFT);
+            }
+        }
 
         // Filter Primary Key
         cQuery.where(RolePredicate.retrieveBuild(cBuilder, root, id));
@@ -119,13 +146,13 @@ public class RoleRepositoryImpl implements RoleRepository {
         TypedQuery<RoleJpaEntity> query = entityManager.createQuery(cQuery);
         List<RoleJpaEntity> resultList = query.getResultList();
         if (resultList.isEmpty()) return Optional.empty();
-        return Optional.of(RoleMapper.toDomain(resultList.getFirst()));
+        return Optional.of(RoleMapper.toDomain(resultList.getFirst(), expands));
     }
 
     @Override
     public Optional<Role> findFirstByName(RoleName name) {
         return springDataRoleJpaRepository
-                .findFirstByName(name.value())
+                .findFirstByNameWithFetch(name.value())
                 .map(RoleMapper::toDomain);
     }
 }

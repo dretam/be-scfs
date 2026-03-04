@@ -4,6 +4,9 @@ import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.embeddable.AuditTr
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,6 +27,24 @@ public class RoleJpaEntity {
     private String icon;
 
     private String description;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "role_permissions",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    @Builder.Default
+    private Set<PermissionJpaEntity> permissions = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "role_menus",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_id")
+    )
+    @Builder.Default
+    private Set<MenuJpaEntity> menus = new HashSet<>();
 
     @Embedded
     private AuditTrailEmbeddable audit;

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
 
 @UseCase
 @RequiredArgsConstructor
@@ -16,8 +17,8 @@ public class PageRoleUseCase {
     private final RoleRepository roleRepository;
 
     @Transactional(readOnly = true)
-    public Page<@NonNull Role> execute(int page, int size, String sort, String filter) {
-        return roleRepository.findAllPageable(page, size, sort, filter);
+    public Page<@NonNull Role> execute(int page, int size, Set<String> expands, String sort, String filter) {
+        return roleRepository.findAllPageable(page, size, expands, sort, filter);
     }
 
 }

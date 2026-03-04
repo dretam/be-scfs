@@ -7,6 +7,7 @@ import lombok.NonNull;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;
+import java.util.Set;
 
 public interface RoleRepository {
 
@@ -16,11 +17,13 @@ public interface RoleRepository {
 
     long count();
 
-    Page<@NonNull Role> findAllPageable(int page, int size, String sort, String filter);
+    Page<@NonNull Role> findAllPageable(int page, int size, Set<String> expands, String sort, String filter);
 
     Optional<Role> findFirstById(RoleId id);
 
     Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleId id);
+
+    Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleId id, Set<String> expands);
 
     Optional<Role> findFirstByName(RoleName name);
 

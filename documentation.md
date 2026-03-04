@@ -6,6 +6,7 @@ Backend Dashboard TMG is a Spring Boot application built with hexagonal architec
 
 ### Key Features
 - Hexagonal Architecture (Ports and Adapters)
+- **Role-Based Access Control (RBAC)** with permission-based authorization
 - JWT-based Authentication & Authorization
 - Multi-database Support (MySQL, PostgreSQL, MariaDB)
 - AWS S3 Integration
@@ -147,10 +148,69 @@ The application uses Flyway for database migration with support for multiple dat
 - Configurable algorithms and expiration times
 - Secure token validation and refresh mechanisms
 
+### Role-Based Access Control (RBAC)
+The application implements a comprehensive RBAC system with permission-based authorization:
+
+#### RBAC Components
+1. **Permissions**: Fine-grained access control codes (e.g., `USER_CREATE`, `USER_READ`, `ROLE_UPDATE`)
+2. **Roles**: Collections of permissions assigned to users (e.g., `ROLE_SU`, `ROLE_ADMIN`, `ROLE_VIEW`)
+3. **Menus**: Hierarchical navigation structure assigned to roles for UI access control
+
+#### Predefined Roles
+- **ROLE_SU (Super User)**: Has all permissions automatically
+- **ROLE_ADMIN**: Has USER_*, ROLE_*, PERMISSION_READ, and MENU_* permissions
+- **ROLE_VIEW**: Read-only access to USER_READ, ROLE_READ, PERMISSION_READ, MENU_READ
+
+#### Permission Codes
+Permissions follow an uppercase snake_case convention with action suffixes:
+- `*_CREATE`: Create new resources
+- `*_READ`: View/retrieve resources
+- `*_UPDATE`: Modify existing resources
+- `*_DELETE`: Remove resources (soft delete)
+
+Available permission categories:
+- **User Management**: `USER_CREATE`, `USER_READ`, `USER_UPDATE`, `USER_DELETE`
+- **Role Management**: `ROLE_CREATE`, `ROLE_READ`, `ROLE_UPDATE`, `ROLE_DELETE`
+- **Permission Management**: `PERMISSION_CREATE`, `PERMISSION_READ`, `PERMISSION_UPDATE`, `PERMISSION_DELETE`
+- **Menu Management**: `MENU_CREATE`, `MENU_READ`, `MENU_UPDATE`, `MENU_DELETE`
+
+#### Permission-Based Authorization
+The application uses the `@HasPermission` annotation for method-level security:
+
+```java
+@HasPermission("USER_CREATE")
+@PostMapping
+public ReadRetrieveResponse<UserResponse> create(...) {
+    // Only users with USER_CREATE permission can access
+}
+```
+
+The annotation is processed by an AOP aspect that:
+- Validates the user is authenticated
+- Checks if the user's role includes the required permission
+- Grants access to super users (ROLE_SU) automatically
+- Logs access attempts for audit purposes
+- Throws `AccessDeniedException` when access is denied
+
+#### Menu Management
+Menus are organized hierarchically and assigned to roles:
+- Parent menus can have nested child menus
+- Each menu has a code, name, path, icon, and sort order
+- Users only see menus assigned to their role
+- API endpoint: `GET /api/v1/menus/role/{roleId}/tree` returns hierarchical menu structure
+
+#### Database Schema
+RBAC uses the following tables:
+- `permissions`: Stores permission definitions
+- `menus`: Stores menu items with parent-child relationships
+- `role_permissions`: Many-to-many join table for role-permission assignments
+- `role_menus`: Many-to-many join table for role-menu assignments
+
 ### Spring Security
 - Role-based access control
 - OAuth2 resource server configuration
 - Secure endpoint protection
+- Permission-based method-level security with AOP
 
 ### Rate Limiting
 - Resilience4j-based rate limiting
@@ -177,6 +237,54 @@ The application uses Flyway for database migration with support for multiple dat
 - Swagger/OpenAPI documentation available at `/swagger-ui.html`
 - Multiple API groups supported
 - Syntax highlighting and filtering options
+
+### RBAC API Endpoints
+
+#### Permissions API
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v1/permissions` | PERMISSION_READ | List all permissions (paginated) |
+| GET | `/api/v1/permissions/{id}` | PERMISSION_READ | Get permission by ID |
+| POST | `/api/v1/permissions` | PERMISSION_CREATE | Create new permission |
+| PUT | `/api/v1/permissions` | PERMISSION_UPDATE | Update existing permission |
+| DELETE | `/api/v1/permissions` | PERMISSION_DELETE | Soft delete permission |
+| DELETE | `/api/v1/permissions/{id}/destroy` | PERMISSION_DELETE | Hard delete permission |
+
+#### Menus API
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v1/menus` | MENU_READ | List all menus (paginated) |
+| GET | `/api/v1/menus/{id}` | MENU_READ | Get menu by ID |
+| GET | `/api/v1/menus/role/{roleId}` | MENU_READ | Get menus by role ID |
+| GET | `/api/v1/menus/role/{roleId}/tree` | MENU_READ | Get hierarchical menu tree for role |
+| POST | `/api/v1/menus` | MENU_CREATE | Create new menu |
+| PUT | `/api/v1/menus` | MENU_UPDATE | Update existing menu |
+| DELETE | `/api/v1/menus` | MENU_DELETE | Soft delete menu |
+| DELETE | `/api/v1/menus/{id}/destroy` | MENU_DELETE | Hard delete menu |
+
+#### Roles API
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v1/roles` | ROLE_READ | List all roles (paginated) |
+| GET | `/api/v1/roles/{id}` | ROLE_READ | Get role by ID |
+| POST | `/api/v1/roles` | ROLE_CREATE | Create new role |
+| PUT | `/api/v1/roles` | ROLE_UPDATE | Update existing role |
+| DELETE | `/api/v1/roles` | ROLE_DELETE | Soft delete role |
+| DELETE | `/api/v1/roles/{id}/destroy` | ROLE_DELETE | Hard delete role |
+| POST | `/api/v1/roles/{roleId}/permissions` | ROLE_UPDATE | Assign permissions to role |
+| DELETE | `/api/v1/roles/{roleId}/permissions` | ROLE_UPDATE | Remove all permissions from role |
+| POST | `/api/v1/roles/{roleId}/menus` | ROLE_UPDATE | Assign menus to role |
+| DELETE | `/api/v1/roles/{roleId}/menus` | ROLE_UPDATE | Remove all menus from role |
+
+#### Users API
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v1/users` | USER_READ | List all users (paginated) |
+| GET | `/api/v1/users/{id}` | USER_READ | Get user by ID |
+| POST | `/api/v1/users` | USER_CREATE | Create new user |
+| PUT | `/api/v1/users` | USER_UPDATE | Update existing user |
+| DELETE | `/api/v1/users` | USER_DELETE | Soft delete user |
+| DELETE | `/api/v1/users/{id}/destroy` | USER_DELETE | Hard delete user |
 
 ## Deployment Options
 
