@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@Order(1)
 public class RbacSeeder implements ApplicationRunner {
 
     private final PermissionRepository permissionRepository;
@@ -58,19 +60,20 @@ public class RbacSeeder implements ApplicationRunner {
      */
     private void seedRoles() {
 
-        createRole("ROLE_SU", "lucide:crown");
-        createRole("ROLE_ADMIN", "lucide:shield");
-        createRole("ROLE_VIEW", "lucide:eye");
+        createRole("ROLE_APP", "lucide:cog", "For app only, used for scheduler");
+        createRole("ROLE_SU", "lucide:crown", "Super user that have all privileges, used by developer");
+        createRole("ROLE_ADMIN", "lucide:clipboard-pen-line", "Administration privileges");
+        createRole("ROLE_VIEW", "lucide:eye", "View only privileges");
     }
 
-    private void createRole(String name, String icon) {
+    private void createRole(String name, String icon, String description) {
 
         Role role = new Role(
                 null,
                 new RoleName(name),
                 new RoleCode(name),
                 new RoleIcon(icon),
-                "Example Role",
+                description,
                 AuditTrail.create(0L)
         );
 

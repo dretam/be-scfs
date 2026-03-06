@@ -21,11 +21,11 @@ public class UserPermissionRepositoryImpl implements UserPermissionRepository {
 
     @Override
     public UserPermission save(UserPermission userPermission) {
-        return UserPermissionMapper.toDomain(
-                springDataUserPermissionJpaRepository.save(
-                        UserPermissionMapper.toJpaEntity(userPermission)
-                )
+        // Save and return the same domain object (avoid lazy loading issue on return)
+        springDataUserPermissionJpaRepository.save(
+                UserPermissionMapper.toJpaEntity(userPermission)
         );
+        return userPermission;
     }
 
     @Override

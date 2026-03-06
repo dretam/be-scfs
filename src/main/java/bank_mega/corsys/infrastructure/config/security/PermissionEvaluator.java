@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,8 +43,7 @@ public class PermissionEvaluator {
 
         // Super user has all permissions
         String role = user.getRole().getName().value();
-        log.info("CURRENT ROLE " + role);
-        if ("ROLE_SU".equals(user.getRole().getName().value())) {
+        if ("ROLE_SU".equals(role)) {
             return true;
         }
 
@@ -54,6 +54,10 @@ public class PermissionEvaluator {
         // Get user permission overrides from repository
         Set<String> userAllowPermissions = getUserAllowPermissions(user);
         Set<String> userDenyPermissions = getUserDenyPermissions(user);
+
+        log.info(Arrays.toString(rolePermissions.toArray()));
+        log.info(Arrays.toString(userAllowPermissions.toArray()));
+        log.info(Arrays.toString(userDenyPermissions.toArray()));
 
         // Apply formula: FINAL = (role_perms + user_allow) - user_deny
         boolean hasFromRole = rolePermissions.contains(permissionCode);

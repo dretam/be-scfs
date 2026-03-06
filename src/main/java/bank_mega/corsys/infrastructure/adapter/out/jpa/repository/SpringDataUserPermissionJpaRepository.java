@@ -12,13 +12,13 @@ import java.util.List;
 @Repository
 public interface SpringDataUserPermissionJpaRepository extends JpaRepository<UserPermissionJpaEntity, UserPermissionIdEmbeddable> {
 
-    @Query("SELECT up FROM UserPermissionJpaEntity up WHERE up.id.userId = :userId")
+    @Query("SELECT up FROM UserPermissionJpaEntity up JOIN FETCH up.permission WHERE up.id.userId = :userId")
     List<UserPermissionJpaEntity> findAllByUserId(@Param("userId") Long userId);
 
-    @Query("SELECT up FROM UserPermissionJpaEntity up WHERE up.id.userId = :userId AND up.effect = 'ALLOW'")
+    @Query("SELECT up FROM UserPermissionJpaEntity up JOIN FETCH up.permission WHERE up.id.userId = :userId AND up.effect = 'ALLOW'")
     List<UserPermissionJpaEntity> findAllAllowByUserId(@Param("userId") Long userId);
 
-    @Query("SELECT up FROM UserPermissionJpaEntity up WHERE up.id.userId = :userId AND up.effect = 'DENY'")
+    @Query("SELECT up FROM UserPermissionJpaEntity up JOIN FETCH up.permission WHERE up.id.userId = :userId AND up.effect = 'DENY'")
     List<UserPermissionJpaEntity> findAllDenyByUserId(@Param("userId") Long userId);
 
 }

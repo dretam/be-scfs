@@ -26,7 +26,7 @@ public class HasPermissionAspect {
 
     private final PermissionEvaluator permissionEvaluator;
 
-    @Around("@annotation(bank_mega.corsys.infrastructure.config.security.HasPermission)")
+    @Around("@annotation(HasPermission)")
     public Object checkPermission(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

@@ -47,7 +47,7 @@ public class UserContextFilter extends OncePerRequestFilter {
 
         // 2. Detail session authentication
         UserTokenAuthentication detailAuth = new UserTokenAuthentication(
-                this.retrieveUserUseCase.execute(userId, ParserUtil.expandParse("role")),
+                this.retrieveUserUseCase.execute(userId, ParserUtil.expandParse("role,permissions")),
                 jwt
         );
 
