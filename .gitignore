@@ -41,6 +41,8 @@ docker/settings.xml
 *.cer
 *.jks
 
-data
-
-/data/
+# Add these lines to .gitignore
+data/
+**/data/
+.data/
+*.minio.sys/

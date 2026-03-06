@@ -6,6 +6,7 @@ import bank_mega.corsys.application.role.command.CreateRoleCommand;
 import bank_mega.corsys.application.role.dto.RoleResponse;
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.role.Role;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.role.RoleIcon;
 import bank_mega.corsys.domain.model.role.RoleName;
 import bank_mega.corsys.domain.model.user.User;
@@ -26,6 +27,7 @@ public class CreateRoleUseCase {
         Role newRole = new Role(
                 null,
                 new RoleName(command.name()),
+                new RoleCode(command.name()),
                 new RoleIcon(command.icon()),
                 command.description(),
                 AuditTrail.create(authPrincipal.getId().value())

@@ -4,6 +4,7 @@ import bank_mega.corsys.domain.exception.DomainRuleViolationException;
 import bank_mega.corsys.domain.model.menu.Menu;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.role.Role;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.role.RoleIcon;
 import bank_mega.corsys.domain.model.role.RoleId;
 import bank_mega.corsys.domain.model.role.RoleName;
@@ -24,9 +25,16 @@ public class RoleMapper {
 
     public static Role toDomain(@NotNull RoleJpaEntity jpaEntity, Set<String> expands) {
         if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
+        
+        RoleCode roleCode = null;
+        if (jpaEntity.getCode() != null && !jpaEntity.getCode().isBlank()) {
+            roleCode = new RoleCode(jpaEntity.getCode());
+        }
+        
         Role role = new Role(
                 new RoleId(jpaEntity.getId()),
                 new RoleName(jpaEntity.getName()),
+                roleCode,
                 new RoleIcon(jpaEntity.getIcon()),
                 jpaEntity.getDescription(),
                 AuditTrailEmbeddableMapper.toDomain(jpaEntity.getAudit())
@@ -59,6 +67,12 @@ public class RoleMapper {
             jpaEntity.setId(domainEntity.getId().value());
         }
         jpaEntity.setName(domainEntity.getName().value());
+        
+        // Set code if present
+        if (domainEntity.getCode() != null) {
+            jpaEntity.setCode(domainEntity.getCode().value());
+        }
+        
         jpaEntity.setDescription(domainEntity.getDescription());
         jpaEntity.setIcon(domainEntity.getIcon().value());
         jpaEntity.setAudit(AuditTrailEmbeddableMapper.toJpa(domainEntity.getAudit()));

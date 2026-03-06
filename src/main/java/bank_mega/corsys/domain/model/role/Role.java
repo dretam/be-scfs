@@ -12,6 +12,7 @@ public class Role {
 
     private final RoleId id;
     private RoleName name;
+    private RoleCode code;
     private RoleIcon icon;
     private String description;
     private Set<Permission> permissions;
@@ -21,12 +22,14 @@ public class Role {
     public Role(
             RoleId id,
             RoleName name,
+            RoleCode code,
             RoleIcon icon,
             String description,
             AuditTrail audit
     ) {
         this.id = id;
         this.name = name;
+        this.code = code;
         this.icon = icon;
         this.description = description;
         this.audit = audit;
@@ -40,6 +43,10 @@ public class Role {
 
     public RoleName getName() {
         return name;
+    }
+
+    public RoleCode getCode() {
+        return code;
     }
 
     public RoleIcon getIcon() {
@@ -65,6 +72,12 @@ public class Role {
     public void changeName(RoleName newName) {
         if (newName != null) {
             this.name = newName;
+        }
+    }
+
+    public void changeCode(RoleCode newCode) {
+        if (newCode != null) {
+            this.code = newCode;
         }
     }
 

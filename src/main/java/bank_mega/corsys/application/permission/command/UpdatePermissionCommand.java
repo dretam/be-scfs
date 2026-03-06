@@ -9,6 +9,7 @@ public record UpdatePermissionCommand(
         Long id,
         Optional<String> name,
         Optional<String> code,
-        Optional<String> description
+        Optional<String> description,
+        Optional<Long> menuId
 ) {
 }

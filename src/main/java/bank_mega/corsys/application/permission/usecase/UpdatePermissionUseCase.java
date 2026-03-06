@@ -42,6 +42,7 @@ public class UpdatePermissionUseCase {
         command.name().ifPresent(name -> permission.changeName(new PermissionName(name)));
         command.code().ifPresent(code -> permission.changeCode(new PermissionCode(code)));
         command.description().ifPresent(permission::changeDescription);
+        command.menuId().ifPresent(menuId -> permission.changeMenuId(menuId != null ? new bank_mega.corsys.domain.model.menu.MenuId(menuId) : null));
 
         // Update audit
         permission.updateAudit(authPrincipal.getId().value());

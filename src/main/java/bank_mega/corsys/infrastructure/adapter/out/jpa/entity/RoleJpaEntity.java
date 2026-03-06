@@ -23,6 +23,9 @@ public class RoleJpaEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(unique = true)
+    private String code;
+
     @Column(nullable = false)
     private String icon;
 

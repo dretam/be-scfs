@@ -3,6 +3,7 @@ package bank_mega.corsys.infrastructure.config.seeder;
 import bank_mega.corsys.domain.exception.RoleNotFoundException;
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.role.Role;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.role.RoleIcon;
 import bank_mega.corsys.domain.model.role.RoleName;
 import bank_mega.corsys.domain.model.user.*;
@@ -35,7 +36,7 @@ public class UserSeeder implements ApplicationRunner {
             this.setUser(
                     new UserName("system"),
                     new UserEmail("hexagonal.apps@yopmail.com"),
-                    new RoleName("ROLE_APP")
+                    new RoleName("ROLE_SU")
             );
         }
     }
@@ -63,6 +64,7 @@ public class UserSeeder implements ApplicationRunner {
             Role newRole = new Role(
                     null,
                     new RoleName(name),
+                    new RoleCode(name),
                     new RoleIcon(icon),
                     description,
                     AuditTrail.create(0L)

@@ -12,6 +12,7 @@ public class PermissionAssembler {
                 .name(permission.getName().value())
                 .code(permission.getCode().value())
                 .description(permission.getDescription())
+                .menuId(permission.getMenuId() != null ? permission.getMenuId().value() : null)
                 .build();
     }
 

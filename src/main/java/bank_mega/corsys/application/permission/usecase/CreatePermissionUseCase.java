@@ -6,6 +6,7 @@ import bank_mega.corsys.application.permission.command.CreatePermissionCommand;
 import bank_mega.corsys.application.permission.dto.PermissionResponse;
 import bank_mega.corsys.domain.exception.DomainRuleViolationException;
 import bank_mega.corsys.domain.model.common.AuditTrail;
+import bank_mega.corsys.domain.model.menu.MenuId;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.permission.PermissionCode;
 import bank_mega.corsys.domain.model.permission.PermissionName;
@@ -34,6 +35,7 @@ public class CreatePermissionUseCase {
                 new PermissionName(command.name()),
                 new PermissionCode(command.code()),
                 command.description(),
+                command.menuId() != null ? new MenuId(command.menuId()) : null,
                 AuditTrail.create(authPrincipal.getId().value())
         );
 

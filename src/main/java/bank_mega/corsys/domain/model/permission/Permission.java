@@ -1,6 +1,8 @@
 package bank_mega.corsys.domain.model.permission;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
+import bank_mega.corsys.domain.model.menu.Menu;
+import bank_mega.corsys.domain.model.menu.MenuId;
 
 public class Permission {
 
@@ -8,6 +10,7 @@ public class Permission {
     private PermissionName name;
     private PermissionCode code;
     private String description;
+    private MenuId menuId;
     private AuditTrail audit;
 
     public Permission(
@@ -15,12 +18,14 @@ public class Permission {
             PermissionName name,
             PermissionCode code,
             String description,
+            MenuId menuId,
             AuditTrail audit
     ) {
         this.id = id;
         this.name = name;
         this.code = code;
         this.description = description;
+        this.menuId = menuId;
         this.audit = audit;
     }
 
@@ -38,6 +43,10 @@ public class Permission {
 
     public String getDescription() {
         return description;
+    }
+
+    public MenuId getMenuId() {
+        return menuId;
     }
 
     public AuditTrail getAudit() {
@@ -60,6 +69,10 @@ public class Permission {
         if (description != null) {
             this.description = description;
         }
+    }
+
+    public void changeMenuId(MenuId menuId) {
+        this.menuId = menuId;
     }
 
     public void updateAudit(Long updatedBy) {

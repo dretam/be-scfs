@@ -25,6 +25,10 @@ public class PermissionJpaEntity {
 
     private String description;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_id")
+    private MenuJpaEntity menu;
+
     @Embedded
     private AuditTrailEmbeddable audit;
 
