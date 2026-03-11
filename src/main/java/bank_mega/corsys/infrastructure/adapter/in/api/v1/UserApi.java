@@ -47,6 +47,7 @@ public class UserApi {
     private final UpdateUserUseCase updateUserUseCase;
     private final SoftDeleteUserUseCase softDeleteUserUseCase;
     private final DeleteUserUseCase deleteUserUseCase;
+    private final UserAssembler userAssembler;
 
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -67,7 +68,7 @@ public class UserApi {
                 filter
         );
         List<UserResponse> data = pageable.stream()
-                .map(domainEntity -> UserAssembler.toResponse(domainEntity, ParserUtil.expandParse(expand)))
+                .map(domainEntity -> userAssembler.toResponse(domainEntity, ParserUtil.expandParse(expand)))
                 .toList();
         return ReadListResponse.<List<UserResponse>>builder()
                 .status(HttpStatus.OK.value())
@@ -101,7 +102,7 @@ public class UserApi {
         return ReadRetrieveResponse.<UserResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(UserAssembler.toResponse(data))
+                .data(userAssembler.toResponse(data, ParserUtil.expandParse(expand)))
                 .build();
     }
 

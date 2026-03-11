@@ -11,6 +11,7 @@ public record UserResponse(
         String name,
         String email,
         RoleResponse role,
+        UserDetailResponse userDetail,
         Instant createdAt,
         Long createdBy,
         Instant updatedAt,

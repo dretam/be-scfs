@@ -23,6 +23,7 @@ public class UpdateUserUseCase {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final UserAssembler userAssembler;
 
     @Transactional
     public UserResponse execute(UpdateUserCommand command, User authPrincipal) {
@@ -65,7 +66,7 @@ public class UpdateUserUseCase {
         User saved = userRepository.save(user);
 
         // 4. convert ke response DTO
-        return UserAssembler.toResponse(saved);
+        return userAssembler.toResponse(saved);
     }
 
 }

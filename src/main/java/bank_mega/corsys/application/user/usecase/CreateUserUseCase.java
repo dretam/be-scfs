@@ -13,8 +13,10 @@ import bank_mega.corsys.domain.model.internaluser.InternalUserName;
 import bank_mega.corsys.domain.model.role.Role;
 import bank_mega.corsys.domain.model.role.RoleId;
 import bank_mega.corsys.domain.model.user.*;
+import bank_mega.corsys.domain.model.userdetail.UserDetail;
 import bank_mega.corsys.domain.repository.InternalUserRepository;
 import bank_mega.corsys.domain.repository.RoleRepository;
+import bank_mega.corsys.domain.repository.UserDetailRepository;
 import bank_mega.corsys.domain.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,8 @@ public class CreateUserUseCase {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final InternalUserRepository internalUserRepository;
+    private final UserDetailRepository userDetailRepository;
+    private final UserAssembler userAssembler;
 
     @Transactional
     public UserResponse execute(CreateUserCommand command, User authPrincipal) {
@@ -35,6 +39,7 @@ public class CreateUserUseCase {
                 .orElseThrow(() -> new InternalUserNotFoundException(new InternalUserName(command.username())));
 
         UserName userName = new UserName(internalUser.getUserName().value());
+
 
         // Check for ANY existing user with this username (including soft-deleted)
         User existingUser = userRepository.findFirstByName(userName).orElse(null);
@@ -57,22 +62,13 @@ public class CreateUserUseCase {
         Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleId(command.roleId()))
                 .orElseThrow(() -> new RoleNotFoundException(new RoleId(command.roleId())));
 
-        // Update the existing user's fields
         existingUser.changePassword(new UserPassword(userRepository.hashPassword(command.password())));
         existingUser.changeRole(role);
 
-        // Restore the user by updating audit (setting deletedAt to null)
-        // You need to add a restore method to your User entity or use the existing methods
         existingUser.updateAudit(authPrincipal.getId().value()); // This will update updatedAt and updatedBy
 
-        // You might need to add a method to clear deletedAt
-        // For now, we'll need to manually set it if there's no method
-        AuditTrail currentAudit = existingUser.getAudit();
-        // This assumes you have a way to create a new AuditTrail with null deletedAt
-        // You might need to add a restore method in your User class
-
         User saved = userRepository.save(existingUser);
-        return UserAssembler.toResponse(saved);
+        return userAssembler.toResponse(saved);
     }
 
     private UserResponse createNewUser(InternalUser internalUser, CreateUserCommand command, User authPrincipal) {
@@ -90,6 +86,30 @@ public class CreateUserUseCase {
         );
 
         User saved = userRepository.save(newUser);
-        return UserAssembler.toResponse(saved);
+
+        // Create UserDetail from InternalUser data (only selected fields)
+        UserDetail userDetail = new UserDetail(
+                null,
+                saved.getId(),
+                internalUser.getNama(),
+                internalUser.getJabatan(),
+                internalUser.getEmail(),
+                internalUser.getArea(),
+                internalUser.getJobTitle(),
+                internalUser.getDirektorat(),
+                internalUser.getSex(),
+                internalUser.getMobile(),
+                internalUser.getTglLahir(),
+                internalUser.getUsersCabang(),
+                internalUser.getUsersBranch(),
+                AuditTrail.create(authPrincipal.getId().value())
+        );
+
+        userDetailRepository.save(userDetail);
+
+        // Set the userDetail relation
+        saved.setUserDetail(userDetail);
+
+        return userAssembler.toResponse(saved);
     }
 }

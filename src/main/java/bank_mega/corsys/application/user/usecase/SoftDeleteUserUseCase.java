@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SoftDeleteUserUseCase {
 
     private final UserRepository userRepository;
+    private final UserAssembler userAssembler;
 
     @Transactional
     public UserResponse execute(SoftDeleteUserCommand command, User authPrincipal) {
@@ -33,7 +34,7 @@ public class SoftDeleteUserUseCase {
         User saved = userRepository.save(user);
 
         // 4. convert ke response DTO
-        return UserAssembler.toResponse(saved);
+        return userAssembler.toResponse(saved);
     }
 
 }

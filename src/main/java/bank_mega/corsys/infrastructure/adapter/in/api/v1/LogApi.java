@@ -32,6 +32,7 @@ public class LogApi {
 
     private final PageAccessLogUseCase pageAccessLogUseCase;
     private final RetrieveAccessLogUseCase retrieveAccessLogUseCase;
+    private final AccessLogAssembler accessLogAssembler;
 
     @GetMapping(
             path = "/access",
@@ -52,7 +53,7 @@ public class LogApi {
                 filter
         );
         List<AccessLogResponse> data = pageable.stream()
-                .map(domainEntity -> AccessLogAssembler.toResponse(domainEntity, ParserUtil.expandParse(expand)))
+                .map(domainEntity -> accessLogAssembler.toResponse(domainEntity, ParserUtil.expandParse(expand)))
                 .toList();
         return ReadListResponse.<List<AccessLogResponse>>builder()
                 .status(HttpStatus.OK.value())
@@ -85,7 +86,7 @@ public class LogApi {
         return ReadRetrieveResponse.<AccessLogResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(AccessLogAssembler.toResponse(data))
+                .data(accessLogAssembler.toResponse(data))
                 .build();
     }
 

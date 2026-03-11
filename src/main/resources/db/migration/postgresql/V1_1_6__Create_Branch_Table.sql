@@ -15,5 +15,6 @@ CREATE TABLE branch
     telepon     varchar(20) NULL,
     faximile    varchar(20) NULL,
     singkatan   varchar(50) NULL,
-    CONSTRAINT branch_pkey PRIMARY KEY (id)
+    CONSTRAINT branch_pkey PRIMARY KEY (id),
+    CONSTRAINT branch_id_branch_unique UNIQUE (id_branch)
 );

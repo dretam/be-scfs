@@ -39,4 +39,7 @@ public class UserJpaEntity {
     @Embedded
     private AuditTrailEmbeddable audit;
 
+    @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private UserDetailJpaEntity userDetail;
+
 }

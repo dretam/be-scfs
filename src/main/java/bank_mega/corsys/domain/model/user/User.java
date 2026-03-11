@@ -2,6 +2,7 @@ package bank_mega.corsys.domain.model.user;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.role.Role;
+import bank_mega.corsys.domain.model.userdetail.UserDetail;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class User {
     private Role role;
     private UserType type;
     private AuditTrail audit;
+    private UserDetail userDetail;
 
     public User(
             UserId id,

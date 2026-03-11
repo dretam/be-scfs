@@ -1,5 +1,6 @@
 package bank_mega.corsys.infrastructure.config.security;
 
+import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.user.UserId;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.domain.model.userpermission.Effect;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,11 +57,6 @@ public class PermissionEvaluator {
         // Get user permission overrides from repository
         Set<String> userAllowPermissions = getUserAllowPermissions(user);
         Set<String> userDenyPermissions = getUserDenyPermissions(user);
-
-        log.info(Arrays.toString(rolePermissions.toArray()));
-        log.info(Arrays.toString(userAllowPermissions.toArray()));
-        log.info(Arrays.toString(userDenyPermissions.toArray()));
-
         // Apply formula: FINAL = (role_perms + user_allow) - user_deny
         boolean hasFromRole = rolePermissions.contains(permissionCode);
         boolean hasFromAllow = userAllowPermissions.contains(permissionCode);
@@ -129,28 +127,42 @@ public class PermissionEvaluator {
      * Get the final effective permissions for a user.
      * Formula: (role_permissions + user_allow) - user_deny
      */
-    public Set<String> getEffectivePermissions(User user) {
+    /**
+     * Get the final effective permissions for a user.
+     * Formula: (role_permissions + user_allow) - user_deny
+     */
+    public Set<Permission> getEffectivePermissions(User user) {
         if (user == null || user.getRole() == null) {
             return Set.of();
         }
 
-        // Super user has all permissions - return empty to indicate unrestricted
         if ("ROLE_SU".equals(user.getRole().getName().value())) {
-            return Set.of("*");
+            return Set.of();
         }
 
-        Set<String> rolePermissions = user.getRole().getPermissions().stream()
-                .map(permission -> permission.getCode().value())
-                .collect(Collectors.toSet());
+        Set<Permission> effectivePermissions = new HashSet<>(user.getRole().getPermissions());
 
-        Set<String> userAllowPermissions = getUserAllowPermissions(user);
-        Set<String> userDenyPermissions = getUserDenyPermissions(user);
+        List<UserPermission> userPermissions = userPermissionRepository.findAllByUserId(
+                new UserId(user.getId().value())
+        );
 
-        // Apply formula: FINAL = (role_perms + user_allow) - user_deny
-        rolePermissions.addAll(userAllowPermissions);
-        rolePermissions.removeAll(userDenyPermissions);
+        Set<Permission> allowPermissions = new HashSet<>();
+        Set<String> denyPermissionCodes = new HashSet<>();
 
-        return rolePermissions;
+        for (UserPermission userPermission : userPermissions) {
+            if (userPermission.isAllow()) {
+                allowPermissions.add(userPermission.getPermission());
+            } else {
+                denyPermissionCodes.add(userPermission.getPermission().getCode().value());
+            }
+        }
+
+        effectivePermissions.addAll(allowPermissions);
+        effectivePermissions.removeIf(permission ->
+                denyPermissionCodes.contains(permission.getCode().value())
+        );
+
+        return effectivePermissions;
     }
 
     /**

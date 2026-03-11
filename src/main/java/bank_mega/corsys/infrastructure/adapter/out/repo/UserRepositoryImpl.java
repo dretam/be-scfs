@@ -75,6 +75,8 @@ public class UserRepositoryImpl implements UserRepository {
 
         if (expands.contains("cabang")) root.fetch("cabang", JoinType.LEFT);
 
+        if (expands.contains("userDetail")) root.fetch("userDetail", JoinType.LEFT);
+
         // Filter and Sorting
         cQuery.where(UserPredicate.listBuild(cBuilder, root, filter));
         cQuery.orderBy(ParserUtil.toOrders(sortBy, cBuilder, root));
@@ -136,6 +138,10 @@ public class UserRepositoryImpl implements UserRepository {
             if (expand.contains("menus")) {
                 roleFetch.fetch("menus", JoinType.LEFT);
             }
+        }
+
+        if (expand != null && expand.contains("userDetail")) {
+            root.fetch("userDetail", JoinType.LEFT);
         }
 
         // Filter Primary Key

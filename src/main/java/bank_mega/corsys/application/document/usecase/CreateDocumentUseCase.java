@@ -9,6 +9,7 @@ import bank_mega.corsys.domain.exception.DomainRuleViolationException;
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.document.Document;
 import bank_mega.corsys.domain.model.ocr.OCRData;
+import bank_mega.corsys.domain.model.ocr.OCRStatus;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.domain.port.OCRService;
 import bank_mega.corsys.domain.repository.DocumentRepository;
@@ -109,6 +110,7 @@ public class CreateDocumentUseCase {
 
         List<OCRData> ocrDataList = ocrResults.stream()
                 .map(ocrData -> OCRData.builder()
+                        .status(OCRStatus.PENDING)
                         .document(savedDocument)
                         .atasNama(ocrData.getAtasNama())
                         .nominal(ocrData.getNominal())

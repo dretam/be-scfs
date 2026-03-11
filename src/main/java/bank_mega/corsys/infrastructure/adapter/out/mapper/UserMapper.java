@@ -24,7 +24,8 @@ public class UserMapper {
 
     public static User toDomain(@NotNull UserJpaEntity jpaEntity, Set<String> expands) {
         if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
-        return new User(
+        
+        User user = new User(
                 new UserId(jpaEntity.getId()),
                 new UserName(jpaEntity.getName()),
                 new UserEmail(jpaEntity.getEmail()),
@@ -35,6 +36,12 @@ public class UserMapper {
                 jpaEntity.getType(),
                 AuditTrailEmbeddableMapper.toDomain(jpaEntity.getAudit())
         );
+        
+        if (expands.contains("userDetail") && jpaEntity.getUserDetail() != null) {
+            user.setUserDetail(UserDetailMapper.toDomain(jpaEntity.getUserDetail(), expands));
+        }
+        
+        return user;
     }
 
     public static UserJpaEntity toJpaEntity(User user) {

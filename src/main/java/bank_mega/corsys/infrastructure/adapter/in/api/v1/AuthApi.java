@@ -34,6 +34,7 @@ public class AuthApi {
     private final RetrieveUserUseCase retrieveUserUseCase;
     private final LoginJWTUseCase loginJWTUseCase;
     private final RefreshJWTUseCase refreshJWTUseCase;
+    private final UserAssembler userAssembler;
 
     @SecurityRequirement(name = "Bearer Authorization")
     @GetMapping(
@@ -48,7 +49,7 @@ public class AuthApi {
         return ReadRetrieveResponse.<UserResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(UserAssembler.toResponse(data))
+                .data(userAssembler.toResponse(data, ParserUtil.expandParse(expand)))
                 .build();
     }
 
