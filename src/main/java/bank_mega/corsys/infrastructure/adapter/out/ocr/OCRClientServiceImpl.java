@@ -120,7 +120,6 @@ public class OCRClientServiceImpl implements OCRService {
                         .nomorRekeningTujuanPencairan(node.path("nomor_rekening_tujuan_pencairan").asText())
                         .nomorRekeningPengirim(node.path("nomor_rekening_pengirim").asText())
                         .nomorRekeningPlacement(node.path("nomor_rekening_placement").asText())
-                        .audit(AuditTrail.create(userId.value()))
                         .build();
 
                 results.add(result);

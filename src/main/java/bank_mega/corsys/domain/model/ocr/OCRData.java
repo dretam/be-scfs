@@ -1,7 +1,5 @@
 package bank_mega.corsys.domain.model.ocr;
-import bank_mega.corsys.domain.model.common.AuditTrail;
 
-import bank_mega.corsys.domain.model.document.Document;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,6 +18,4 @@ public class OCRData {
     private String nomorRekeningPengirim;
     private String nomorRekeningPlacement;
     private OCRStatus status;
-    private Document document;
-    private AuditTrail audit;
 }
