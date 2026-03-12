@@ -2,7 +2,6 @@ package bank_mega.corsys.infrastructure.adapter.out.ldap;
 
 import bank_mega.corsys.domain.model.ldap.LDAPResponse;
 import bank_mega.corsys.domain.port.LDAPService;
-import bank_mega.corsys.domain.port.OpenApiService;
 import bank_mega.corsys.infrastructure.config.LDAPProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

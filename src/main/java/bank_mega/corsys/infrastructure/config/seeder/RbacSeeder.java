@@ -194,7 +194,7 @@ public class RbacSeeder implements ApplicationRunner {
 
         List<Menu> allMenus =
                 menuRepository
-                        .findAllPageable(1, 1000, "sortOrder", "")
+                        .findAllPageable(1, 1000, "sortOrder", "", null)
                         .getContent();
 
         /**

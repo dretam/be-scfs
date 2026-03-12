@@ -14,6 +14,7 @@ import bank_mega.corsys.domain.model.menu.Menu;
 import bank_mega.corsys.domain.model.menu.MenuId;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.infrastructure.config.security.HasPermission;
+import bank_mega.corsys.infrastructure.util.ParserUtil;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,9 +54,10 @@ public class MenuApi {
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "perPage", required = false, defaultValue = "5") int perPage,
             @RequestParam(value = "filter", required = false) String filter,
-            @RequestParam(value = "sort", required = false) String sort
+            @RequestParam(value = "sort", required = false) String sort,
+            @RequestParam(value = "expands", required = false) String expands
     ) {
-        Page<@NonNull MenuResponse> pageable = this.pageMenuUseCase.execute(page, perPage, sort, filter);
+        Page<@NonNull MenuResponse> pageable = this.pageMenuUseCase.execute(page, perPage, sort, filter, ParserUtil.expandParse(expands));
         List<MenuResponse> data = pageable.getContent();
         return ReadListResponse.<List<MenuResponse>>builder()
                 .status(HttpStatus.OK.value())

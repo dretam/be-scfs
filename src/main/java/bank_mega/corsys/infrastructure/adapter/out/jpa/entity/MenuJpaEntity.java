@@ -1,8 +1,12 @@
 package bank_mega.corsys.infrastructure.adapter.out.jpa.entity;
 
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.embeddable.AuditTrailEmbeddable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -35,5 +39,9 @@ public class MenuJpaEntity {
 
     @Embedded
     private AuditTrailEmbeddable audit;
+
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<PermissionJpaEntity> permissions = new HashSet<>();
 
 }

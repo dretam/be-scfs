@@ -1,7 +1,13 @@
 package bank_mega.corsys.domain.model.menu;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
+import bank_mega.corsys.domain.model.permission.Permission;
+import lombok.Getter;
 
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
 public class Menu {
 
     private final MenuId id;
@@ -11,17 +17,17 @@ public class Menu {
     private String icon;
     private MenuId parentId;
     private Integer sortOrder;
+    private Set<Permission> permissions;
     private AuditTrail audit;
 
-    public Menu(
-            MenuId id,
-            MenuName name,
-            MenuCode code,
-            String path,
-            String icon,
-            MenuId parentId,
-            Integer sortOrder,
-            AuditTrail audit
+    public Menu(MenuId id,
+                MenuName name,
+                MenuCode code,
+                String path,
+                String icon,
+                MenuId parentId,
+                Integer sortOrder,
+                AuditTrail audit
     ) {
         this.id = id;
         this.name = name;
@@ -31,43 +37,18 @@ public class Menu {
         this.parentId = parentId;
         this.sortOrder = sortOrder;
         this.audit = audit;
-    }
-
-    public MenuId getId() {
-        return id;
-    }
-
-    public MenuName getName() {
-        return name;
-    }
-
-    public MenuCode getCode() {
-        return code;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public MenuId getParentId() {
-        return parentId;
-    }
-
-    public Integer getSortOrder() {
-        return sortOrder;
-    }
-
-    public AuditTrail getAudit() {
-        return this.audit;
+        this.permissions = new HashSet<>();
     }
 
     public void changeName(MenuName newName) {
         if (newName != null) {
             this.name = newName;
+        }
+    }
+
+    public void addPermission(Permission permission) {
+        if (permission != null) {
+            this.permissions.add(permission);
         }
     }
 

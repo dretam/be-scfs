@@ -16,6 +16,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
@@ -62,7 +64,7 @@ public class MenuRepositoryImpl implements MenuRepository {
     }
 
     @Override
-    public Page<@NonNull Menu> findAllPageable(int page, int size, String sort, String filter) {
+    public Page<@NonNull Menu> findAllPageable(int page, int size, String sort, String filter, Set<String> expands) {
         int pageIndex = page - 1;
         Sort sortBy = ParserUtil.sortParse(this.availableSort, sort, this.availableSort[0]);
         CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
@@ -70,7 +72,12 @@ public class MenuRepositoryImpl implements MenuRepository {
         CriteriaQuery<MenuJpaEntity> cQuery = cBuilder.createQuery(MenuJpaEntity.class);
         Root<MenuJpaEntity> root = cQuery.from(MenuJpaEntity.class);
 
-        // Filter and Sorting
+        if (expands != null) {
+            if (expands.contains("permissions")) {
+                root.fetch("permissions", JoinType.LEFT);
+            }
+        }
+        
         cQuery.where(MenuPredicate.listBuild(cBuilder, root, filter));
         cQuery.orderBy(ParserUtil.toOrders(sortBy, cBuilder, root));
 
