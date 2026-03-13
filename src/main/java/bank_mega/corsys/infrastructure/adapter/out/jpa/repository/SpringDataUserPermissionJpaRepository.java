@@ -3,6 +3,7 @@ package bank_mega.corsys.infrastructure.adapter.out.jpa.repository;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.UserPermissionJpaEntity;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.embeddable.UserPermissionIdEmbeddable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,7 @@ public interface SpringDataUserPermissionJpaRepository extends JpaRepository<Use
     @Query("SELECT up FROM UserPermissionJpaEntity up JOIN FETCH up.permission WHERE up.id.userId = :userId AND up.effect = 'DENY'")
     List<UserPermissionJpaEntity> findAllDenyByUserId(@Param("userId") Long userId);
 
+    @Modifying
+    @Query("DELETE FROM UserPermissionJpaEntity up WHERE up.id.userId = :userId")
+    void deleteAllByUserId(@Param("userId") Long userId);
 }

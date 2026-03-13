@@ -102,27 +102,9 @@ public class RoleMapper {
             }
         }
 
-        rootMenus.forEach(RoleMapper::sortMenuTree);
-
-        rootMenus.sort(Comparator.comparing(Menu::getSortOrder));
-
         return rootMenus;
     }
 
-
-    private static void sortMenuTree(Menu menu) {
-
-        List<Menu> children = menu.getChildren();
-
-        if (children != null && !children.isEmpty()) {
-
-            children.sort(Comparator.comparing(Menu::getSortOrder));
-
-            for (Menu child : children) {
-                sortMenuTree(child);
-            }
-        }
-    }
 
     public static RoleJpaEntity toJpaEntity(Role domainEntity) {
         RoleJpaEntity jpaEntity = new RoleJpaEntity();

@@ -47,8 +47,12 @@ public class UserPermissionMapper {
         UserPermissionJpaEntity jpaEntity = new UserPermissionJpaEntity();
 
         UserPermissionIdEmbeddable idEmbeddable = new UserPermissionIdEmbeddable();
-        idEmbeddable.setUserId(domainEntity.getId().userId());
-        idEmbeddable.setPermissionId(domainEntity.getId().permissionId());
+        if (domainEntity.getId() != null) {
+            idEmbeddable.setUserId(domainEntity.getId().userId());
+        }
+        if (domainEntity.getId() != null) {
+            idEmbeddable.setPermissionId(domainEntity.getId().permissionId());
+        }
         jpaEntity.setId(idEmbeddable);
 
         // Set user reference (lazy loaded)

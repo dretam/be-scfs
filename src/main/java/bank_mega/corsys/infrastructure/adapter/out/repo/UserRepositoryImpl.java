@@ -133,6 +133,7 @@ public class UserRepositoryImpl implements UserRepository {
         boolean permissions = expands != null && expands.contains("permissions");
         boolean menus = expands != null && expands.contains("menus");
         boolean userDetail = expands != null && expands.contains("userDetail");
+        boolean userPermission = expands != null && expands.contains("userPermission");
 
         if (role) {
             Fetch<UserJpaEntity, ?> roleFetch = root.fetch("role", JoinType.LEFT);
@@ -146,6 +147,10 @@ public class UserRepositoryImpl implements UserRepository {
 
         if (userDetail) {
             root.fetch("userDetail", JoinType.LEFT);
+        }
+
+        if (userPermission) {
+            root.fetch("permissionsOverride", JoinType.LEFT);
         }
 
         cq.select(root)

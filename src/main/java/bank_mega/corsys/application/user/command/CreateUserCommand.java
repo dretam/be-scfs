@@ -1,13 +1,13 @@
 package bank_mega.corsys.application.user.command;
 
 import bank_mega.corsys.infrastructure.adapter.in.validation.role.RoleIdExist;
-import bank_mega.corsys.infrastructure.adapter.in.validation.user.UserEmailAvailable;
-import bank_mega.corsys.infrastructure.adapter.in.validation.user.UserNameAvailable;
-import jakarta.validation.constraints.Email;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
+
+import java.util.List;
 
 @Builder
 public record CreateUserCommand(
@@ -25,6 +25,22 @@ public record CreateUserCommand(
 
         @NotNull
         @RoleIdExist
-        Long roleId
+        Long roleId,
+
+        @Nullable
+        List<PermissionOverride> permissionOverrides
 ) {
+        public record PermissionOverride(
+                @NotNull
+                Long permissionId,
+
+                @NotNull
+                PermissionEffect effect
+        ) {
+        }
+
+        public enum PermissionEffect {
+                ALLOW,
+                DENY
+        }
 }

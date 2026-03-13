@@ -1,6 +1,5 @@
 package bank_mega.corsys.domain.model.userpermission;
 
-import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.user.User;
 

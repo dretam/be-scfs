@@ -36,6 +36,11 @@ public class UserPermissionRepositoryImpl implements UserPermissionRepository {
     }
 
     @Override
+    public void deleteByUserId(UserId userId) {
+        springDataUserPermissionJpaRepository.deleteAllByUserId(userId.value());
+    }
+
+    @Override
     public Optional<UserPermission> findFirstById(UserPermissionId id) {
         UserPermissionIdEmbeddable embeddable = new UserPermissionIdEmbeddable(
                 id.userId(),

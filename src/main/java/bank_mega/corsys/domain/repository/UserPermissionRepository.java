@@ -13,6 +13,8 @@ public interface UserPermissionRepository {
 
     void delete(UserPermission userPermission);
 
+    void deleteByUserId(UserId userId);
+
     Optional<UserPermission> findFirstById(UserPermissionId id);
 
     List<UserPermission> findAllByUserId(UserId userId);

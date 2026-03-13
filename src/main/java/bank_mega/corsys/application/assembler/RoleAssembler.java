@@ -1,6 +1,5 @@
 package bank_mega.corsys.application.assembler;
 
-import bank_mega.corsys.application.menu.dto.MenuResponse;
 import bank_mega.corsys.application.permission.dto.PermissionResponse;
 import bank_mega.corsys.application.role.dto.RoleResponse;
 import bank_mega.corsys.domain.model.permission.Permission;

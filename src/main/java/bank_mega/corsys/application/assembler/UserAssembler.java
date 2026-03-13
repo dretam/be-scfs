@@ -47,6 +47,10 @@ public class UserAssembler {
             builder = builder.userDetail(toUserDetailResponse(saved.getUserDetail(), expands));
         }
 
+        if (expands != null && expands.contains("userPermission") && saved.getUserPermissionOverride() != null) {
+            builder = builder.userPermissionOverride(saved.getUserPermissionOverride().stream().map(UserPermissionAssembler::toResponse).toList());
+        }
+
         return builder.build();
     }
 
@@ -73,11 +77,11 @@ public class UserAssembler {
                 .deletedBy(userDetail.getAudit().deletedBy());
 
         if (expands != null && expands.contains("usersCabang") && userDetail.getUsersCabang() != null) {
-            builder = builder.usersCabang(bank_mega.corsys.application.assembler.BranchAssembler.toResponse(userDetail.getUsersCabang()));
+            builder = builder.usersCabang(BranchAssembler.toResponse(userDetail.getUsersCabang()));
         }
 
         if (expands != null && expands.contains("usersBranch") && userDetail.getUsersBranch() != null) {
-            builder = builder.usersBranch(bank_mega.corsys.application.assembler.BranchAssembler.toResponse(userDetail.getUsersBranch()));
+            builder = builder.usersBranch(BranchAssembler.toResponse(userDetail.getUsersBranch()));
         }
 
         return builder.build();

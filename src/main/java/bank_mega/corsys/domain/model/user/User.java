@@ -1,10 +1,15 @@
 package bank_mega.corsys.domain.model.user;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
+import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.role.Role;
 import bank_mega.corsys.domain.model.userdetail.UserDetail;
+import bank_mega.corsys.domain.model.userpermission.UserPermission;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,6 +23,7 @@ public class User {
     private UserType type;
     private AuditTrail audit;
     private UserDetail userDetail;
+    private Set<UserPermission> userPermissionOverride;
 
     public User(
             UserId id,
@@ -35,6 +41,13 @@ public class User {
         this.role = role;
         this.type = type;
         this.audit = audit;
+        this.userPermissionOverride = new HashSet<>();
+    }
+
+    public void addPermissionOverride(UserPermission permission) {
+        if (permission != null) {
+            this.userPermissionOverride.add(permission);
+        }
     }
 
     public void changeName(UserName newName) {

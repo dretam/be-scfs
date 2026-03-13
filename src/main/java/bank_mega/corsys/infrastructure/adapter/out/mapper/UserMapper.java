@@ -2,7 +2,9 @@ package bank_mega.corsys.infrastructure.adapter.out.mapper;
 
 import bank_mega.corsys.domain.exception.DomainRuleViolationException;
 import bank_mega.corsys.domain.model.user.*;
+import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.PermissionJpaEntity;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.UserJpaEntity;
+import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.UserPermissionJpaEntity;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Set;
@@ -40,7 +42,13 @@ public class UserMapper {
         if (expands.contains("userDetail") && jpaEntity.getUserDetail() != null) {
             user.setUserDetail(UserDetailMapper.toDomain(jpaEntity.getUserDetail(), expands));
         }
-        
+
+        if (expands.contains("userPermission") && jpaEntity.getPermissionsOverride() != null) {
+            for (UserPermissionJpaEntity userPermissionJpaEntity : jpaEntity.getPermissionsOverride()) {
+                user.addPermissionOverride(UserPermissionMapper.toDomain(userPermissionJpaEntity));
+            }
+        }
+
         return user;
     }
 
