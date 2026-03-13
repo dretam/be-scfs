@@ -19,12 +19,6 @@ public record OCRResponse(
         String nomorRekeningTujuanPencairan,
         String nomorRekeningPengirim,
         String nomorRekeningPlacement,
-        OCRStatus status,
-        Instant createdAt,
-        Long createdBy,
-        Instant updatedAt,
-        Long updatedBy,
-        Instant deletedAt,
-        Long deletedBy
+        OCRStatus status
 ) {
 }

@@ -42,8 +42,6 @@ public class RejectOCRDataUseCase {
                     .nomorRekeningPengirim(ocrData.getNomorRekeningPengirim())
                     .nomorRekeningPlacement(ocrData.getNomorRekeningPlacement())
                     .status(OCRStatus.REJECTED)
-                    .document(ocrData.getDocument())
-                    .audit(ocrData.getAudit().update(authPrincipal.getId().value()))
                     .build();
 
             OCRData saved = ocrDataRepository.save(rejectedData);

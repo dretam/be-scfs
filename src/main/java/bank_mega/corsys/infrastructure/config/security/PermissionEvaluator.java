@@ -136,10 +136,6 @@ public class PermissionEvaluator {
             return Set.of();
         }
 
-        if ("ROLE_SU".equals(user.getRole().getName().value())) {
-            return Set.of();
-        }
-
         Set<Permission> effectivePermissions = new HashSet<>(user.getRole().getPermissions());
 
         List<UserPermission> userPermissions = userPermissionRepository.findAllByUserId(

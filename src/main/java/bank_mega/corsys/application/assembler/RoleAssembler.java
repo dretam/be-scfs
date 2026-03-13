@@ -25,7 +25,6 @@ public class RoleAssembler {
     public static RoleResponse toResponse(Role role, Set<String> expands, Set<Permission> effectivePermissions) {
         if (role == null) return null;
 
-        // Check if we should include permissions and menus
         boolean includePermissions = expands == null || expands.contains("permissions");
         boolean includeMenus = expands == null || expands.contains("menus");
 
@@ -40,15 +39,31 @@ public class RoleAssembler {
                 .updatedBy(role.getAudit().updatedBy())
                 .deletedAt(role.getAudit().deletedAt())
                 .deletedBy(role.getAudit().deletedBy())
-                .permissions(includePermissions && role.getPermissions() != null && effectivePermissions != null
-                        ? effectivePermissions.stream().map(PermissionAssembler::toResponse).toList()
+                .permissions(includePermissions
+                        ? getPermissionsToShow(role, effectivePermissions)
                         : Collections.emptyList())
                 .menus(includeMenus && role.getMenus() != null
                         ? role.getMenus().stream()
-                                .map(MenuAssembler::toResponse)
-                                .toList()
+                        .map(MenuAssembler::toResponse)
+                        .toList()
                         : Collections.emptyList())
                 .build();
+    }
+
+    private static List<PermissionResponse> getPermissionsToShow(Role role, Set<Permission> effectivePermissions) {
+        if (effectivePermissions != null) {
+            return effectivePermissions.stream()
+                    .map(PermissionAssembler::toResponse)
+                    .toList();
+        }
+
+        if (role.getPermissions() != null) {
+            return role.getPermissions().stream()
+                    .map(PermissionAssembler::toResponse)
+                    .toList();
+        }
+
+        return Collections.emptyList();
     }
 
 }

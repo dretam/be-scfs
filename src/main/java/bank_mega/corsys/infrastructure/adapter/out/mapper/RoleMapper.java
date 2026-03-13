@@ -2,6 +2,7 @@ package bank_mega.corsys.infrastructure.adapter.out.mapper;
 
 import bank_mega.corsys.domain.exception.DomainRuleViolationException;
 import bank_mega.corsys.domain.model.menu.Menu;
+import bank_mega.corsys.domain.model.menu.MenuId;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.role.Role;
 import bank_mega.corsys.domain.model.role.RoleCode;
@@ -14,7 +15,7 @@ import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.RoleJpaEntity;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.Hibernate;
 
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RoleMapper {
@@ -23,42 +24,104 @@ public class RoleMapper {
         return toDomain(jpaEntity, null);
     }
 
-    public static Role toDomain(@NotNull RoleJpaEntity jpaEntity, Set<String> expands) {
-        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
-        
-        RoleCode roleCode = null;
-        if (jpaEntity.getCode() != null && !jpaEntity.getCode().isBlank()) {
-            roleCode = new RoleCode(jpaEntity.getCode());
-        }
-        
+    public static Role toDomain(RoleJpaEntity entity, Set<String> expands) {
+
         Role role = new Role(
-                new RoleId(jpaEntity.getId()),
-                new RoleName(jpaEntity.getName()),
-                roleCode,
-                new RoleIcon(jpaEntity.getIcon()),
-                jpaEntity.getDescription(),
-                AuditTrailEmbeddableMapper.toDomain(jpaEntity.getAudit())
+                new RoleId(entity.getId()),
+                new RoleName(entity.getName()),
+                new RoleCode(entity.getCode()),
+                new RoleIcon(entity.getIcon()),
+                entity.getDescription(),
+                AuditTrailEmbeddableMapper.toDomain(entity.getAudit())
         );
 
-        // Map permissions if loaded and initialized
-        boolean loadPermissions = expands == null || expands.contains("permissions");
-        if (loadPermissions && jpaEntity.getPermissions() != null && Hibernate.isInitialized(jpaEntity.getPermissions())) {
-            for (PermissionJpaEntity permissionJpa : jpaEntity.getPermissions()) {
-                Permission permission = PermissionMapper.toDomain(permissionJpa);
-                role.addPermission(permission);
-            }
-        }
+        if (expands != null && expands.contains("permissions")) {
 
-        // Map menus if loaded and initialized
-        boolean loadMenus = expands == null || expands.contains("menus");
-        if (loadMenus && jpaEntity.getMenus() != null && Hibernate.isInitialized(jpaEntity.getMenus())) {
-            for (MenuJpaEntity menuJpa : jpaEntity.getMenus()) {
-                Menu menu = MenuMapper.toDomain(menuJpa);
-                role.addMenu(menu);
+            Set<Permission> permissions = new HashSet<>();
+            Map<Long, Menu> menuCache = new HashMap<>();
+
+            for (PermissionJpaEntity permissionJpa : entity.getPermissions()) {
+
+                Permission permission = PermissionMapper.toDomain(permissionJpa);
+                permissions.add(permission);
+
+                if (permissionJpa.getMenu() != null) {
+
+                    MenuJpaEntity menuJpa = permissionJpa.getMenu();
+                    Long menuId = menuJpa.getId();
+
+                    menuCache.computeIfAbsent(
+                            menuId,
+                            id -> MenuMapper.toDomain(menuJpa)
+                    );
+                }
+            }
+
+            role.setPermissions(permissions);
+
+            if (expands.contains("menus")) {
+
+                List<Menu> flatMenus = new ArrayList<>(menuCache.values());
+
+                List<Menu> treeMenus = buildMenuTree(flatMenus);
+
+                role.setMenus(new HashSet<>(treeMenus));
             }
         }
 
         return role;
+    }
+
+
+    private static List<Menu> buildMenuTree(List<Menu> menus) {
+
+        Map<Long, Menu> menuMap = menus.stream()
+                .collect(Collectors.toMap(
+                        m -> m.getId().value(),
+                        m -> {
+                            m.setChildren(new ArrayList<>());
+                            return m;
+                        }
+                ));
+
+        List<Menu> rootMenus = new ArrayList<>();
+
+        for (Menu menu : menus) {
+
+            MenuId parentId = menu.getParentId();
+
+            if (parentId == null) {
+                rootMenus.add(menu);
+            } else {
+
+                Menu parent = menuMap.get(parentId.value());
+
+                if (parent != null) {
+                    parent.getChildren().add(menu);
+                }
+            }
+        }
+
+        rootMenus.forEach(RoleMapper::sortMenuTree);
+
+        rootMenus.sort(Comparator.comparing(Menu::getSortOrder));
+
+        return rootMenus;
+    }
+
+
+    private static void sortMenuTree(Menu menu) {
+
+        List<Menu> children = menu.getChildren();
+
+        if (children != null && !children.isEmpty()) {
+
+            children.sort(Comparator.comparing(Menu::getSortOrder));
+
+            for (Menu child : children) {
+                sortMenuTree(child);
+            }
+        }
     }
 
     public static RoleJpaEntity toJpaEntity(Role domainEntity) {
@@ -83,14 +146,6 @@ public class RoleMapper {
                     .map(PermissionMapper::toJpaEntity)
                     .collect(Collectors.toSet());
             jpaEntity.setPermissions(permissionJpaEntities);
-        }
-
-        // Map menus
-        if (domainEntity.getMenus() != null && !domainEntity.getMenus().isEmpty()) {
-            Set<MenuJpaEntity> menuJpaEntities = domainEntity.getMenus().stream()
-                    .map(MenuMapper::toJpaEntity)
-                    .collect(Collectors.toSet());
-            jpaEntity.setMenus(menuJpaEntities);
         }
 
         return jpaEntity;

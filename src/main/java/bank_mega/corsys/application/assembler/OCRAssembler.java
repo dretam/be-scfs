@@ -17,7 +17,6 @@ public class OCRAssembler {
 
         OCRResponse.OCRResponseBuilder builder = OCRResponse.builder()
                 .id(saved.getId())
-                .document(DocumentAssembler.toResponse(saved.getDocument()))
                 .atasNama(saved.getAtasNama())
                 .nominal(saved.getNominal())
                 .jangkaWaktu(saved.getJangkaWaktu())
@@ -28,13 +27,7 @@ public class OCRAssembler {
                 .nomorRekeningTujuanPencairan(saved.getNomorRekeningTujuanPencairan() != null ? saved.getNomorRekeningTujuanPencairan() : "-")
                 .nomorRekeningPengirim(saved.getNomorRekeningPengirim() != null ? saved.getNomorRekeningPengirim() : "-")
                 .nomorRekeningPlacement(saved.getNomorRekeningPlacement() != null ? saved.getNomorRekeningPlacement() : "-")
-                .status(saved.getStatus())
-                .createdAt(saved.getAudit() != null ? saved.getAudit().createdAt() : null)
-                .createdBy(saved.getAudit() != null ? saved.getAudit().createdBy() : null)
-                .updatedAt(saved.getAudit() != null ? saved.getAudit().updatedAt() : null)
-                .updatedBy(saved.getAudit() != null ? saved.getAudit().updatedBy() : null)
-                .deletedAt(saved.getAudit() != null ? saved.getAudit().deletedAt() : null)
-                .deletedBy(saved.getAudit() != null ? saved.getAudit().deletedBy() : null);
+                .status(saved.getStatus());
 
         return builder.build();
     }

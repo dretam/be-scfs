@@ -76,9 +76,6 @@ public class RoleRepositoryImpl implements RoleRepository {
             if (expands.contains("permissions")) {
                 root.fetch("permissions", JoinType.LEFT);
             }
-            if (expands.contains("menus")) {
-                root.fetch("menus", JoinType.LEFT);
-            }
         }
 
         // Filter and Sorting
@@ -134,9 +131,6 @@ public class RoleRepositoryImpl implements RoleRepository {
         if (expands != null && !expands.isEmpty()) {
             if (expands.contains("permissions")) {
                 root.fetch("permissions", JoinType.LEFT);
-            }
-            if (expands.contains("menus")) {
-                root.fetch("menus", JoinType.LEFT);
             }
         }
 

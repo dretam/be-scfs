@@ -19,10 +19,6 @@ public interface SpringDataRoleJpaRepository extends JpaRepository<@NonNull Role
 
     Optional<RoleJpaEntity> findFirstByName(String name);
 
-    @Query("SELECT r FROM RoleJpaEntity r LEFT JOIN FETCH r.permissions LEFT JOIN FETCH r.menus WHERE r.name = :name")
+    @Query("SELECT r FROM RoleJpaEntity r LEFT JOIN FETCH r.permissions WHERE r.name = :name")
     Optional<RoleJpaEntity> findFirstByNameWithFetch(@Param("name") String name);
-
-    @Query("SELECT r FROM RoleJpaEntity r LEFT JOIN FETCH r.permissions LEFT JOIN FETCH r.menus WHERE r.id = :id")
-    Optional<RoleJpaEntity> findFirstByIdWithFetch(@Param("id") Long id);
-
 }

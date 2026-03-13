@@ -43,8 +43,6 @@ public class MenuApi {
     private final UpdateMenuUseCase updateMenuUseCase;
     private final SoftDeleteMenuUseCase softDeleteMenuUseCase;
     private final DeleteMenuUseCase deleteMenuUseCase;
-    private final GetMenusByRoleUseCase getMenusByRoleUseCase;
-    private final GetMenuTreeByRoleUseCase getMenuTreeByRoleUseCase;
 
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -86,34 +84,6 @@ public class MenuApi {
     public ReadRetrieveResponse<MenuResponse> retrieve(@PathVariable Long id) {
         MenuResponse data = this.retrieveMenuUseCase.execute(id);
         return ReadRetrieveResponse.<MenuResponse>builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(data)
-                .build();
-    }
-
-    @GetMapping(
-            path = "/role/{roleId}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @HasPermission("MENU_READ")
-    public ReadListResponse<List<MenuResponse>> getByRole(@PathVariable Long roleId) {
-        List<MenuResponse> data = this.getMenusByRoleUseCase.execute(roleId);
-        return ReadListResponse.<List<MenuResponse>>builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(data)
-                .build();
-    }
-
-    @GetMapping(
-            path = "/role/{roleId}/tree",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @HasPermission("MENU_READ")
-    public ReadListResponse<List<MenuResponse>> getTreeByRole(@PathVariable Long roleId) {
-        List<MenuResponse> data = this.getMenuTreeByRoleUseCase.execute(roleId);
-        return ReadListResponse.<List<MenuResponse>>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(data)

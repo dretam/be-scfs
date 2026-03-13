@@ -16,6 +16,7 @@ public class MenuAssembler {
                 .parentId(menu.getParentId() != null ? menu.getParentId().value() : null)
                 .sortOrder(menu.getSortOrder())
                 .permissions(menu.getPermissions().stream().map(PermissionAssembler::toResponse).toList())
+                .children(menu.getChildren() != null ? menu.getChildren().stream().map(MenuAssembler::toResponse).toList() : null)
                 .build();
     }
 

@@ -39,6 +39,7 @@ public class UserAssembler {
             Set<Permission> effectivePermissions = (expands != null && expands.contains("permissions"))
                     ? permissionEvaluator.getEffectivePermissions(saved)
                     : null;
+
             builder = builder.role(RoleAssembler.toResponse(saved.getRole(), expands, effectivePermissions));
         }
 

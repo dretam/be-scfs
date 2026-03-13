@@ -122,35 +122,41 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findFirstByIdAndAuditDeletedAtIsNull(UserId id, Set<String> expand) {
-        CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
+    public Optional<User> findFirstByIdAndAuditDeletedAtIsNull(UserId id, Set<String> expands) {
 
-        CriteriaQuery<UserJpaEntity> cQuery = cBuilder.createQuery(UserJpaEntity.class);
-        Root<UserJpaEntity> root = cQuery.from(UserJpaEntity.class);
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserJpaEntity> cq = cb.createQuery(UserJpaEntity.class);
 
-        // Expands fetching
-        if (expand != null && expand.contains("role")) {
+        Root<UserJpaEntity> root = cq.from(UserJpaEntity.class);
+
+        boolean role = expands != null && expands.contains("role");
+        boolean permissions = expands != null && expands.contains("permissions");
+        boolean menus = expands != null && expands.contains("menus");
+        boolean userDetail = expands != null && expands.contains("userDetail");
+
+        if (role) {
             Fetch<UserJpaEntity, ?> roleFetch = root.fetch("role", JoinType.LEFT);
-
-            if (expand.contains("permissions")) {
-                roleFetch.fetch("permissions", JoinType.LEFT);
-            }
-            if (expand.contains("menus")) {
-                roleFetch.fetch("menus", JoinType.LEFT);
+            if (permissions) {
+                Fetch<?, ?> permissionFetch = roleFetch.fetch("permissions", JoinType.LEFT);
+                if (menus) {
+                    permissionFetch.fetch("menu", JoinType.LEFT);
+                }
             }
         }
 
-        if (expand != null && expand.contains("userDetail")) {
+        if (userDetail) {
             root.fetch("userDetail", JoinType.LEFT);
         }
 
-        // Filter Primary Key
-        cQuery.where(UserPredicate.retrieveBuild(cBuilder, root, id));
+        cq.select(root)
+                .where(UserPredicate.retrieveBuild(cb, root, id))
+                .distinct(true);
 
-        TypedQuery<UserJpaEntity> query = entityManager.createQuery(cQuery);
-        List<UserJpaEntity> resultList = query.getResultList();
-        if (resultList.isEmpty()) return Optional.empty();
-        return Optional.of(UserMapper.toDomain(resultList.getFirst(), expand));
+        TypedQuery<UserJpaEntity> query = entityManager.createQuery(cq);
+
+        return query.getResultStream()
+                .findFirst()
+                .map(entity -> UserMapper.toDomain(entity, expands));
     }
 
     @Override

@@ -12,7 +12,6 @@ public class OCRDataMapper {
 
         return OCRData.builder()
                 .id(entity.getId())
-                .document(DocumentMapper.toDomain(entity.getDocument()))
                 .atasNama(entity.getAtasNama() != null ? entity.getAtasNama() : "-")
                 .nominal(entity.getNominal() != null ? entity.getNominal() : "-")
                 .jangkaWaktu(entity.getJangkaWaktu() != null ? entity.getJangkaWaktu() : "-")
@@ -24,7 +23,6 @@ public class OCRDataMapper {
                 .nomorRekeningPengirim(entity.getNomorRekeningPengirim() != null ? entity.getNomorRekeningPengirim() : "-")
                 .nomorRekeningPlacement(entity.getNomorRekeningPlacement() != null ? entity.getNomorRekeningPlacement() : "-")
                 .status(entity.getStatus())
-                .audit(AuditTrailEmbeddableMapper.toDomain(entity.getAudit()))
                 .build();
     }
 
@@ -33,7 +31,6 @@ public class OCRDataMapper {
 
         return OCRDataJpaEntity.builder()
                 .id(domain.getId())
-                .document(DocumentMapper.toJpaEntity(domain.getDocument()))
                 .atasNama(domain.getAtasNama())
                 .nominal(domain.getNominal())
                 .jangkaWaktu(domain.getJangkaWaktu())
@@ -45,7 +42,6 @@ public class OCRDataMapper {
                 .nomorRekeningPengirim(domain.getNomorRekeningPengirim())
                 .nomorRekeningPlacement(domain.getNomorRekeningPlacement())
                 .status(domain.getStatus())
-                .audit(AuditTrailEmbeddableMapper.toJpa(domain.getAudit()))
                 .build();
     }
 }

@@ -136,19 +136,4 @@ public class MenuRepositoryImpl implements MenuRepository {
                 .findFirstByCode(code.value())
                 .map(MenuMapper::toDomain);
     }
-
-    @Override
-    public List<Menu> findAllByRoleId(RoleId roleId) {
-        return springDataMenuJpaRepository.findAllByRoleId(roleId.value()).stream()
-                .map(MenuMapper::toDomain)
-                .toList();
-    }
-
-    @Override
-    public List<Menu> findAllActiveByParentId(MenuId parentId) {
-        return springDataMenuJpaRepository.findAllByParentIdAndAuditDeletedAtIsNull(parentId.value()).stream()
-                .map(MenuMapper::toDomain)
-                .toList();
-    }
-
 }

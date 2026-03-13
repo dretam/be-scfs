@@ -42,8 +42,6 @@ public class ApproveOCRDataUseCase {
                     .nomorRekeningPengirim(ocrData.getNomorRekeningPengirim())
                     .nomorRekeningPlacement(ocrData.getNomorRekeningPlacement())
                     .status(OCRStatus.APPROVED)
-                    .document(ocrData.getDocument())
-                    .audit(ocrData.getAudit().update(authPrincipal.getId().value()))
                     .build();
 
             OCRData saved = ocrDataRepository.save(approvedData);

@@ -21,11 +21,5 @@ public interface SpringDataMenuJpaRepository extends JpaRepository<MenuJpaEntity
 
     Optional<MenuJpaEntity> findFirstById(Long id);
 
-    @Query("SELECT m FROM RoleJpaEntity r JOIN r.menus m WHERE r.id = :roleId")
-    List<MenuJpaEntity> findAllByRoleId(@Param("roleId") Long roleId);
-
     List<MenuJpaEntity> findAllByParentIdAndAuditDeletedAtIsNull(Long parentId);
-
-    Page<MenuJpaEntity> findAllByAuditDeletedAtIsNull(Pageable pageable);
-
 }

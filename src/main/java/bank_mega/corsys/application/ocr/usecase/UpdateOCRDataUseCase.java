@@ -35,7 +35,6 @@ public class UpdateOCRDataUseCase {
                 .nomorRekeningTujuanPencairan(command.nomorRekeningTujuanPencairan() != null ? command.nomorRekeningTujuanPencairan() : ocrData.getNomorRekeningTujuanPencairan())
                 .nomorRekeningPengirim(command.nomorRekeningPengirim() != null ? command.nomorRekeningPengirim() : ocrData.getNomorRekeningPengirim())
                 .nomorRekeningPlacement(command.nomorRekeningPlacement() != null ? command.nomorRekeningPlacement() : ocrData.getNomorRekeningPlacement())
-                .audit(ocrData.getAudit().update(authPrincipal.getId().value()))
                 .build();
 
         OCRData saved = ocrDataRepository.save(updatedData);

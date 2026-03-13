@@ -3,11 +3,15 @@ package bank_mega.corsys.domain.model.menu;
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.permission.Permission;
 import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
+@Setter
 public class Menu {
 
     private final MenuId id;
@@ -19,6 +23,7 @@ public class Menu {
     private Integer sortOrder;
     private Set<Permission> permissions;
     private AuditTrail audit;
+    private List<Menu> children;
 
     public Menu(MenuId id,
                 MenuName name,
@@ -38,6 +43,7 @@ public class Menu {
         this.sortOrder = sortOrder;
         this.audit = audit;
         this.permissions = new HashSet<>();
+        this.children = new ArrayList<>();
     }
 
     public void changeName(MenuName newName) {

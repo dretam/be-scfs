@@ -55,10 +55,6 @@ public class OCRDataJpaEntity {
     @Column(name = "status", nullable = false)
     private OCRStatus status;
 
-    @OneToOne
-    @JoinColumn(name = "document_id", referencedColumnName = "id")
-    private DocumentJpaEntity document;
-
     @Embedded
     private AuditTrailEmbeddable audit;
 }

@@ -27,8 +27,4 @@ public interface MenuRepository {
 
     Optional<Menu> findFirstByCode(MenuCode code);
 
-    List<Menu> findAllByRoleId(RoleId roleId);
-
-    List<Menu> findAllActiveByParentId(MenuId parentId);
-
 }

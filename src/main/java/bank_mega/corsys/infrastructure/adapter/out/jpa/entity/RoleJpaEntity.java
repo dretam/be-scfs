@@ -40,15 +40,6 @@ public class RoleJpaEntity {
     @Builder.Default
     private Set<PermissionJpaEntity> permissions = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "role_menus",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "menu_id")
-    )
-    @Builder.Default
-    private Set<MenuJpaEntity> menus = new HashSet<>();
-
     @Embedded
     private AuditTrailEmbeddable audit;
 
