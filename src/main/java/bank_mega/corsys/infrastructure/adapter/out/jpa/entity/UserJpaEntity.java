@@ -35,10 +35,9 @@ public class UserJpaEntity {
     @JoinColumn(name = "role_id")
     private RoleJpaEntity role;
 
-    @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(name = "type", nullable = false, columnDefinition = "user_type")
-    private UserType type = UserType.INTERNAL;
+    private UserType type;
 
     @Embedded
     private AuditTrailEmbeddable audit;

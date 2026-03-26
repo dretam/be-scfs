@@ -62,6 +62,7 @@ public class UserMapper {
         jpaEntity.setPassword(user.getPassword().value());
         jpaEntity.setRole(RoleMapper.toJpaEntity(user.getRole()));
         jpaEntity.setAudit(AuditTrailEmbeddableMapper.toJpa(user.getAudit()));
+        jpaEntity.setType(user.getType());
         return jpaEntity;
     }
 
