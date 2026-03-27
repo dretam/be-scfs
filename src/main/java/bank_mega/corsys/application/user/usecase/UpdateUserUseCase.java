@@ -6,7 +6,6 @@ import bank_mega.corsys.application.user.command.UpdateUserCommand;
 import bank_mega.corsys.application.user.dto.UserResponse;
 import bank_mega.corsys.domain.exception.PermissionNotFoundException;
 import bank_mega.corsys.domain.exception.RoleNotFoundException;
-import bank_mega.corsys.domain.exception.UserExistingPasswordException;
 import bank_mega.corsys.domain.exception.UserNotFoundException;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.permission.PermissionId;
@@ -20,8 +19,8 @@ import bank_mega.corsys.domain.repository.RoleRepository;
 import bank_mega.corsys.domain.repository.UserPermissionRepository;
 import bank_mega.corsys.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.transaction.annotation.Transactional;
+
 @UseCase
 @RequiredArgsConstructor
 public class UpdateUserUseCase {
@@ -37,7 +36,19 @@ public class UpdateUserUseCase {
 
         User user = findUser(command.id());
 
-        updateUserData(user, command);
+        command.roleId().ifPresent(roleId -> {
+            Role role = roleRepository
+                    .findFirstByIdAndAuditDeletedAtIsNull(new RoleId(roleId))
+                    .orElseThrow(() -> new RoleNotFoundException(new RoleId(roleId)));
+
+            user.changeRole(role);
+        });
+
+        if(command.password() != null) {
+            user.changePassword(
+                    new UserPassword(userRepository.hashPassword(command.password()))
+            );
+        }
 
         user.updateAudit(authPrincipal.getId().value());
 
@@ -54,47 +65,7 @@ public class UpdateUserUseCase {
                 .orElseThrow(() -> new UserNotFoundException(new UserId(userId)));
     }
 
-    private void updateUserData(User user, UpdateUserCommand command) {
-
-        command.roleId().ifPresent(roleId -> {
-            Role role = roleRepository
-                    .findFirstByIdAndAuditDeletedAtIsNull(new RoleId(roleId))
-                    .orElseThrow(() -> new RoleNotFoundException(new RoleId(roleId)));
-
-            user.changeRole(role);
-        });
-
-        command.name().ifPresent(name ->
-                user.changeName(new UserName(name))
-        );
-
-        command.email().ifPresent(email ->
-                user.changeEmail(new UserEmail(email))
-        );
-
-        handlePasswordChange(user, command);
-    }
-
-    private void handlePasswordChange(User user, UpdateUserCommand command) {
-
-        command.existingPassword().ifPresent(existingPassword -> {
-
-            boolean match = BCrypt.checkpw(existingPassword, user.getPassword().value());
-
-            if (!match) {
-                throw new UserExistingPasswordException();
-            }
-
-            command.password().ifPresent(newPassword ->
-                    user.changePassword(
-                            new UserPassword(userRepository.hashPassword(newPassword))
-                    )
-            );
-        });
-    }
-
     private void handlePermissionOverrides(User user, UpdateUserCommand command) {
-
         if (command.permissionOverrides() != null && !command.permissionOverrides().isEmpty()) {
 
             userPermissionRepository.deleteByUserId(user.getId());

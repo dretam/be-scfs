@@ -11,7 +11,11 @@ import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.PermissionJpaEntit
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.Hibernate;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MenuMapper {
 
@@ -58,6 +62,49 @@ public class MenuMapper {
         jpaEntity.setSortOrder(domainEntity.getSortOrder());
         jpaEntity.setAudit(AuditTrailEmbeddableMapper.toJpa(domainEntity.getAudit()));
         return jpaEntity;
+    }
+
+    public static List<Menu> buildMenuTree(List<Menu> menus) {
+        if (menus == null || menus.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Map<Long, Menu> menuMap = menus.stream()
+                .filter(menu -> menu != null && menu.getId() != null)
+                .collect(Collectors.toMap(
+                        m -> m.getId().value(),
+                        m -> {
+                            if (m.getChildren() == null) {
+                                m.setChildren(new ArrayList<>());
+                            }
+                            return m;
+                        },
+                        (existing, replacement) -> existing
+                ));
+
+        List<Menu> rootMenus = new ArrayList<>();
+
+        for (Menu menu : menus) {
+            if (menu == null) continue;
+
+            MenuId parentId = menu.getParentId();
+
+            if (parentId == null || parentId.value() == null) {
+                rootMenus.add(menu);
+            } else {
+                Menu parent = menuMap.get(parentId.value());
+                if (parent != null) {
+                    if (parent.getChildren() == null) {
+                        parent.setChildren(new ArrayList<>());
+                    }
+                    parent.getChildren().add(menu);
+                } else {
+                    rootMenus.add(menu);
+                }
+            }
+        }
+
+        return rootMenus;
     }
 
 }

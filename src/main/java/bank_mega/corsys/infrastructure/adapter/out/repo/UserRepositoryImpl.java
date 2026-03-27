@@ -137,11 +137,13 @@ public class UserRepositoryImpl implements UserRepository {
 
         if (role) {
             Fetch<UserJpaEntity, ?> roleFetch = root.fetch("role", JoinType.LEFT);
+
             if (permissions) {
-                Fetch<?, ?> permissionFetch = roleFetch.fetch("permissions", JoinType.LEFT);
-                if (menus) {
-                    permissionFetch.fetch("menu", JoinType.LEFT);
-                }
+                roleFetch.fetch("permissions", JoinType.LEFT);
+            }
+
+            if (menus) {
+                roleFetch.fetch("menus", JoinType.LEFT);
             }
         }
 

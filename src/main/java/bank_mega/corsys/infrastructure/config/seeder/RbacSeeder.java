@@ -97,29 +97,7 @@ public class RbacSeeder implements ApplicationRunner {
 
         createMenu("Menu Management", "MENU_MENU_MANAGEMENT", "/menus", "lucide:menu", null, 5);
 
-        Menu parameterManagementMenu = createMenu("Parameter Management", "MENU_PARAMETER_MANAGEMENT", "/parameters", "lucide:settings", null, 6);
-
-        createMenu("Sumber Dana", "MENU_SUMBER_DANA", "/parameters/sumber-dana", "lucide:database", parameterManagementMenu.getId().value(), 1);
-
-        createMenu("Jenis Perpanjangan", "MENU_JENIS_PERPANJANGAN", "/parameters/jenis-perpanjangan", "lucide:calendar", parameterManagementMenu.getId().value(), 2);
-
-        createMenu("Metode Pembayaran Bunga", "MENU_METODE_PEMBAYARAN_BUNGA", "/parameters/metode-pembayaran-bunga", "lucide:credit-card", parameterManagementMenu.getId().value(), 3);
-
-        createMenu("Jenis Transfer", "MENU_JENIS_TRANSFER", "/parameters/jenis-transfer", "lucide:arrow-right-left", parameterManagementMenu.getId().value(), 4);
-
-        createMenu("Jenis Transaksi SKN", "MENU_JENIS_TRANSAKSI_SKN", "/parameters/jenis-transaksi-skn", "lucide:file-text", parameterManagementMenu.getId().value(), 5);
-
-        createMenu("Jenis Transaksi RTGS", "MENU_JENIS_TRANSAKSI_RTGS", "/parameters/jenis-transaksi-rtgs", "lucide:landmark", parameterManagementMenu.getId().value(), 6);
-
-        createMenu("Jenis Nasabah Penerima", "MENU_JENIS_NASABAH_PENERIMA", "/parameters/jenis-nasabah-penerima", "lucide:user", parameterManagementMenu.getId().value(), 7);
-
-        createMenu("Status Kependudukan Penerima", "MENU_STATUS_KEPENDUDUKAN_PENERIMA", "/parameters/status-kependudukan-penerima", "lucide:id-card", parameterManagementMenu.getId().value(), 8);
-
-        createMenu("Metode Pembayaran Pokok", "MENU_METODE_PEMBAYARAN_POKOK", "/parameters/metode-pembayaran-pokok", "lucide:coins", parameterManagementMenu.getId().value(), 9);
-
-        createMenu("Approver Biaya Materai", "MENU_APPROVER_BIAYA_MATERAI", "/parameters/approver-biaya-materai", "lucide:stamp", parameterManagementMenu.getId().value(), 10);
-
-        createMenu("Automatic Transfer", "MENU_AUTOMATIC_TRANSFER", "/parameters/automatic-transfer", "lucide:repeat", parameterManagementMenu.getId().value(), 11);
+        createMenu("Parameter Management", "MENU_PARAMETER_MANAGEMENT", "/parameters", "lucide:settings", null, 6);
     }
 
     private Menu createMenu(

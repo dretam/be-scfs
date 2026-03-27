@@ -33,14 +33,12 @@ public class UserPermissionMapper {
             permission = PermissionMapper.toDomain(jpaEntity.getPermission());
         }
 
-        UserPermission userPermission = new UserPermission(
+        return new UserPermission(
                 id,
                 user,
                 permission,
                 jpaEntity.getEffect()
         );
-
-        return userPermission;
     }
 
     public static UserPermissionJpaEntity toJpaEntity(UserPermission domainEntity) {
