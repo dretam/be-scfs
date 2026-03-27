@@ -5,7 +5,7 @@ import bank_mega.corsys.application.common.annotation.UseCase;
 import bank_mega.corsys.application.role.dto.RoleResponse;
 import bank_mega.corsys.domain.exception.RoleNotFoundException;
 import bank_mega.corsys.domain.model.role.Role;
-import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.domain.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,9 @@ public class RemoveAllPermissionsFromRoleUseCase {
     private final RoleRepository roleRepository;
 
     @Transactional
-    public RoleResponse execute(Long roleId, User authPrincipal) {
-        Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleId(roleId))
-                .orElseThrow(() -> new RoleNotFoundException(new RoleId(roleId)));
+    public RoleResponse execute(String roleId, User authPrincipal) {
+        Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleCode(roleId))
+                .orElseThrow(() -> new RoleNotFoundException(new RoleCode(roleId)));
 
         // Clear all permissions
         role.getPermissions().clear();

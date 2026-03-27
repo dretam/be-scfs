@@ -25,7 +25,7 @@ public record CreateUserCommand(
 
         @NotNull
         @RoleIdExist
-        Long roleId,
+        String roleId,
 
         @Nullable
         List<PermissionOverride> permissionOverrides

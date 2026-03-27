@@ -22,8 +22,8 @@ public class SoftDeleteRoleUseCase {
     public RoleResponse execute(SoftDeleteRoleCommand command, User authPrincipal) {
 
         // 1. Validasi bahwa role ada
-        Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleId(command.id())).orElseThrow(
-                () -> new RoleNotFoundException(new RoleId(command.id()))
+        Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleCode(command.id())).orElseThrow(
+                () -> new RoleNotFoundException(new RoleCode(command.id()))
         );
 
         // 2. Update Soft Delete

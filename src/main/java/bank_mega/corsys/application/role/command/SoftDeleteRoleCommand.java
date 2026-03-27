@@ -4,6 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record SoftDeleteRoleCommand(
-        Long id
+        String id
 ) {
 }

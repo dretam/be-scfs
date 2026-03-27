@@ -1,11 +1,11 @@
 package bank_mega.corsys.domain.exception;
 
-import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.role.RoleName;
 
 public class RoleNotFoundException extends DomainException {
 
-    public RoleNotFoundException(RoleId roleId) {
+    public RoleNotFoundException(RoleCode roleId) {
         super("Role not found with id: " + roleId.value());
     }
 

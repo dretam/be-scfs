@@ -28,7 +28,7 @@ public class RoleAssembler {
         boolean includeMenus = expands == null || expands.contains("menus");
 
         return RoleResponse.builder()
-                .id(role.getId().value())
+                .id(role.getCode().value())
                 .name(role.getName().value())
                 .icon(role.getIcon().value())
                 .description(role.getDescription())

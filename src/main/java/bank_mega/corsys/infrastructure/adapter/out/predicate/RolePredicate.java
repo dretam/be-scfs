@@ -1,6 +1,6 @@
 package bank_mega.corsys.infrastructure.adapter.out.predicate;
 
-import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.RoleJpaEntity;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
@@ -32,7 +32,7 @@ public class RolePredicate {
         return predicates.toArray(Predicate[]::new);
     }
 
-    public static Predicate[] retrieveBuild(CriteriaBuilder cb, Root<RoleJpaEntity> root, RoleId id) {
+    public static Predicate[] retrieveBuild(CriteriaBuilder cb, Root<RoleJpaEntity> root, RoleCode id) {
         List<Predicate> predicates = new ArrayList<>();
 
         predicates.add(

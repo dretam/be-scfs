@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Builder
 public record AssignPermissionsCommand(
-        @NotNull Long roleId,
+        @NotNull String roleId,
         @NotEmpty Set<Long> permissionIds
 ) {
 }

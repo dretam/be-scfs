@@ -3,7 +3,6 @@ package bank_mega.corsys.infrastructure.adapter.out.repo;
 import bank_mega.corsys.domain.model.menu.Menu;
 import bank_mega.corsys.domain.model.menu.MenuCode;
 import bank_mega.corsys.domain.model.menu.MenuId;
-import bank_mega.corsys.domain.model.role.RoleId;
 import bank_mega.corsys.domain.repository.MenuRepository;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.MenuJpaEntity;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.repository.SpringDataMenuJpaRepository;

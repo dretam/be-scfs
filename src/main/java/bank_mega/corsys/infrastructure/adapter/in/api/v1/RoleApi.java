@@ -13,7 +13,7 @@ import bank_mega.corsys.application.role.command.UpdateRoleCommand;
 import bank_mega.corsys.application.role.dto.RoleResponse;
 import bank_mega.corsys.application.role.usecase.*;
 import bank_mega.corsys.domain.model.role.Role;
-import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.infrastructure.config.security.HasPermission;
 import bank_mega.corsys.infrastructure.util.ParserUtil;
@@ -91,7 +91,7 @@ public class RoleApi {
     )
     @HasPermission("ROLE_READ")
     public ReadRetrieveResponse<RoleResponse> retrieve(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestParam(value = "expands", required = false) String expand
     ) {
         RoleResponse data = this.retrieveRoleUseCase.execute(id, ParserUtil.expandParse(expand));
@@ -159,9 +159,9 @@ public class RoleApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @HasPermission("ROLE_DELETE")
-    public DeleteResponse<RoleId> delete(@PathVariable Long id) {
-        RoleId pk = this.deleteRoleUseCase.execute(id);
-        return DeleteResponse.<RoleId>builder()
+    public DeleteResponse<RoleCode> delete(@PathVariable String id) {
+        RoleCode pk = this.deleteRoleUseCase.execute(id);
+        return DeleteResponse.<RoleCode>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .id(pk)
@@ -175,7 +175,7 @@ public class RoleApi {
     )
     @HasPermission("ROLE_UPDATE")
     public ReadRetrieveResponse<RoleResponse> assignPermissions(
-            @PathVariable Long roleId,
+            @PathVariable String roleId,
             @AuthenticationPrincipal User authPrincipal,
             @RequestBody @Valid AssignPermissionsCommand command
     ) {
@@ -196,7 +196,7 @@ public class RoleApi {
     )
     @HasPermission("ROLE_UPDATE")
     public ReadRetrieveResponse<RoleResponse> removeAllPermissions(
-            @PathVariable Long roleId,
+            @PathVariable String roleId,
             @AuthenticationPrincipal User authPrincipal
     ) {
         RoleResponse data = this.removeAllPermissionsFromRoleUseCase.execute(roleId, authPrincipal);
@@ -214,7 +214,7 @@ public class RoleApi {
     )
     @HasPermission("ROLE_UPDATE")
     public ReadRetrieveResponse<RoleResponse> assignMenus(
-            @PathVariable Long roleId,
+            @PathVariable String roleId,
             @AuthenticationPrincipal User authPrincipal,
             @RequestBody @Valid AssignMenusCommand command
     ) {
@@ -235,7 +235,7 @@ public class RoleApi {
     )
     @HasPermission("ROLE_UPDATE")
     public ReadRetrieveResponse<RoleResponse> removeAllMenus(
-            @PathVariable Long roleId,
+            @PathVariable String roleId,
             @AuthenticationPrincipal User authPrincipal
     ) {
         RoleResponse data = this.removeAllMenusFromRoleUseCase.execute(roleId, authPrincipal);

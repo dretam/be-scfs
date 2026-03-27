@@ -10,7 +10,7 @@ import bank_mega.corsys.domain.exception.UserNotFoundException;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.permission.PermissionId;
 import bank_mega.corsys.domain.model.role.Role;
-import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.user.*;
 import bank_mega.corsys.domain.model.userpermission.Effect;
 import bank_mega.corsys.domain.model.userpermission.UserPermission;
@@ -38,8 +38,8 @@ public class UpdateUserUseCase {
 
         command.roleId().ifPresent(roleId -> {
             Role role = roleRepository
-                    .findFirstByIdAndAuditDeletedAtIsNull(new RoleId(roleId))
-                    .orElseThrow(() -> new RoleNotFoundException(new RoleId(roleId)));
+                    .findFirstByIdAndAuditDeletedAtIsNull(new RoleCode(roleId))
+                    .orElseThrow(() -> new RoleNotFoundException(new RoleCode(roleId)));
 
             user.changeRole(role);
         });

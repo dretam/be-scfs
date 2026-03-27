@@ -25,9 +25,8 @@ public class CreateRoleUseCase {
     public RoleResponse execute(CreateRoleCommand command, User authPrincipal) {
         // 1. set domain role
         Role newRole = new Role(
-                null,
                 new RoleName(command.name()),
-                new RoleCode(command.name()),
+                new RoleCode(command.code()),
                 new RoleIcon(command.icon()),
                 command.description(),
                 AuditTrail.create(authPrincipal.getId().value())

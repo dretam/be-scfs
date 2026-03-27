@@ -3,7 +3,7 @@ package bank_mega.corsys.infrastructure.adapter.out.repo;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.permission.PermissionCode;
 import bank_mega.corsys.domain.model.permission.PermissionId;
-import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.repository.PermissionRepository;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.PermissionJpaEntity;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.repository.SpringDataPermissionJpaRepository;
@@ -131,8 +131,8 @@ public class PermissionRepositoryImpl implements PermissionRepository {
     }
 
     @Override
-    public List<Permission> findAllByRoleId(RoleId roleId) {
-        return springDataPermissionJpaRepository.findAllByRoleId(roleId.value()).stream()
+    public List<Permission> findAllByRoleId(RoleCode roleCode) {
+        return springDataPermissionJpaRepository.findAllByRoleId(roleCode.value()).stream()
                 .map(PermissionMapper::toDomain)
                 .toList();
     }

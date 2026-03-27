@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Builder
 public record AssignMenusCommand(
-        @NotNull Long roleId,
+        @NotNull String roleId,
         @NotEmpty Set<Long> menuIds
 ) {
 }

@@ -51,18 +51,18 @@ spring:
             enable: ${SPRING_PROPERTIES_SMTP_STARTTLS_ENABLE}
 
 db-scheduler:
-  enabled: true
+  enabled: false
   polling-interval: 5s
   immediate-execution-enabled: true
   polling-strategy: lock_and_fetch
   table-name: scheduled_tasks
 
 db-scheduler-log:
-  enabled: true
+  enabled: false
   table-name: scheduled_logs
 
 db-scheduler-ui:
-  enabled: true
+  enabled: false
   history: true
   log-limit: 500
   read-only: false

@@ -3,11 +3,9 @@ package bank_mega.corsys.domain.repository;
 import bank_mega.corsys.domain.model.menu.Menu;
 import bank_mega.corsys.domain.model.menu.MenuCode;
 import bank_mega.corsys.domain.model.menu.MenuId;
-import bank_mega.corsys.domain.model.role.RoleId;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 

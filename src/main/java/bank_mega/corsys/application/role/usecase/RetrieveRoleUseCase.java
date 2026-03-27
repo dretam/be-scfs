@@ -5,7 +5,7 @@ import bank_mega.corsys.application.common.annotation.UseCase;
 import bank_mega.corsys.application.role.dto.RoleResponse;
 import bank_mega.corsys.domain.exception.RoleNotFoundException;
 import bank_mega.corsys.domain.model.role.Role;
-import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +19,15 @@ public class RetrieveRoleUseCase {
     private final RoleRepository roleRepository;
 
     @Transactional(readOnly = true)
-    public RoleResponse execute(Long id) {
+    public RoleResponse execute(String id) {
         return execute(id, null);
     }
 
     @Transactional(readOnly = true)
-    public RoleResponse execute(Long id, Set<String> expands) {
+    public RoleResponse execute(String id, Set<String> expands) {
         // Validate that role exists
-        Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleId(id), expands).orElseThrow(
-                () -> new RoleNotFoundException(new RoleId(id))
+        Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleCode(id), expands).orElseThrow(
+                () -> new RoleNotFoundException(new RoleCode(id))
         );
 
         // Convert to response DTO

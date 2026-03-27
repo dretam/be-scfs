@@ -26,7 +26,7 @@ public record UpdateUserCommand(
         String password,
 
         @RoleIdExist
-        Optional<Long> roleId,
+        Optional<String> roleId,
 
         @Nullable
         List<PermissionOverride> permissionOverrides

@@ -22,7 +22,7 @@ public interface SpringDataPermissionJpaRepository extends JpaRepository<Permiss
     Optional<PermissionJpaEntity> findFirstById(Long id);
 
     @Query("SELECT p FROM RoleJpaEntity r JOIN r.permissions p WHERE r.id = :roleId")
-    List<PermissionJpaEntity> findAllByRoleId(@Param("roleId") Long roleId);
+    List<PermissionJpaEntity> findAllByRoleId(@Param("roleId") String roleId);
 
     Page<PermissionJpaEntity> findAllByAuditDeletedAtIsNull(Pageable pageable);
 

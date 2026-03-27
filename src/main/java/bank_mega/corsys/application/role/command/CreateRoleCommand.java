@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record CreateRoleCommand(
+        String code,
         String name,
         String icon,
         String description

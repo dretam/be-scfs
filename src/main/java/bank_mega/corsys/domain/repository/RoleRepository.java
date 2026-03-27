@@ -1,7 +1,7 @@
 package bank_mega.corsys.domain.repository;
 
 import bank_mega.corsys.domain.model.role.Role;
-import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.role.RoleName;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
@@ -19,11 +19,11 @@ public interface RoleRepository {
 
     Page<@NonNull Role> findAllPageable(int page, int size, Set<String> expands, String sort, String filter);
 
-    Optional<Role> findFirstById(RoleId id);
+    Optional<Role> findFirstById(RoleCode id);
 
-    Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleId id);
+    Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleCode id);
 
-    Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleId id, Set<String> expands);
+    Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleCode id, Set<String> expands);
 
     Optional<Role> findFirstByName(RoleName name);
 

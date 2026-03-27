@@ -1,12 +1,10 @@
 package bank_mega.corsys.infrastructure.adapter.out.mapper;
 
 import bank_mega.corsys.domain.model.menu.Menu;
-import bank_mega.corsys.domain.model.menu.MenuId;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.role.Role;
 import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.role.RoleIcon;
-import bank_mega.corsys.domain.model.role.RoleId;
 import bank_mega.corsys.domain.model.role.RoleName;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.MenuJpaEntity;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.PermissionJpaEntity;
@@ -28,9 +26,8 @@ public class RoleMapper {
         }
 
         Role role = new Role(
-                new RoleId(entity.getId()),
                 new RoleName(entity.getName()),
-                entity.getCode() != null ? new RoleCode(entity.getCode()) : null,
+                new RoleCode(entity.getCode()),
                 entity.getIcon() != null ? new RoleIcon(entity.getIcon()) : null,
                 entity.getDescription(),
                 AuditTrailEmbeddableMapper.toDomain(entity.getAudit())
@@ -64,8 +61,8 @@ public class RoleMapper {
 
         RoleJpaEntity jpaEntity = new RoleJpaEntity();
 
-        if (domainEntity.getId() != null) {
-            jpaEntity.setId(domainEntity.getId().value());
+        if (domainEntity.getCode() != null) {
+            jpaEntity.setId(domainEntity.getCode().value());
         }
 
         if (domainEntity.getName() != null) {

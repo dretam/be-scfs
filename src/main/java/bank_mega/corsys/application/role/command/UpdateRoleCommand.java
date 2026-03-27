@@ -6,7 +6,7 @@ import java.util.Optional;
 
 @Builder
 public record UpdateRoleCommand(
-        Long id,
+        String id,
         Optional<String> name,
         Optional<String> icon,
         Optional<String> description

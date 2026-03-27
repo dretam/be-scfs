@@ -9,7 +9,7 @@ import java.util.List;
 
 @Builder
 public record RoleResponse(
-        Long id,
+        String id,
         String name,
         String icon,
         String description,

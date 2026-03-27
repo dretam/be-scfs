@@ -1,7 +1,7 @@
 package bank_mega.corsys.infrastructure.adapter.out.repo;
 
 import bank_mega.corsys.domain.model.role.Role;
-import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.role.RoleName;
 import bank_mega.corsys.domain.repository.RoleRepository;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.RoleJpaEntity;
@@ -109,19 +109,19 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public Optional<Role> findFirstById(RoleId id) {
+    public Optional<Role> findFirstById(RoleCode id) {
         return springDataRoleJpaRepository
                 .findFirstById(id.value())
                 .map(RoleMapper::toDomain);
     }
 
     @Override
-    public Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleId id) {
+    public Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleCode id) {
         return findFirstByIdAndAuditDeletedAtIsNull(id, null);
     }
 
     @Override
-    public Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleId id, Set<String> expands) {
+    public Optional<Role> findFirstByIdAndAuditDeletedAtIsNull(RoleCode id, Set<String> expands) {
         CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<RoleJpaEntity> cQuery = cBuilder.createQuery(RoleJpaEntity.class);

@@ -3,7 +3,7 @@ package bank_mega.corsys.domain.repository;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.permission.PermissionCode;
 import bank_mega.corsys.domain.model.permission.PermissionId;
-import bank_mega.corsys.domain.model.role.RoleId;
+import bank_mega.corsys.domain.model.role.RoleCode;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 
@@ -26,6 +26,6 @@ public interface PermissionRepository {
 
     Optional<Permission> findFirstByCode(PermissionCode code);
 
-    List<Permission> findAllByRoleId(RoleId roleId);
+    List<Permission> findAllByRoleId(RoleCode roleCode);
 
 }

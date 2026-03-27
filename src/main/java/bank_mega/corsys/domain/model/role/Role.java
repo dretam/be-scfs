@@ -14,7 +14,6 @@ import java.util.Set;
 @Setter
 public class Role {
 
-    private final RoleId id;
     private RoleName name;
     private RoleCode code;
     private RoleIcon icon;
@@ -24,14 +23,12 @@ public class Role {
     private AuditTrail audit;
 
     public Role(
-            RoleId id,
             RoleName name,
             RoleCode code,
             RoleIcon icon,
             String description,
             AuditTrail audit
     ) {
-        this.id = id;
         this.name = name;
         this.code = code;
         this.icon = icon;
