@@ -17,7 +17,7 @@ public class DeleteUserUseCase {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserId execute(Long id) {
+    public UserId execute(String id) {
         // 1. Validasi bahwa user ada
         User user = userRepository.findFirstById(new UserId(id)).orElseThrow(
                 () -> new UserNotFoundException(new UserId(id))

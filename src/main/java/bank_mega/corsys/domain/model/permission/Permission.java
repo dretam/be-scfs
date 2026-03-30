@@ -75,11 +75,11 @@ public class Permission {
         this.menuId = menuId;
     }
 
-    public void updateAudit(Long updatedBy) {
+    public void updateAudit(String updatedBy) {
         this.audit = this.audit.update(updatedBy);
     }
 
-    public void deleteAudit(Long deletedBy) {
+    public void deleteAudit(String deletedBy) {
         this.audit = this.audit.delete(deletedBy);
     }
 

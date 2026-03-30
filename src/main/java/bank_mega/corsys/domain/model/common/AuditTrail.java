@@ -6,31 +6,31 @@ import java.time.Instant;
 
 public record AuditTrail(
         Instant createdAt,
-        Long createdBy,
+        String createdBy,
         Instant updatedAt,
-        Long updatedBy,
+        String updatedBy,
         Instant deletedAt,
-        Long deletedBy
+        String deletedBy
 ) {
     public AuditTrail {
         if (createdAt == null) {
             throw new DomainRuleViolationException("createdAt value cannot be null");
         }
 
-        if (createdBy == null || createdBy <= -1) {
+        if (createdBy == null || createdBy.isBlank()) {
             throw new DomainRuleViolationException("createdBy value cannot be null");
         }
     }
 
-    public static AuditTrail create(Long createdBy) {
+    public static AuditTrail create(String createdBy) {
         return new AuditTrail(Instant.now(), createdBy, null, null, null, null);
     }
 
-    public AuditTrail update(Long updatedBy) {
+    public AuditTrail update(String updatedBy) {
         return new AuditTrail(this.createdAt, this.createdBy, Instant.now(), updatedBy, null, null);
     }
 
-    public AuditTrail delete(Long deletedBy) {
+    public AuditTrail delete(String deletedBy) {
         return new AuditTrail(this.createdAt, this.createdBy, this.updatedAt, this.updatedBy, Instant.now(), deletedBy);
     }
 

@@ -19,7 +19,6 @@ public class UserMapper {
                 new UserEmail(jpaEntity.getEmail()),
                 new UserPassword(jpaEntity.getPassword()),
                 RoleMapper.toDomain(jpaEntity.getRole()),
-                jpaEntity.getType(),
                 AuditTrailEmbeddableMapper.toDomain(jpaEntity.getAudit())
         );
     }
@@ -35,13 +34,8 @@ public class UserMapper {
                 expands.contains("role") && jpaEntity.getRole() != null
                         ? RoleMapper.toDomain(jpaEntity.getRole(), expands)
                         : null,
-                jpaEntity.getType(),
                 AuditTrailEmbeddableMapper.toDomain(jpaEntity.getAudit())
         );
-        
-        if (expands.contains("userDetail") && jpaEntity.getUserDetail() != null) {
-            user.setUserDetail(UserDetailMapper.toDomain(jpaEntity.getUserDetail(), expands));
-        }
 
         if (expands.contains("userPermission") && jpaEntity.getPermissionsOverride() != null) {
             for (UserPermissionJpaEntity userPermissionJpaEntity : jpaEntity.getPermissionsOverride()) {
@@ -62,7 +56,6 @@ public class UserMapper {
         jpaEntity.setPassword(user.getPassword().value());
         jpaEntity.setRole(RoleMapper.toJpaEntity(user.getRole()));
         jpaEntity.setAudit(AuditTrailEmbeddableMapper.toJpa(user.getAudit()));
-        jpaEntity.setType(user.getType());
         return jpaEntity;
     }
 

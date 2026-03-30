@@ -39,7 +39,7 @@ public class UserContextFilter extends OncePerRequestFilter {
         }
 
         Jwt jwt = jwtAuth.getToken();
-        Long userId = jwt.getClaim("uid");
+        String userId = jwt.getClaim("uid");
         if (userId == null) {
             filterChain.doFilter(request, response);
             return;

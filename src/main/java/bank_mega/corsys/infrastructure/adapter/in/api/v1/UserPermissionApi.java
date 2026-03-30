@@ -23,7 +23,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Tag(name = "User Permissions")
 @RestController
@@ -43,7 +42,7 @@ public class UserPermissionApi {
     )
     @HasPermission("USER_READ")
     public ReadListResponse<List<UserPermissionResponse>> list(
-            @PathVariable Long userId
+            @PathVariable String userId
     ) {
         List<UserPermissionResponse> data = retrieveUserPermissionsUseCase.execute(userId);
         return ReadListResponse.<List<UserPermissionResponse>>builder()
@@ -59,7 +58,7 @@ public class UserPermissionApi {
     )
     @HasPermission("USER_READ")
     public ReadRetrieveResponse<List<String>> getEffectivePermissions(
-            @PathVariable Long userId
+            @PathVariable String userId
     ) {
         // For effective permissions, we need to load the user with role
         // This endpoint assumes the user exists and has a role
@@ -77,7 +76,7 @@ public class UserPermissionApi {
     )
     @HasPermission("USER_UPDATE")
     public ReadRetrieveResponse<UserPermissionResponse> create(
-            @PathVariable Long userId,
+            @PathVariable String userId,
             @AuthenticationPrincipal User authPrincipal,
             @RequestBody @Valid CreateUserPermissionCommand command
     ) {
@@ -102,7 +101,7 @@ public class UserPermissionApi {
     )
     @HasPermission("USER_UPDATE")
     public ReadRetrieveResponse<UserPermissionResponse> update(
-            @PathVariable Long userId,
+            @PathVariable String userId,
             @PathVariable Long permissionId,
             @AuthenticationPrincipal User authPrincipal,
             @RequestBody @Valid UpdateUserPermissionCommand command
@@ -128,7 +127,7 @@ public class UserPermissionApi {
     )
     @HasPermission("USER_UPDATE")
     public ReadRetrieveResponse<Void> delete(
-            @PathVariable Long userId,
+            @PathVariable String userId,
             @PathVariable Long permissionId,
             @AuthenticationPrincipal User authPrincipal
     ) {

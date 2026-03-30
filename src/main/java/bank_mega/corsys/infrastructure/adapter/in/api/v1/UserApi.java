@@ -95,7 +95,7 @@ public class UserApi {
     )
     @HasPermission("USER_READ")
     public ReadRetrieveResponse<UserResponse> retrieve(
-            @PathVariable @NotNull @UserIdExist Long id,
+            @PathVariable @NotNull @UserIdExist String id,
             @RequestParam(value = "expands", required = false) String expand
     ) {
         User data = this.retrieveUserUseCase.execute(id, ParserUtil.expandParse(expand));
@@ -163,7 +163,7 @@ public class UserApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @HasPermission("USER_DELETE")
-    public DeleteResponse<UserId> delete(@PathVariable @NotNull @UserIdExist Long id) {
+    public DeleteResponse<UserId> delete(@PathVariable @NotNull @UserIdExist String id) {
         UserId pk = this.deleteUserUseCase.execute(id);
         return DeleteResponse.<UserId>builder()
                 .status(HttpStatus.OK.value())

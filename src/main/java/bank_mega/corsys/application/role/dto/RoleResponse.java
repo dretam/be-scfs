@@ -3,6 +3,7 @@ package bank_mega.corsys.application.role.dto;
 import bank_mega.corsys.application.menu.dto.MenuResponse;
 import bank_mega.corsys.application.permission.dto.PermissionResponse;
 import lombok.Builder;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.time.Instant;
 import java.util.List;
@@ -14,11 +15,11 @@ public record RoleResponse(
         String icon,
         String description,
         Instant createdAt,
-        Long createdBy,
+        String createdBy,
         Instant updatedAt,
-        Long updatedBy,
+        String updatedBy,
         Instant deletedAt,
-        Long deletedBy,
+        String deletedBy,
         List<PermissionResponse> permissions,
         List<MenuResponse> menus
 ) {

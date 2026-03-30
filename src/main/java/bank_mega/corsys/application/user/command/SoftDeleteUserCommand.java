@@ -9,6 +9,6 @@ public record SoftDeleteUserCommand(
 
         @NotNull
         @UserIdExist
-        Long id
+        String id
 ) {
 }

@@ -2,15 +2,15 @@ package bank_mega.corsys.domain.model.user;
 
 import bank_mega.corsys.domain.exception.DomainRuleViolationException;
 
-public record UserId(Long value) {
+public record UserId(String value) {
 
     public UserId {
-        if (value == null || value <= 0) {
-            throw new DomainRuleViolationException("UserId value cannot be null");
+        if (value == null || value.isBlank()) {
+            throw new DomainRuleViolationException("UserId value cannot be null or blank");
         }
     }
 
-    public static UserId of(Long value) {
+    public static UserId of(String value) {
         return new UserId(value);
     }
 

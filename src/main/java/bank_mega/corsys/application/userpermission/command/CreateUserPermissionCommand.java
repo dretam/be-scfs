@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public record CreateUserPermissionCommand(
         @NotNull(message = "userId is required")
-        Long userId,
+        String userId,
 
         @NotNull(message = "permissionId is required")
         Long permissionId,

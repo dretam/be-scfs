@@ -11,7 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface SpringDataRoleJpaRepository extends JpaRepository<@NonNull RoleJpaEntity, @NonNull Long>, PagingAndSortingRepository<@NonNull RoleJpaEntity, @NonNull Long> {
+public interface SpringDataRoleJpaRepository extends JpaRepository<@NonNull RoleJpaEntity, @NonNull String>,
+        PagingAndSortingRepository<@NonNull RoleJpaEntity, @NonNull String> {
 
     long count();
 

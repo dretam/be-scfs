@@ -1,9 +1,7 @@
 package bank_mega.corsys.domain.model.user;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
-import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.role.Role;
-import bank_mega.corsys.domain.model.userdetail.UserDetail;
 import bank_mega.corsys.domain.model.userpermission.UserPermission;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +20,6 @@ public class User {
     private Role role;
     private UserType type;
     private AuditTrail audit;
-    private UserDetail userDetail;
     private Set<UserPermission> userPermissionOverride;
 
     public User(
@@ -31,7 +28,6 @@ public class User {
             UserEmail email,
             UserPassword password,
             Role role,
-            UserType type,
             AuditTrail audit
     ) {
         this.id = id;
@@ -74,11 +70,11 @@ public class User {
         }
     }
 
-    public void updateAudit(Long updatedBy) {
+    public void updateAudit(String updatedBy) {
         this.audit = this.audit.update(updatedBy);
     }
 
-    public void deleteAudit(Long deletedBy) {
+    public void deleteAudit(String deletedBy) {
         this.audit = this.audit.delete(deletedBy);
     }
 

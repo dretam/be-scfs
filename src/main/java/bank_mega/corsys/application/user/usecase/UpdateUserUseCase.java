@@ -59,7 +59,7 @@ public class UpdateUserUseCase {
         return userAssembler.toResponse(saved);
     }
 
-    private User findUser(Long userId) {
+    private User findUser(String userId) {
         return userRepository
                 .findFirstByIdAndAuditDeletedAtIsNull(new UserId(userId))
                 .orElseThrow(() -> new UserNotFoundException(new UserId(userId)));

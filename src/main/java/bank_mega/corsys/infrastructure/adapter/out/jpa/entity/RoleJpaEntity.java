@@ -17,14 +17,11 @@ import java.util.Set;
 public class RoleJpaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @Column(unique = true)
+    private String code;
 
     @Column(nullable = false)
     private String name;
-
-    @Column(unique = true)
-    private String code;
 
     @Column(nullable = false)
     private String icon;
@@ -34,7 +31,7 @@ public class RoleJpaEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "role_permissions",
-            joinColumns = @JoinColumn(name = "role_id"),
+            joinColumns = @JoinColumn(name = "role_code"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
     @Builder.Default
@@ -43,7 +40,7 @@ public class RoleJpaEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "role_menus",
-            joinColumns = @JoinColumn(name = "role_id"),
+            joinColumns = @JoinColumn(name = "role_code"),
             inverseJoinColumns = @JoinColumn(name = "menu_id")
     )
     @Builder.Default

@@ -62,16 +62,11 @@ public class RoleMapper {
         RoleJpaEntity jpaEntity = new RoleJpaEntity();
 
         if (domainEntity.getCode() != null) {
-            jpaEntity.setId(domainEntity.getCode().value());
+            jpaEntity.setCode(domainEntity.getCode().value());
         }
 
         if (domainEntity.getName() != null) {
             jpaEntity.setName(domainEntity.getName().value());
-        }
-
-        // Set code if present
-        if (domainEntity.getCode() != null) {
-            jpaEntity.setCode(domainEntity.getCode().value());
         }
 
         jpaEntity.setDescription(domainEntity.getDescription());

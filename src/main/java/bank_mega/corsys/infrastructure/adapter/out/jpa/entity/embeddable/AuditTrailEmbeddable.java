@@ -14,18 +14,18 @@ public class AuditTrailEmbeddable {
     private Instant createdAt;
 
     @Column(name = "created_by", nullable = false)
-    private Long createdBy;
+    private String createdBy;
 
     @Column(name = "updated_at")
     private Instant updatedAt;
 
     @Column(name = "updated_by")
-    private Long updatedBy;
+    private String updatedBy;
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
     @Column(name = "deleted_by")
-    private Long deletedBy;
+    private String deletedBy;
 
 }

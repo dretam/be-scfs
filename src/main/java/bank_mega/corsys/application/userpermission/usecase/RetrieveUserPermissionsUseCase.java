@@ -18,7 +18,7 @@ public class RetrieveUserPermissionsUseCase {
     /**
      * Retrieve all permission overrides for a user.
      */
-    public List<UserPermissionResponse> execute(Long userId) {
+    public List<UserPermissionResponse> execute(String userId) {
         List<UserPermission> userPermissions = userPermissionRepository.findAllByUserId(new UserId(userId));
         
         return userPermissions.stream()
@@ -36,7 +36,7 @@ public class RetrieveUserPermissionsUseCase {
      * Retrieve effective permissions for a user (combining role permissions with overrides).
      * Formula: FINAL = (role_perms + user_allow) - user_deny
      */
-    public List<String> executeEffectivePermissions(Long userId) {
+    public List<String> executeEffectivePermissions(String userId) {
         List<UserPermission> allowOverrides = userPermissionRepository.findAllAllowByUserId(new UserId(userId));
         List<UserPermission> denyOverrides = userPermissionRepository.findAllDenyByUserId(new UserId(userId));
         

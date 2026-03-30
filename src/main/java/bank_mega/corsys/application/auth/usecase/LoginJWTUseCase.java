@@ -5,14 +5,12 @@ import bank_mega.corsys.application.auth.command.GenerateTokenCommand;
 import bank_mega.corsys.application.auth.command.LoginJWTCommand;
 import bank_mega.corsys.application.auth.dto.LoginJWTResponse;
 import bank_mega.corsys.application.common.annotation.UseCase;
-import bank_mega.corsys.domain.model.ldap.LDAPResponse;
 import bank_mega.corsys.domain.model.token.TokenHash;
 import bank_mega.corsys.domain.model.token.TokenType;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.domain.model.user.UserEmail;
 import bank_mega.corsys.domain.model.user.UserName;
 import bank_mega.corsys.domain.model.user.UserType;
-import bank_mega.corsys.domain.port.LDAPService;
 import bank_mega.corsys.domain.repository.TokenRepository;
 import bank_mega.corsys.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +36,6 @@ public class LoginJWTUseCase {
     private final TokenRepository tokenRepository;
     private final GenerateTokenUseCase generateTokenUseCase;
     private final GenerateJWTUseCase generateJWTUseCase;
-    private final LDAPService ldapService;
 
     @Transactional
     public LoginJWTResponse execute(LoginJWTCommand command) {
@@ -55,18 +52,7 @@ public class LoginJWTUseCase {
 
         boolean isPasswordValid;
 
-        if (user.getType() == UserType.INTERNAL) {
-            try {
-                LDAPResponse ldapResponse = ldapService.verifyPassword(command.username(), command.password());
-                isPasswordValid = ldapResponse.getVerified(); // Assuming LDAPResponse has isSuccess() method
-
-            } catch (Exception e) {
-                log.error("LDAP authentication failed for user: {}", user.getId(), e);
-                throw new AuthorizationServiceException("Authentication failed");
-            }
-        } else {
-            isPasswordValid = BCrypt.checkpw(command.password(), user.getPassword().value());
-        }
+        isPasswordValid = BCrypt.checkpw(command.password(), user.getPassword().value());
 
         if (!isPasswordValid) {
             // Log failed attempt for security monitoring

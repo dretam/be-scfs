@@ -11,12 +11,12 @@ import lombok.RequiredArgsConstructor;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class UserIdOptionalExistImpl implements ConstraintValidator<UserIdExist, Optional<Long>> {
+public class UserIdOptionalExistImpl implements ConstraintValidator<UserIdExist, Optional<String>> {
 
     private final UserRepository userRepository;
 
     @Override
-    public boolean isValid(Optional<Long> value, ConstraintValidatorContext context) {
+    public boolean isValid(Optional<String> value, ConstraintValidatorContext context) {
         User user = userRepository.findFirstByIdAndAuditDeletedAtIsNull(new UserId(value.get())).orElse(null);
         return user != null;
     }

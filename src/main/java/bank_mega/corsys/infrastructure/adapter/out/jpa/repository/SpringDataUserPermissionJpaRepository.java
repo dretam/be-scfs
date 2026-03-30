@@ -14,15 +14,15 @@ import java.util.List;
 public interface SpringDataUserPermissionJpaRepository extends JpaRepository<UserPermissionJpaEntity, UserPermissionIdEmbeddable> {
 
     @Query("SELECT up FROM UserPermissionJpaEntity up JOIN FETCH up.permission WHERE up.id.userId = :userId")
-    List<UserPermissionJpaEntity> findAllByUserId(@Param("userId") Long userId);
+    List<UserPermissionJpaEntity> findAllByUserId(@Param("userId") String userId);
 
     @Query("SELECT up FROM UserPermissionJpaEntity up JOIN FETCH up.permission WHERE up.id.userId = :userId AND up.effect = 'ALLOW'")
-    List<UserPermissionJpaEntity> findAllAllowByUserId(@Param("userId") Long userId);
+    List<UserPermissionJpaEntity> findAllAllowByUserId(@Param("userId") String userId);
 
     @Query("SELECT up FROM UserPermissionJpaEntity up JOIN FETCH up.permission WHERE up.id.userId = :userId AND up.effect = 'DENY'")
-    List<UserPermissionJpaEntity> findAllDenyByUserId(@Param("userId") Long userId);
+    List<UserPermissionJpaEntity> findAllDenyByUserId(@Param("userId") String userId);
 
     @Modifying
     @Query("DELETE FROM UserPermissionJpaEntity up WHERE up.id.userId = :userId")
-    void deleteAllByUserId(@Param("userId") Long userId);
+    void deleteAllByUserId(@Param("userId") String userId);
 }

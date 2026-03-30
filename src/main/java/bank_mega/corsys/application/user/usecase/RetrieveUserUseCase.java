@@ -18,7 +18,7 @@ public class RetrieveUserUseCase {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public User execute(Long id, Set<String> expands) {
+    public User execute(String id, Set<String> expands) {
         return userRepository.findFirstByIdAndAuditDeletedAtIsNull(new UserId(id), expands).orElseThrow(
                 () -> new UserNotFoundException(new UserId(id))
         );

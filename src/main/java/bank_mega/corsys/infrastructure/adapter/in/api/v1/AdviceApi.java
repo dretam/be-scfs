@@ -73,8 +73,7 @@ public class AdviceApi {
 
     @ExceptionHandler({
             UserNotFoundException.class,
-            RoleNotFoundException.class,
-            InternalUserNotFoundException.class
+            RoleNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<DomainValidationResponse> handleNotFoundExceptions(RuntimeException exception) {

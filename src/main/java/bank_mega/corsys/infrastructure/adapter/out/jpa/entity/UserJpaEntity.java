@@ -22,7 +22,7 @@ public class UserJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(nullable = false, unique = true, name = "username")
     private String name;
@@ -32,18 +32,11 @@ public class UserJpaEntity {
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "role_code")
     private RoleJpaEntity role;
-
-    @JdbcType(PostgreSQLEnumJdbcType.class)
-    @Column(name = "type", nullable = false, columnDefinition = "user_type")
-    private UserType type;
 
     @Embedded
     private AuditTrailEmbeddable audit;
-
-    @OneToOne(mappedBy = "userId", cascade = CascadeType.ALL)
-    private UserDetailJpaEntity userDetail;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore

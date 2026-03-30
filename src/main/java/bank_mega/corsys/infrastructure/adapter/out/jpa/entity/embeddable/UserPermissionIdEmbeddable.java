@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class UserPermissionIdEmbeddable {
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private String userId;
 
     @Column(name = "permission_id", nullable = false)
     private Long permissionId;

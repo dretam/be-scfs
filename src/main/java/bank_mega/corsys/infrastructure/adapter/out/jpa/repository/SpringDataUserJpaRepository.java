@@ -13,17 +13,17 @@ public interface SpringDataUserJpaRepository extends JpaRepository<@NonNull User
 
     long count();
 
-    Optional<UserJpaEntity> findFirstById(Long id);
+    Optional<UserJpaEntity> findFirstById(String id);
 
     Optional<UserJpaEntity> findFirstByName(String name);
 
-    Optional<UserJpaEntity> findFirstByNameAndIdNot(String name, Long id);
+    Optional<UserJpaEntity> findFirstByNameAndIdNot(String name, String id);
 
     Optional<UserJpaEntity> findFirstByEmail(String email);
 
-    Optional<UserJpaEntity> findFirstByEmailAndIdNot(String email, Long id);
+    Optional<UserJpaEntity> findFirstByEmailAndIdNot(String email, String id);
 
-    Optional<UserJpaEntity> findFirstByIdAndAuditDeletedAtIsNull(Long id);
+    Optional<UserJpaEntity> findFirstByIdAndAuditDeletedAtIsNull(String id);
 
     Optional<UserJpaEntity> findFirstByEmailAndAuditDeletedAtIsNull(String email);
 

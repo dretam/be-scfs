@@ -11,17 +11,16 @@ import java.util.Set;
 
 @Builder
 public record UserResponse(
-        Long id,
+        String id,
         String name,
         String email,
         RoleResponse role,
-        UserDetailResponse userDetail,
         List<UserPermissionResponse> userPermissionOverride,
         Instant createdAt,
-        Long createdBy,
+        String createdBy,
         Instant updatedAt,
-        Long updatedBy,
+        String updatedBy,
         Instant deletedAt,
-        Long deletedBy
+        String deletedBy
 ) {
 }

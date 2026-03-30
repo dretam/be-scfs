@@ -15,7 +15,7 @@ public record UpdateUserCommand(
 
         @NotNull
         @UserIdExist
-        Long id,
+        String id,
 
 
         @Nullable
