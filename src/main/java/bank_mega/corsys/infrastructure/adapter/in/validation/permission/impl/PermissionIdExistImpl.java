@@ -9,14 +9,15 @@ import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @RequiredArgsConstructor
-public class PermissionIdExistImpl implements ConstraintValidator<PermissionIdExist, Long> {
+public class PermissionIdExistImpl implements ConstraintValidator<PermissionIdExist, UUID> {
 
     private final PermissionRepository permissionRepository;
 
     @Override
-    public boolean isValid(Long value, ConstraintValidatorContext context) {
+    public boolean isValid(UUID value, ConstraintValidatorContext context) {
         if (Objects.nonNull(value)) {
             Permission permission = permissionRepository.findFirstByIdAndAuditDeletedAtIsNull(
                     new PermissionId(value)).orElse(null);

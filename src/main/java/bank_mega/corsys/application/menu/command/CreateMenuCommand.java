@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
+import java.util.UUID;
+
 @Builder
 public record CreateMenuCommand(
         @NotNull
@@ -23,7 +25,7 @@ public record CreateMenuCommand(
         @Size(max = 100, message = "Icon must not exceed 100 characters")
         String icon,
 
-        Long parentId,
+        UUID parentId,
 
         @NotNull
         Integer sortOrder

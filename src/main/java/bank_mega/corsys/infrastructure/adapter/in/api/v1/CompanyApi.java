@@ -10,10 +10,6 @@ import bank_mega.corsys.application.company.command.SoftDeleteCompanyCommand;
 import bank_mega.corsys.application.company.command.UpdateCompanyCommand;
 import bank_mega.corsys.application.company.dto.CompanyResponse;
 import bank_mega.corsys.application.company.usecase.*;
-import bank_mega.corsys.application.role.command.CreateRoleCommand;
-import bank_mega.corsys.application.role.command.SoftDeleteRoleCommand;
-import bank_mega.corsys.application.role.command.UpdateRoleCommand;
-import bank_mega.corsys.application.role.dto.RoleResponse;
 import bank_mega.corsys.domain.model.company.Company;
 import bank_mega.corsys.domain.model.company.CompanyId;
 import bank_mega.corsys.domain.model.user.User;
@@ -29,6 +25,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Companies")
 @RestController
@@ -81,7 +78,7 @@ public class CompanyApi {
             path = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ReadRetrieveResponse<CompanyResponse> retrieve(@PathVariable String id) {
+    public ReadRetrieveResponse<CompanyResponse> retrieve(@PathVariable UUID id) {
         CompanyResponse data = this.retrieveCompanyUseCase.execute(id);
         return ReadRetrieveResponse.<CompanyResponse>builder()
                 .status(HttpStatus.OK.value())
@@ -140,10 +137,11 @@ public class CompanyApi {
 
     @DeleteMapping(
             path = "/{id}/destroy",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            // consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = "*/*",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public DeleteResponse<CompanyId> delete(@PathVariable String id) {
+    public DeleteResponse<CompanyId> delete(@PathVariable UUID id) {
         CompanyId pk = this.deleteCompanyUseCase.execute(id);
         return DeleteResponse.<CompanyId>builder()
                 .status(HttpStatus.OK.value())

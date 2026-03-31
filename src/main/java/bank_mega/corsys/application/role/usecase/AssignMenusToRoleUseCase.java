@@ -16,6 +16,8 @@ import bank_mega.corsys.domain.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @UseCase
 @RequiredArgsConstructor
 public class AssignMenusToRoleUseCase {
@@ -29,7 +31,7 @@ public class AssignMenusToRoleUseCase {
                 .orElseThrow(() -> new RoleNotFoundException(new RoleCode(command.roleId())));
 
         // Add menus to role
-        for (Long menuId : command.menuIds()) {
+        for (UUID menuId : command.menuIds()) {
             Menu menu = menuRepository.findFirstByIdAndAuditDeletedAtIsNull(new MenuId(menuId))
                     .orElseThrow(() -> new MenuNotFoundException(new MenuId(menuId)));
             role.addMenu(menu);

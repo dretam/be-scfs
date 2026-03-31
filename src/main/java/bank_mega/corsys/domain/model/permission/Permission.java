@@ -4,6 +4,8 @@ import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.menu.Menu;
 import bank_mega.corsys.domain.model.menu.MenuId;
 
+import java.util.UUID;
+
 public class Permission {
 
     private final PermissionId id;
@@ -75,11 +77,11 @@ public class Permission {
         this.menuId = menuId;
     }
 
-    public void updateAudit(String updatedBy) {
+    public void updateAudit(UUID updatedBy) {
         this.audit = this.audit.update(updatedBy);
     }
 
-    public void deleteAudit(String deletedBy) {
+    public void deleteAudit(UUID deletedBy) {
         this.audit = this.audit.delete(deletedBy);
     }
 

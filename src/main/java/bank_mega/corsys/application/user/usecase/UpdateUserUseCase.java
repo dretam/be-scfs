@@ -21,6 +21,8 @@ import bank_mega.corsys.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @UseCase
 @RequiredArgsConstructor
 public class UpdateUserUseCase {
@@ -59,7 +61,7 @@ public class UpdateUserUseCase {
         return userAssembler.toResponse(saved);
     }
 
-    private User findUser(String userId) {
+    private User findUser(UUID userId) {
         return userRepository
                 .findFirstByIdAndAuditDeletedAtIsNull(new UserId(userId))
                 .orElseThrow(() -> new UserNotFoundException(new UserId(userId)));

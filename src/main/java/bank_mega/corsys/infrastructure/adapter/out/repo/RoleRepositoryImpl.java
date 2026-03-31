@@ -111,7 +111,7 @@ public class RoleRepositoryImpl implements RoleRepository {
     @Override
     public Optional<Role> findFirstById(RoleCode id) {
         return springDataRoleJpaRepository
-                .findFirstById(id.value())
+                .findFirstByCode(id.value())
                 .map(RoleMapper::toDomain);
     }
 

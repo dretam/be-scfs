@@ -27,6 +27,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Permissions")
 @RestController
@@ -79,7 +80,7 @@ public class PermissionApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @HasPermission("PERMISSION_READ")
-    public ReadRetrieveResponse<PermissionResponse> retrieve(@PathVariable Long id) {
+    public ReadRetrieveResponse<PermissionResponse> retrieve(@PathVariable UUID id) {
         PermissionResponse data = this.retrievePermissionUseCase.execute(id);
         return ReadRetrieveResponse.<PermissionResponse>builder()
                 .status(HttpStatus.OK.value())
@@ -145,7 +146,7 @@ public class PermissionApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @HasPermission("PERMISSION_DELETE")
-    public DeleteResponse<PermissionId> delete(@PathVariable Long id) {
+    public DeleteResponse<PermissionId> delete(@PathVariable UUID id) {
         PermissionId pk = this.deletePermissionUseCase.execute(id);
         return DeleteResponse.<PermissionId>builder()
                 .status(HttpStatus.OK.value())

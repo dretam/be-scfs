@@ -11,15 +11,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface SpringDataMenuJpaRepository extends JpaRepository<MenuJpaEntity, Long> {
+public interface SpringDataMenuJpaRepository extends JpaRepository<MenuJpaEntity, UUID> {
 
     Optional<MenuJpaEntity> findFirstByCode(String code);
 
-    Optional<MenuJpaEntity> findFirstByIdAndAuditDeletedAtIsNull(Long id);
+    Optional<MenuJpaEntity> findFirstByIdAndAuditDeletedAtIsNull(UUID id);
 
-    Optional<MenuJpaEntity> findFirstById(Long id);
+    Optional<MenuJpaEntity> findFirstById(UUID id);
 
-    List<MenuJpaEntity> findAllByParentIdAndAuditDeletedAtIsNull(Long parentId);
+    List<MenuJpaEntity> findAllByParentIdAndAuditDeletedAtIsNull(UUID parentId);
 }

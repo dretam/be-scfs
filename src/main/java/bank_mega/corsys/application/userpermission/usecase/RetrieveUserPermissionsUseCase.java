@@ -8,6 +8,7 @@ import bank_mega.corsys.domain.repository.UserPermissionRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @UseCase
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class RetrieveUserPermissionsUseCase {
     /**
      * Retrieve all permission overrides for a user.
      */
-    public List<UserPermissionResponse> execute(String userId) {
+    public List<UserPermissionResponse> execute(UUID userId) {
         List<UserPermission> userPermissions = userPermissionRepository.findAllByUserId(new UserId(userId));
         
         return userPermissions.stream()
@@ -36,7 +37,7 @@ public class RetrieveUserPermissionsUseCase {
      * Retrieve effective permissions for a user (combining role permissions with overrides).
      * Formula: FINAL = (role_perms + user_allow) - user_deny
      */
-    public List<String> executeEffectivePermissions(String userId) {
+    public List<String> executeEffectivePermissions(UUID userId) {
         List<UserPermission> allowOverrides = userPermissionRepository.findAllAllowByUserId(new UserId(userId));
         List<UserPermission> denyOverrides = userPermissionRepository.findAllDenyByUserId(new UserId(userId));
         

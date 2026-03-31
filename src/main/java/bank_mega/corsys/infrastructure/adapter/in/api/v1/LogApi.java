@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Tag(name = "Logs")
@@ -79,7 +80,7 @@ public class LogApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ReadRetrieveResponse<AccessLogResponse> retrieve(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @RequestParam(value = "expands", required = false) String expand
     ) {
         AccessLog data = this.retrieveAccessLogUseCase.execute(id, ParserUtil.expandParse(expand));

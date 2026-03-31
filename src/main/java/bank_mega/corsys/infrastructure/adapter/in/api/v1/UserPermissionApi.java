@@ -23,6 +23,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "User Permissions")
 @RestController
@@ -42,7 +43,7 @@ public class UserPermissionApi {
     )
     @HasPermission("USER_READ")
     public ReadListResponse<List<UserPermissionResponse>> list(
-            @PathVariable String userId
+            @PathVariable UUID userId
     ) {
         List<UserPermissionResponse> data = retrieveUserPermissionsUseCase.execute(userId);
         return ReadListResponse.<List<UserPermissionResponse>>builder()
@@ -58,7 +59,7 @@ public class UserPermissionApi {
     )
     @HasPermission("USER_READ")
     public ReadRetrieveResponse<List<String>> getEffectivePermissions(
-            @PathVariable String userId
+            @PathVariable UUID userId
     ) {
         // For effective permissions, we need to load the user with role
         // This endpoint assumes the user exists and has a role
@@ -76,7 +77,7 @@ public class UserPermissionApi {
     )
     @HasPermission("USER_UPDATE")
     public ReadRetrieveResponse<UserPermissionResponse> create(
-            @PathVariable String userId,
+            @PathVariable UUID userId,
             @AuthenticationPrincipal User authPrincipal,
             @RequestBody @Valid CreateUserPermissionCommand command
     ) {
@@ -101,8 +102,8 @@ public class UserPermissionApi {
     )
     @HasPermission("USER_UPDATE")
     public ReadRetrieveResponse<UserPermissionResponse> update(
-            @PathVariable String userId,
-            @PathVariable Long permissionId,
+            @PathVariable UUID userId,
+            @PathVariable UUID permissionId,
             @AuthenticationPrincipal User authPrincipal,
             @RequestBody @Valid UpdateUserPermissionCommand command
     ) {
@@ -127,8 +128,8 @@ public class UserPermissionApi {
     )
     @HasPermission("USER_UPDATE")
     public ReadRetrieveResponse<Void> delete(
-            @PathVariable String userId,
-            @PathVariable Long permissionId,
+            @PathVariable UUID userId,
+            @PathVariable UUID permissionId,
             @AuthenticationPrincipal User authPrincipal
     ) {
         DeleteUserPermissionCommand command = new DeleteUserPermissionCommand(userId, permissionId);

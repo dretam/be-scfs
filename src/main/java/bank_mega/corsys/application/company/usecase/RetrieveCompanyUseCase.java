@@ -10,14 +10,16 @@ import bank_mega.corsys.domain.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @UseCase
 @RequiredArgsConstructor
 public class RetrieveCompanyUseCase {
 
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
     @Transactional(readOnly = true)
-    public CompanyResponse execute(String id) {
+    public CompanyResponse execute(UUID id) {
         // 1. Validasi bahwa company ada
         Company company = companyRepository.findFirstByIdAndAuditDeletedAtIsNull(new CompanyId(id)).orElseThrow(
                 () -> new CompanyNotFoundException(new CompanyId(id))

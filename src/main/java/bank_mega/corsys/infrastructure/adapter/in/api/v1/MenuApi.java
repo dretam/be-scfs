@@ -28,6 +28,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Menus")
 @RestController
@@ -81,7 +82,7 @@ public class MenuApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @HasPermission("MENU_READ")
-    public ReadRetrieveResponse<MenuResponse> retrieve(@PathVariable Long id) {
+    public ReadRetrieveResponse<MenuResponse> retrieve(@PathVariable UUID id) {
         MenuResponse data = this.retrieveMenuUseCase.execute(id);
         return ReadRetrieveResponse.<MenuResponse>builder()
                 .status(HttpStatus.OK.value())
@@ -147,7 +148,7 @@ public class MenuApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @HasPermission("MENU_DELETE")
-    public DeleteResponse<MenuId> delete(@PathVariable Long id) {
+    public DeleteResponse<MenuId> delete(@PathVariable UUID id) {
         MenuId pk = this.deleteMenuUseCase.execute(id);
         return DeleteResponse.<MenuId>builder()
                 .status(HttpStatus.OK.value())

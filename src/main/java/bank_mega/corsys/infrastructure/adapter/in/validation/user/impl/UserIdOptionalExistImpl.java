@@ -9,14 +9,15 @@ import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
-public class UserIdOptionalExistImpl implements ConstraintValidator<UserIdExist, Optional<String>> {
+public class UserIdOptionalExistImpl implements ConstraintValidator<UserIdExist, Optional<UUID>> {
 
     private final UserRepository userRepository;
 
     @Override
-    public boolean isValid(Optional<String> value, ConstraintValidatorContext context) {
+    public boolean isValid(Optional<UUID> value, ConstraintValidatorContext context) {
         User user = userRepository.findFirstByIdAndAuditDeletedAtIsNull(new UserId(value.get())).orElse(null);
         return user != null;
     }

@@ -10,6 +10,7 @@ import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,7 +23,7 @@ public class UserJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private UUID id;
 
     @Column(nullable = false, unique = true, name = "username")
     private String name;

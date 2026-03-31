@@ -4,21 +4,22 @@ import bank_mega.corsys.domain.model.company.CompanyType;
 import lombok.Builder;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Builder
 public record CompanyResponse(
-        String companyId,
+        UUID companyId,
         String companyCif,
         String companyName,
         String companyType,
-        String companyRmUserId,
+        UUID companyRmUserId,
         Integer companyDiscountRate,
         Integer companyMaxFinancing,
         Instant createdAt,
-        String createdBy,
+        UUID createdBy,
         Instant updatedAt,
-        String updatedBy,
+        UUID updatedBy,
         Instant deletedAt,
-        String deletedBy
+        UUID deletedBy
 ) {
 }

@@ -1,6 +1,7 @@
 package bank_mega.corsys.infrastructure.adapter.out.predicate;
 
 import bank_mega.corsys.domain.model.company.CompanyId;
+import bank_mega.corsys.domain.model.company.CompanyType;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.CompanyJpaEntity;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.RoleJpaEntity;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -25,11 +26,7 @@ public class CompanyPredicate {
             predicates.add(
                     cb.or(
                             cb.like(cb.lower(root.get("cif")), like),
-                            cb.like(cb.lower(root.get("name")), like),
-                            cb.equal(cb.lower(root.get("typeCompany")), filter.toLowerCase()),
-                            cb.equal(cb.lower(root.get("rmUserId")), filter.toLowerCase()),
-                            cb.equal(root.get("discountRate"), filter),
-                            cb.equal(root.get("maxFinancing"), filter)
+                            cb.like(cb.lower(root.get("name")), like)
                     )
             );
         }

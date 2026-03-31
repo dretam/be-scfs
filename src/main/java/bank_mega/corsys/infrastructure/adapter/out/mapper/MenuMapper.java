@@ -11,10 +11,7 @@ import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.PermissionJpaEntit
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.Hibernate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MenuMapper {
@@ -69,7 +66,7 @@ public class MenuMapper {
             return new ArrayList<>();
         }
 
-        Map<Long, Menu> menuMap = menus.stream()
+        Map<UUID, Menu> menuMap = menus.stream()
                 .filter(menu -> menu != null && menu.getId() != null)
                 .collect(Collectors.toMap(
                         m -> m.getId().value(),

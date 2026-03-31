@@ -8,6 +8,8 @@ import bank_mega.corsys.domain.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 
 @UseCase
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class DeleteUserUseCase {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserId execute(String id) {
+    public UserId execute(UUID id) {
         // 1. Validasi bahwa user ada
         User user = userRepository.findFirstById(new UserId(id)).orElseThrow(
                 () -> new UserNotFoundException(new UserId(id))

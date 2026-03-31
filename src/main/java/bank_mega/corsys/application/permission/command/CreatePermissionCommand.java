@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
+import java.util.UUID;
+
 @Builder
 public record CreatePermissionCommand(
         @NotNull
@@ -20,6 +22,6 @@ public record CreatePermissionCommand(
         @Size(max = 1000, message = "Description must not exceed 1000 characters")
         String description,
 
-        Long menuId
+        UUID menuId
 ) {
 }

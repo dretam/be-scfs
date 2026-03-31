@@ -2,12 +2,14 @@ package bank_mega.corsys.application.permission.dto;
 
 import lombok.Builder;
 
+import java.util.UUID;
+
 @Builder
 public record PermissionResponse(
-        Long id,
+        UUID id,
         String name,
         String code,
         String description,
-        Long menuId
+        UUID menuId
 ) {
 }

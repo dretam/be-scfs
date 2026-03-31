@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 public record CreateUserCommand(
@@ -32,7 +33,7 @@ public record CreateUserCommand(
 ) {
         public record PermissionOverride(
                 @NotNull
-                Long permissionId,
+                UUID permissionId,
 
                 @NotNull
                 PermissionEffect effect

@@ -4,6 +4,8 @@ import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.embeddable.AuditTr
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,8 +16,8 @@ import lombok.*;
 public class PermissionJpaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(nullable = false)
     private String name;

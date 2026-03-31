@@ -8,15 +8,17 @@ import bank_mega.corsys.domain.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @UseCase
 @RequiredArgsConstructor
 public class DeleteCompanyUseCase {
 
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
     @Transactional
-    public CompanyId execute(String id) {
-        // 1. Validasi bahwa role ada
+    public CompanyId execute(UUID id) {
+        // 1. Validasi bahwa company ada
         Company company = companyRepository.findFirstById(new CompanyId(id)).orElseThrow(
                 () -> new CompanyNotFoundException(new CompanyId(id))
         );

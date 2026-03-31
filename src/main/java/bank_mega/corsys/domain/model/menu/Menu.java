@@ -5,10 +5,7 @@ import bank_mega.corsys.domain.model.permission.Permission;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -86,11 +83,11 @@ public class Menu {
         }
     }
 
-    public void updateAudit(String updatedBy) {
+    public void updateAudit(UUID updatedBy) {
         this.audit = this.audit.update(updatedBy);
     }
 
-    public void deleteAudit(String deletedBy) {
+    public void deleteAudit(UUID deletedBy) {
         this.audit = this.audit.delete(deletedBy);
     }
 

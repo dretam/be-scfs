@@ -9,14 +9,15 @@ import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @RequiredArgsConstructor
-public class MenuIdExistImpl implements ConstraintValidator<MenuIdExist, Long> {
+public class MenuIdExistImpl implements ConstraintValidator<MenuIdExist, UUID> {
 
     private final MenuRepository menuRepository;
 
     @Override
-    public boolean isValid(Long value, ConstraintValidatorContext context) {
+    public boolean isValid(UUID value, ConstraintValidatorContext context) {
         if (Objects.nonNull(value)) {
             Menu menu = menuRepository.findFirstByIdAndAuditDeletedAtIsNull(
                     new MenuId(value)).orElse(null);

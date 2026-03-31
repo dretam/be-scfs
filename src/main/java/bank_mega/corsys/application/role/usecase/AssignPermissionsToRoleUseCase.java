@@ -16,6 +16,8 @@ import bank_mega.corsys.domain.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @UseCase
 @RequiredArgsConstructor
 public class AssignPermissionsToRoleUseCase {
@@ -29,7 +31,7 @@ public class AssignPermissionsToRoleUseCase {
                 .orElseThrow(() -> new RoleNotFoundException(new RoleCode(command.roleId())));
 
         // Add permissions to role
-        for (Long permissionId : command.permissionIds()) {
+        for (UUID permissionId : command.permissionIds()) {
             Permission permission = permissionRepository.findFirstByIdAndAuditDeletedAtIsNull(
                             new PermissionId(permissionId))
                     .orElseThrow(() -> new PermissionNotFoundException(new PermissionId(permissionId)));

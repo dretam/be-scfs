@@ -8,14 +8,15 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface SpringDataAccessLogJpaRepository extends JpaRepository<@NonNull AccessLogJpaEntity, @NonNull Long>, PagingAndSortingRepository<@NonNull AccessLogJpaEntity, @NonNull Long> {
+public interface SpringDataAccessLogJpaRepository extends JpaRepository<@NonNull AccessLogJpaEntity, @NonNull UUID>, PagingAndSortingRepository<@NonNull AccessLogJpaEntity, @NonNull UUID> {
 
     long count();
 
     void deleteByCreatedAtLessThanEqual(Instant createdAt);
 
-    Optional<AccessLogJpaEntity> findFirstById(Long id);
+    Optional<AccessLogJpaEntity> findFirstById(UUID id);
 
 }

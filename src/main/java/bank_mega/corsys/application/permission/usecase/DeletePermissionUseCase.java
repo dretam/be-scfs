@@ -8,6 +8,8 @@ import bank_mega.corsys.domain.repository.PermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @UseCase
 @RequiredArgsConstructor
 public class DeletePermissionUseCase {
@@ -15,7 +17,7 @@ public class DeletePermissionUseCase {
     private final PermissionRepository permissionRepository;
 
     @Transactional
-    public PermissionId execute(Long id) {
+    public PermissionId execute(UUID id) {
         PermissionId permissionId = new PermissionId(id);
 
         Permission permission = permissionRepository.findFirstById(permissionId)

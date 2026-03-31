@@ -22,14 +22,18 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
+@RequiredArgsConstructor
 public class CompanyRepositoryImpl implements CompanyRepository {
 
     private final String[] availableSort = {
@@ -41,7 +45,7 @@ public class CompanyRepositoryImpl implements CompanyRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private SpringDataCompanyJpaRepository springDataCompanyJpaRepository;
+    private final SpringDataCompanyJpaRepository springDataCompanyJpaRepository;
 
     @Override
     public Company save(Company company) {

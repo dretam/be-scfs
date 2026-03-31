@@ -11,17 +11,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface SpringDataPermissionJpaRepository extends JpaRepository<PermissionJpaEntity, Long> {
 
     Optional<PermissionJpaEntity> findFirstByCode(String code);
 
-    Optional<PermissionJpaEntity> findFirstByIdAndAuditDeletedAtIsNull(Long id);
+    Optional<PermissionJpaEntity> findFirstByIdAndAuditDeletedAtIsNull(UUID id);
 
-    Optional<PermissionJpaEntity> findFirstById(Long id);
+    Optional<PermissionJpaEntity> findFirstById(UUID id);
 
-    @Query("SELECT p FROM RoleJpaEntity r JOIN r.permissions p WHERE r.id = :roleId")
+    @Query("SELECT p FROM RoleJpaEntity r JOIN r.permissions p WHERE r.code = :roleId")
     List<PermissionJpaEntity> findAllByRoleId(@Param("roleId") String roleId);
 
     Page<PermissionJpaEntity> findAllByAuditDeletedAtIsNull(Pageable pageable);

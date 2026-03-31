@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
+import java.util.UUID;
 
 
 @UseCase
@@ -18,7 +19,7 @@ public class RetrieveAccessLogUseCase {
     private final AccessLogRepository accessLogRepository;
 
     @Transactional(readOnly = true)
-    public AccessLog execute(Long id, Set<String> expands) {
+    public AccessLog execute(UUID id, Set<String> expands) {
         return accessLogRepository.findFirstById(new AccessLogId(id), expands).orElseThrow(
                 () -> new AccessLogNotFoundException(new AccessLogId(id))
         );

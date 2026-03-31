@@ -7,6 +7,7 @@ import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 public record RoleResponse(
@@ -15,11 +16,11 @@ public record RoleResponse(
         String icon,
         String description,
         Instant createdAt,
-        String createdBy,
+        UUID createdBy,
         Instant updatedAt,
-        String updatedBy,
+        UUID updatedBy,
         Instant deletedAt,
-        String deletedBy,
+        UUID deletedBy,
         List<PermissionResponse> permissions,
         List<MenuResponse> menus
 ) {

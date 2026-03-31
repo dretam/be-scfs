@@ -8,6 +8,8 @@ import bank_mega.corsys.domain.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @UseCase
 @RequiredArgsConstructor
 public class DeleteMenuUseCase {
@@ -15,7 +17,7 @@ public class DeleteMenuUseCase {
     private final MenuRepository menuRepository;
 
     @Transactional
-    public MenuId execute(Long id) {
+    public MenuId execute(UUID id) {
         MenuId menuId = new MenuId(id);
 
         Menu menu = menuRepository.findFirstById(menuId)

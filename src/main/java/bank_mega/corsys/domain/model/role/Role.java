@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -89,11 +90,11 @@ public class Role {
         }
     }
 
-    public void updateAudit(String updatedBy) {
+    public void updateAudit(UUID updatedBy) {
         this.audit = this.audit.update(updatedBy);
     }
 
-    public void deleteAudit(String deletedBy) {
+    public void deleteAudit(UUID deletedBy) {
         this.audit = this.audit.delete(deletedBy);
     }
 

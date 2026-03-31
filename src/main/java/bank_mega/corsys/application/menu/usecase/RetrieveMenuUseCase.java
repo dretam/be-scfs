@@ -10,6 +10,8 @@ import bank_mega.corsys.domain.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @UseCase
 @RequiredArgsConstructor
 public class RetrieveMenuUseCase {
@@ -17,7 +19,7 @@ public class RetrieveMenuUseCase {
     private final MenuRepository menuRepository;
 
     @Transactional(readOnly = true)
-    public MenuResponse execute(Long id) {
+    public MenuResponse execute(UUID id) {
         Menu menu = menuRepository.findFirstByIdAndAuditDeletedAtIsNull(new MenuId(id))
                 .orElseThrow(() -> new MenuNotFoundException(new MenuId(id)));
 

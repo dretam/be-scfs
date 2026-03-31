@@ -2,8 +2,10 @@ package bank_mega.corsys.application.menu.command;
 
 import lombok.Builder;
 
+import java.util.UUID;
+
 @Builder
 public record SoftDeleteMenuCommand(
-        Long id
+        UUID id
 ) {
 }

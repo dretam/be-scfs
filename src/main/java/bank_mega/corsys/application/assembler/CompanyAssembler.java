@@ -7,10 +7,13 @@ public class CompanyAssembler {
     public static CompanyResponse toResponse(Company saved) {
         if (saved == null) return null;
         return CompanyResponse.builder()
+                .companyId(saved.getCompanyId().value())
                 .companyCif(saved.getCompanyCif().value())
                 .companyName(saved.getCompanyName().value())
                 .companyType(saved.getCompanyType().name())
                 .companyRmUserId(saved.getCompanyRmUserId().value())
+                .companyDiscountRate(saved.getCompanyDiscountRate().value())
+                .companyMaxFinancing(saved.getCompanyMaxFinancing().value())
                 .createdAt(saved.getAudit().createdAt())
                 .createdBy(saved.getAudit().createdBy())
                 .updatedAt(saved.getAudit().updatedAt())

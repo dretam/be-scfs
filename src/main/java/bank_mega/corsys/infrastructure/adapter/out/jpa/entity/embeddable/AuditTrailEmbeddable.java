@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.Data;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Data
 @Embeddable
@@ -14,18 +15,18 @@ public class AuditTrailEmbeddable {
     private Instant createdAt;
 
     @Column(name = "created_by", nullable = false)
-    private String createdBy;
+    private UUID createdBy;
 
     @Column(name = "updated_at")
     private Instant updatedAt;
 
     @Column(name = "updated_by")
-    private String updatedBy;
+    private UUID updatedBy;
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
     @Column(name = "deleted_by")
-    private String deletedBy;
+    private UUID deletedBy;
 
 }

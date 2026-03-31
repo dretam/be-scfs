@@ -3,13 +3,14 @@ package bank_mega.corsys.application.permission.command;
 import lombok.Builder;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Builder
 public record UpdatePermissionCommand(
-        Long id,
+        UUID id,
         Optional<String> name,
         Optional<String> code,
         Optional<String> description,
-        Optional<Long> menuId
+        Optional<UUID> menuId
 ) {
 }

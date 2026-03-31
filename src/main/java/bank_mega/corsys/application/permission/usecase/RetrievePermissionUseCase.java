@@ -10,6 +10,8 @@ import bank_mega.corsys.domain.repository.PermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @UseCase
 @RequiredArgsConstructor
 public class RetrievePermissionUseCase {
@@ -17,7 +19,7 @@ public class RetrievePermissionUseCase {
     private final PermissionRepository permissionRepository;
 
     @Transactional(readOnly = true)
-    public PermissionResponse execute(Long id) {
+    public PermissionResponse execute(UUID id) {
         Permission permission = permissionRepository.findFirstByIdAndAuditDeletedAtIsNull(
                         new PermissionId(id))
                 .orElseThrow(() -> new PermissionNotFoundException(new PermissionId(id)));

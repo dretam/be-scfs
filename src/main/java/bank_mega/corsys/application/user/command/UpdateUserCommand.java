@@ -9,13 +9,14 @@ import lombok.Builder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Builder
 public record UpdateUserCommand(
 
         @NotNull
         @UserIdExist
-        String id,
+        UUID id,
 
 
         @Nullable
@@ -35,7 +36,7 @@ public record UpdateUserCommand(
         public record PermissionOverride(
 
                 @NotNull
-                Long permissionId,
+                UUID permissionId,
 
                 @NotNull
                 PermissionEffect effect

@@ -2,15 +2,17 @@ package bank_mega.corsys.application.userpermission.command;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.util.UUID;
+
 /**
  * Command to create a user permission override.
  */
 public record CreateUserPermissionCommand(
         @NotNull(message = "userId is required")
-        String userId,
+        UUID userId,
 
         @NotNull(message = "permissionId is required")
-        Long permissionId,
+        UUID permissionId,
 
         @NotNull(message = "effect is required")
         String effect

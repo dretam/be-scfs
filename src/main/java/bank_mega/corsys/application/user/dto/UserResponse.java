@@ -8,19 +8,20 @@ import lombok.Builder;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Builder
 public record UserResponse(
-        String id,
+        UUID id,
         String name,
         String email,
         RoleResponse role,
         List<UserPermissionResponse> userPermissionOverride,
         Instant createdAt,
-        String createdBy,
+        UUID createdBy,
         Instant updatedAt,
-        String updatedBy,
+        UUID updatedBy,
         Instant deletedAt,
-        String deletedBy
+        UUID deletedBy
 ) {
 }

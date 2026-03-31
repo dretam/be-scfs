@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreateCompanyUseCase {
 
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
     @Transactional
     public CompanyResponse execute(CreateCompanyCommand command, User authPrincipal) {

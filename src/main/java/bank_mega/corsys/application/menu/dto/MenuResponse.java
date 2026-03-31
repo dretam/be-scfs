@@ -4,15 +4,16 @@ import bank_mega.corsys.application.permission.dto.PermissionResponse;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 public record MenuResponse(
-        Long id,
+        UUID id,
         String name,
         String code,
         String path,
         String icon,
-        Long parentId,
+        UUID parentId,
         Integer sortOrder,
         List<PermissionResponse> permissions,
         List<MenuResponse> children

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 /**
  * Embeddable class for UserPermission composite primary key.
  */
@@ -16,9 +18,9 @@ import lombok.NoArgsConstructor;
 public class UserPermissionIdEmbeddable {
 
     @Column(name = "user_id", nullable = false)
-    private String userId;
+    private UUID userId;
 
     @Column(name = "permission_id", nullable = false)
-    private Long permissionId;
+    private UUID permissionId;
 
 }

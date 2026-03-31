@@ -2,15 +2,17 @@ package bank_mega.corsys.domain.model.permission;
 
 import bank_mega.corsys.domain.exception.DomainRuleViolationException;
 
-public record PermissionId(Long value) {
+import java.util.UUID;
+
+public record PermissionId(UUID value) {
 
     public PermissionId {
-        if (value == null || value <= 0) {
-            throw new DomainRuleViolationException("PermissionId must be a positive number");
+        if (value == null) {
+            throw new DomainRuleViolationException("PermissionId must be filled");
         }
     }
 
-    public static PermissionId of(Long value) {
+    public static PermissionId of(UUID value) {
         return new PermissionId(value);
     }
 

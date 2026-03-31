@@ -5,10 +5,11 @@ import bank_mega.corsys.domain.model.accesslog.AccessLogHttpMethod;
 import lombok.Builder;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Builder
 public record AccessLogResponse(
-        Long id,
+        UUID id,
         UserResponse user,
         String ipAddress,
         String userAgent,

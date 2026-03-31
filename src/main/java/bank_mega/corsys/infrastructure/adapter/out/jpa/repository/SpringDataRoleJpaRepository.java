@@ -16,7 +16,7 @@ public interface SpringDataRoleJpaRepository extends JpaRepository<@NonNull Role
 
     long count();
 
-    Optional<RoleJpaEntity> findFirstById(String id);
+    Optional<RoleJpaEntity> findFirstByCode(String code);
 
     Optional<RoleJpaEntity> findFirstByName(String name);
 

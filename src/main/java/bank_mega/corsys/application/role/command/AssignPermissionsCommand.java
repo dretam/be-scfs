@@ -5,10 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Builder
 public record AssignPermissionsCommand(
         @NotNull String roleId,
-        @NotEmpty Set<Long> permissionIds
+        @NotEmpty Set<UUID> permissionIds
 ) {
 }

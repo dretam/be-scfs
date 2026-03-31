@@ -1,9 +1,15 @@
 package bank_mega.corsys.domain.model.company;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.UUID;
+
+@Getter
+@Setter
 public class Company {
-    private CompanyId companyId;
+    private final CompanyId companyId;
     private CompanyCif companyCif;
     private CompanyName companyName;
     private CompanyType companyType;
@@ -30,38 +36,6 @@ public class Company {
         this.companyDiscountRate = companyDiscountRate;
         this.companyMaxFinancing = companyMaxFinancing;
         this.audit = audit;
-    }
-
-    public AuditTrail getAudit() {
-        return audit;
-    }
-
-    public CompanyId getCompanyId() {
-        return companyId;
-    }
-
-    public CompanyCif getCompanyCif() {
-        return companyCif;
-    }
-
-    public CompanyName getCompanyName() {
-        return companyName;
-    }
-
-    public CompanyType getCompanyType() {
-        return companyType;
-    }
-
-    public CompanyRmUserId getCompanyRmUserId() {
-        return companyRmUserId;
-    }
-
-    public CompanyDiscountRate getCompanyDiscountRate() {
-        return companyDiscountRate;
-    }
-
-    public CompanyMaxFinancing getCompanyMaxFinancing() {
-        return companyMaxFinancing;
     }
 
     public void changeCompanyCif(CompanyCif newCompanyCif) {
@@ -100,11 +74,11 @@ public class Company {
         }
     }
 
-    public void updateAudit(String updatedBy) {
+    public void updateAudit(UUID updatedBy) {
         this.audit = this.audit.update(updatedBy);
     }
 
-    public void deleteAudit(String deletedBy) {
+    public void deleteAudit(UUID deletedBy) {
         this.audit = this.audit.delete(deletedBy);
     }
 

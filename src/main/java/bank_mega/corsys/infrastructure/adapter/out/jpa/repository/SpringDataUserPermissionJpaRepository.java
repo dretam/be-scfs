@@ -9,20 +9,21 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface SpringDataUserPermissionJpaRepository extends JpaRepository<UserPermissionJpaEntity, UserPermissionIdEmbeddable> {
 
     @Query("SELECT up FROM UserPermissionJpaEntity up JOIN FETCH up.permission WHERE up.id.userId = :userId")
-    List<UserPermissionJpaEntity> findAllByUserId(@Param("userId") String userId);
+    List<UserPermissionJpaEntity> findAllByUserId(@Param("userId") UUID userId);
 
     @Query("SELECT up FROM UserPermissionJpaEntity up JOIN FETCH up.permission WHERE up.id.userId = :userId AND up.effect = 'ALLOW'")
-    List<UserPermissionJpaEntity> findAllAllowByUserId(@Param("userId") String userId);
+    List<UserPermissionJpaEntity> findAllAllowByUserId(@Param("userId") UUID userId);
 
     @Query("SELECT up FROM UserPermissionJpaEntity up JOIN FETCH up.permission WHERE up.id.userId = :userId AND up.effect = 'DENY'")
-    List<UserPermissionJpaEntity> findAllDenyByUserId(@Param("userId") String userId);
+    List<UserPermissionJpaEntity> findAllDenyByUserId(@Param("userId") UUID userId);
 
     @Modifying
     @Query("DELETE FROM UserPermissionJpaEntity up WHERE up.id.userId = :userId")
-    void deleteAllByUserId(@Param("userId") String userId);
+    void deleteAllByUserId(@Param("userId") UUID userId);
 }

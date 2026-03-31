@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SoftDeleteCompanyUseCase {
 
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
     @Transactional
     public CompanyResponse execute(SoftDeleteCompanyCommand command, User authPrincipal) {

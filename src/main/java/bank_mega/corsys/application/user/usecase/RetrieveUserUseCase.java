@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
+import java.util.UUID;
 
 
 @UseCase
@@ -18,7 +19,7 @@ public class RetrieveUserUseCase {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public User execute(String id, Set<String> expands) {
+    public User execute(UUID id, Set<String> expands) {
         return userRepository.findFirstByIdAndAuditDeletedAtIsNull(new UserId(id), expands).orElseThrow(
                 () -> new UserNotFoundException(new UserId(id))
         );

@@ -30,6 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Tag(name = "Users")
@@ -95,7 +96,7 @@ public class UserApi {
     )
     @HasPermission("USER_READ")
     public ReadRetrieveResponse<UserResponse> retrieve(
-            @PathVariable @NotNull @UserIdExist String id,
+            @PathVariable @NotNull @UserIdExist UUID id,
             @RequestParam(value = "expands", required = false) String expand
     ) {
         User data = this.retrieveUserUseCase.execute(id, ParserUtil.expandParse(expand));
@@ -163,7 +164,7 @@ public class UserApi {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @HasPermission("USER_DELETE")
-    public DeleteResponse<UserId> delete(@PathVariable @NotNull @UserIdExist String id) {
+    public DeleteResponse<UserId> delete(@PathVariable @NotNull @UserIdExist UUID id) {
         UserId pk = this.deleteUserUseCase.execute(id);
         return DeleteResponse.<UserId>builder()
                 .status(HttpStatus.OK.value())

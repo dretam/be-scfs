@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 @Component
@@ -39,11 +40,12 @@ public class UserContextFilter extends OncePerRequestFilter {
         }
 
         Jwt jwt = jwtAuth.getToken();
-        String userId = jwt.getClaim("uid");
-        if (userId == null) {
+        String userIdStr = jwt.getClaim("uid");
+        if (userIdStr == null) {
             filterChain.doFilter(request, response);
             return;
         }
+        UUID userId = UUID.fromString(userIdStr);
 
         // 2. Detail session authentication
         UserTokenAuthentication detailAuth = new UserTokenAuthentication(

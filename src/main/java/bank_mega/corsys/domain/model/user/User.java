@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,8 +16,11 @@ public class User {
 
     private final UserId id;
     private UserName name;
+    private UserFullName fullName;
     private UserEmail email;
     private UserPassword password;
+    private UserIsActive isActive;
+    private UserPhotoPath photoPath;
     private Role role;
     private UserType type;
     private AuditTrail audit;
@@ -70,11 +74,11 @@ public class User {
         }
     }
 
-    public void updateAudit(String updatedBy) {
+    public void updateAudit(UUID updatedBy) {
         this.audit = this.audit.update(updatedBy);
     }
 
-    public void deleteAudit(String deletedBy) {
+    public void deleteAudit(UUID deletedBy) {
         this.audit = this.audit.delete(deletedBy);
     }
 

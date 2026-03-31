@@ -8,6 +8,7 @@ import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,8 +20,8 @@ import java.time.Instant;
 public class AccessLogJpaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(name = "ip_address", nullable = false)
     private String ipAddress;
