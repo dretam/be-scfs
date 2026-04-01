@@ -21,7 +21,7 @@ public class MenuMapper {
     }
 
     public static Menu toDomain(@NotNull MenuJpaEntity jpaEntity, Set<String> expands) {
-        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
+        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null (MenuMapper)");
 
         Menu menu = new Menu(
                 jpaEntity.getId() != null ? new MenuId(jpaEntity.getId()) : null,

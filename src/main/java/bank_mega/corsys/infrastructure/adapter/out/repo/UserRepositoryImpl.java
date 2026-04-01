@@ -36,6 +36,7 @@ public class UserRepositoryImpl implements UserRepository {
     private final String[] availableSort = {
             "audit.createdAt",
             "name",
+            "fullName",
             "email"
     };
 
@@ -73,9 +74,7 @@ public class UserRepositoryImpl implements UserRepository {
         // Expands fetching
         if (expands.contains("role")) root.fetch("role", JoinType.LEFT);
 
-        if (expands.contains("cabang")) root.fetch("cabang", JoinType.LEFT);
-
-        if (expands.contains("userDetail")) root.fetch("userDetail", JoinType.LEFT);
+        if (expands.contains("company")) root.fetch("company", JoinType.LEFT);
 
         // Filter and Sorting
         cQuery.where(UserPredicate.listBuild(cBuilder, root, filter));
@@ -130,9 +129,9 @@ public class UserRepositoryImpl implements UserRepository {
         Root<UserJpaEntity> root = cq.from(UserJpaEntity.class);
 
         boolean role = expands != null && expands.contains("role");
+        boolean company = expands != null && expands.contains("company");
         boolean permissions = expands != null && expands.contains("permissions");
         boolean menus = expands != null && expands.contains("menus");
-        boolean userDetail = expands != null && expands.contains("userDetail");
         boolean userPermission = expands != null && expands.contains("userPermission");
 
         if (role) {
@@ -147,8 +146,8 @@ public class UserRepositoryImpl implements UserRepository {
             }
         }
 
-        if (userDetail) {
-            root.fetch("userDetail", JoinType.LEFT);
+        if (company) {
+            root.fetch("company", JoinType.LEFT);
         }
 
         if (userPermission) {

@@ -1,5 +1,6 @@
 package bank_mega.corsys.application.user.dto;
 
+import bank_mega.corsys.application.company.dto.CompanyResponse;
 import bank_mega.corsys.application.role.dto.RoleResponse;
 import bank_mega.corsys.application.userpermission.dto.UserPermissionResponse;
 import bank_mega.corsys.domain.model.userpermission.UserPermission;
@@ -14,8 +15,12 @@ import java.util.UUID;
 public record UserResponse(
         UUID id,
         String name,
+        String fullName,
         String email,
+        Boolean isActive,
+        String photoPath,
         RoleResponse role,
+        CompanyResponse company,
         List<UserPermissionResponse> userPermissionOverride,
         Instant createdAt,
         UUID createdBy,

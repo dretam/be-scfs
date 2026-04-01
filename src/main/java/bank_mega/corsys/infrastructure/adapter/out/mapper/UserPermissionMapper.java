@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 public class UserPermissionMapper {
 
     public static UserPermission toDomain(@NotNull UserPermissionJpaEntity jpaEntity) {
-        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
+        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null (UserPermissionMapper)");
 
         UserPermissionId id = new UserPermissionId(
                 jpaEntity.getId().getUserId(),

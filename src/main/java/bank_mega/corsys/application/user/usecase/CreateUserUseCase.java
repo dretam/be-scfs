@@ -4,10 +4,13 @@ import bank_mega.corsys.application.assembler.UserAssembler;
 import bank_mega.corsys.application.common.annotation.UseCase;
 import bank_mega.corsys.application.user.command.CreateUserCommand;
 import bank_mega.corsys.application.user.dto.UserResponse;
+import bank_mega.corsys.domain.exception.CompanyNotFoundException;
 import bank_mega.corsys.domain.exception.PermissionNotFoundException;
 import bank_mega.corsys.domain.exception.RoleNotFoundException;
 import bank_mega.corsys.domain.exception.UserAlreadyExistsException;
 import bank_mega.corsys.domain.model.common.AuditTrail;
+import bank_mega.corsys.domain.model.company.Company;
+import bank_mega.corsys.domain.model.company.CompanyId;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.permission.PermissionId;
 import bank_mega.corsys.domain.model.role.Role;
@@ -25,6 +28,7 @@ public class CreateUserUseCase {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final CompanyRepository companyRepository;
     private final UserPermissionRepository userPermissionRepository;
     private final PermissionRepository permissionRepository;
     private final UserAssembler userAssembler;
@@ -43,9 +47,7 @@ public class CreateUserUseCase {
                 return restoreUser(existingUser, command, authPrincipal);
             }
         }
-
-        return restoreUser(existingUser, command, authPrincipal);
-//        return createNewUser(internalUser, command, authPrincipal);
+        return createNewUser(null, command, authPrincipal);
     }
 
     private UserResponse restoreUser(User existingUser, CreateUserCommand command, User authPrincipal) {
@@ -67,11 +69,18 @@ public class CreateUserUseCase {
         Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleCode(command.roleId()))
                 .orElseThrow(() -> new RoleNotFoundException(new RoleCode(command.roleId())));
 
+        Company company = companyRepository.findFirstByIdAndAuditDeletedAtIsNull(new CompanyId(command.companyId()))
+                .orElseThrow(() -> new CompanyNotFoundException(new CompanyId(command.companyId())));
+
         User newUser = new User(
                 null,
-                new UserName(user.getName().value()),
-                new UserEmail(user.getEmail().value()),
+                new UserName(command.username()),
+                new UserFullName(command.fullName()),
+                new UserEmail(command.email()),
                 new UserPassword(userRepository.hashPassword(command.password())),
+                new UserIsActive(command.isActive()),
+                new UserPhotoPath(command.photoPath()),
+                company,
                 role,
                 AuditTrail.create(authPrincipal.getId().value())
         );

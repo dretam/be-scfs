@@ -4,9 +4,12 @@ import bank_mega.corsys.application.assembler.UserAssembler;
 import bank_mega.corsys.application.common.annotation.UseCase;
 import bank_mega.corsys.application.user.command.UpdateUserCommand;
 import bank_mega.corsys.application.user.dto.UserResponse;
+import bank_mega.corsys.domain.exception.CompanyNotFoundException;
 import bank_mega.corsys.domain.exception.PermissionNotFoundException;
 import bank_mega.corsys.domain.exception.RoleNotFoundException;
 import bank_mega.corsys.domain.exception.UserNotFoundException;
+import bank_mega.corsys.domain.model.company.Company;
+import bank_mega.corsys.domain.model.company.CompanyId;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.permission.PermissionId;
 import bank_mega.corsys.domain.model.role.Role;
@@ -14,10 +17,7 @@ import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.user.*;
 import bank_mega.corsys.domain.model.userpermission.Effect;
 import bank_mega.corsys.domain.model.userpermission.UserPermission;
-import bank_mega.corsys.domain.repository.PermissionRepository;
-import bank_mega.corsys.domain.repository.RoleRepository;
-import bank_mega.corsys.domain.repository.UserPermissionRepository;
-import bank_mega.corsys.domain.repository.UserRepository;
+import bank_mega.corsys.domain.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +29,7 @@ public class UpdateUserUseCase {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final CompanyRepository companyRepository;
     private final PermissionRepository permissionRepository;
     private final UserPermissionRepository userPermissionRepository;
     private final UserAssembler userAssembler;
@@ -45,6 +46,14 @@ public class UpdateUserUseCase {
 
             user.changeRole(role);
         });
+
+        if(command.companyId() != null) {
+            Company company = companyRepository
+                    .findFirstByIdAndAuditDeletedAtIsNull(new CompanyId(command.companyId()))
+                    .orElseThrow(() -> new CompanyNotFoundException(new CompanyId(command.companyId())));
+
+            user.changeCompany(company);
+        }
 
         if(command.password() != null) {
             user.changePassword(

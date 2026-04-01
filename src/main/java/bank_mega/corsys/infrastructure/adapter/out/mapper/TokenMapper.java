@@ -12,7 +12,7 @@ import java.util.Set;
 public class TokenMapper {
 
     public static Token toDomain(@NotNull TokenJpaEntity jpaEntity) {
-        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
+        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null (TokenMapper)");
         return new Token(
                 new TokenId(jpaEntity.getId()),
                 UserMapper.toDomain(jpaEntity.getUser()),
@@ -25,7 +25,7 @@ public class TokenMapper {
     }
 
     public static Token toDomain(@NotNull TokenJpaEntity jpaEntity, Set<String> expands) {
-        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
+        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null (TokenMapper)");
         return new Token(
                 new TokenId(jpaEntity.getId()),
                 expands.contains("user") && jpaEntity.getUser() != null

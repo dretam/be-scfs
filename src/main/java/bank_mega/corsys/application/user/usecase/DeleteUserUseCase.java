@@ -15,7 +15,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DeleteUserUseCase {
 
-
     private final UserRepository userRepository;
 
     @Transactional

@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 public class PermissionMapper {
 
     public static Permission toDomain(@NotNull PermissionJpaEntity jpaEntity) {
-        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
+        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null (PermissionMapper)");
         
         MenuId menuId = null;
         if (jpaEntity.getMenu() != null) {

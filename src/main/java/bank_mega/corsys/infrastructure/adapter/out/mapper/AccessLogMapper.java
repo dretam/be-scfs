@@ -10,7 +10,7 @@ import java.util.Set;
 public class AccessLogMapper {
 
     public static AccessLog toDomain(@NotNull AccessLogJpaEntity jpaEntity) {
-        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
+        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null (AccessLogMapper)");
         return new AccessLog(
                 new AccessLogId(jpaEntity.getId()),
                 UserMapper.toDomain(jpaEntity.getUser()),
@@ -28,7 +28,7 @@ public class AccessLogMapper {
     }
 
     public static AccessLog toDomain(@NotNull AccessLogJpaEntity jpaEntity, Set<String> expands) {
-        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
+        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null (AccessLogMapper)");
         return new AccessLog(
                 new AccessLogId(jpaEntity.getId()),
                 expands.contains("user") && jpaEntity.getUser() != null

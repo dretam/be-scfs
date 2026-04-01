@@ -22,19 +22,34 @@ import java.util.UUID;
 public class UserJpaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false, unique = true, name = "username")
     private String name;
 
+    @Column(nullable = false, name = "full_name")
+    private String fullName;
+
+    @Column(nullable = false, name = "email")
     private String email;
 
+    @Column(nullable = false, name = "is_active")
+    private Boolean isActive;
+
+    @Column(nullable = false, name = "photo_path")
+    private String photoPath;
+
+    @Column(nullable = false, name = "password")
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_code")
     private RoleJpaEntity role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private CompanyJpaEntity company;
 
     @Embedded
     private AuditTrailEmbeddable audit;

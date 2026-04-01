@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 public class CompanyMapper {
 
     public static Company toDomain(@NotNull CompanyJpaEntity jpaEntity) {
-        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null");
+        if (jpaEntity == null) throw new DomainRuleViolationException("JPA Entity is null (CompanyMapper)");
         return new Company(
                 new CompanyId(jpaEntity.getId()),
                 new CompanyCif(jpaEntity.getCif()),

@@ -1,6 +1,7 @@
 package bank_mega.corsys.domain.model.user;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
+import bank_mega.corsys.domain.model.company.Company;
 import bank_mega.corsys.domain.model.role.Role;
 import bank_mega.corsys.domain.model.userpermission.UserPermission;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class User {
     private UserPassword password;
     private UserIsActive isActive;
     private UserPhotoPath photoPath;
+    private Company company;
     private Role role;
     private UserType type;
     private AuditTrail audit;
@@ -29,17 +31,25 @@ public class User {
     public User(
             UserId id,
             UserName name,
+            UserFullName fullName,
             UserEmail email,
             UserPassword password,
+            UserIsActive isActive,
+            UserPhotoPath photoPath,
+            Company company,
             Role role,
             AuditTrail audit
     ) {
         this.id = id;
         this.name = name;
+        this.fullName = fullName;
         this.email = email;
+        this.isActive = isActive;
+        this.photoPath = photoPath;
         this.password = password;
-        this.role = role;
         this.type = type;
+        this.role = role;
+        this.company = company;
         this.audit = audit;
         this.userPermissionOverride = new HashSet<>();
     }
@@ -68,9 +78,27 @@ public class User {
         }
     }
 
+    public void changeIsActive(UserIsActive isActive) {
+        if (isActive != null) {
+            this.isActive = isActive;
+        }
+    }
+
+    public void changePhotoPath(UserPhotoPath photoPath) {
+        if (photoPath != null) {
+            this.photoPath = photoPath;
+        }
+    }
+
     public void changeRole(Role newRole) {
         if (newRole != null) {
             this.role = newRole;
+        }
+    }
+
+    public void changeCompany(Company newCompany) {
+        if (newCompany != null) {
+            this.company = newCompany;
         }
     }
 

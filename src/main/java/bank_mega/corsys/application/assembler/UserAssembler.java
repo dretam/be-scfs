@@ -1,8 +1,10 @@
 package bank_mega.corsys.application.assembler;
 
 import bank_mega.corsys.application.user.dto.UserResponse;
+import bank_mega.corsys.domain.model.company.Company;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.user.User;
+import bank_mega.corsys.infrastructure.adapter.out.mapper.RoleMapper;
 import bank_mega.corsys.infrastructure.config.security.PermissionEvaluator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,10 @@ public class UserAssembler {
         UserResponse.UserResponseBuilder builder = UserResponse.builder()
                 .id(saved.getId().value())
                 .name(saved.getName().value())
+                .fullName(saved.getFullName().value())
                 .email(saved.getEmail().value())
+                .isActive(saved.getIsActive().value())
+                .photoPath(saved.getPhotoPath().value())
                 .createdAt(saved.getAudit().createdAt())
                 .createdBy(saved.getAudit().createdBy())
                 .updatedAt(saved.getAudit().updatedAt())
@@ -40,6 +45,10 @@ public class UserAssembler {
                     : null;
 
             builder = builder.role(RoleAssembler.toResponse(saved.getRole(), expands, effectivePermissions));
+        }
+
+        if (expands == null || expands.contains("company")) {
+            builder = builder.company(CompanyAssembler.toResponse(saved.getCompany()));
         }
 
         if (expands != null && expands.contains("userPermission") && saved.getUserPermissionOverride() != null) {

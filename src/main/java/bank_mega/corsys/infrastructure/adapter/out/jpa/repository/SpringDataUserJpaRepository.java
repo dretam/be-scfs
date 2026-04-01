@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface SpringDataUserJpaRepository extends JpaRepository<@NonNull UserJpaEntity, @NonNull Long>, PagingAndSortingRepository<@NonNull UserJpaEntity, @NonNull Long> {
+public interface SpringDataUserJpaRepository extends JpaRepository<@NonNull UserJpaEntity, @NonNull UUID>, PagingAndSortingRepository<@NonNull UserJpaEntity, @NonNull UUID> {
 
     long count();
 

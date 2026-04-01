@@ -24,6 +24,7 @@ public class UserPredicate {
             predicates.add(
                     cb.or(
                             cb.like(cb.lower(root.get("name")), like),
+                            cb.like(cb.lower(root.get("fullName")), like),
                             cb.like(cb.lower(root.get("email")), like)
                     )
             );

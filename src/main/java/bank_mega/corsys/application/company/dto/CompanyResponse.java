@@ -1,6 +1,5 @@
 package bank_mega.corsys.application.company.dto;
 
-import bank_mega.corsys.domain.model.company.CompanyType;
 import lombok.Builder;
 
 import java.time.Instant;
