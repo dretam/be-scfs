@@ -160,7 +160,7 @@ public class UserApi {
 
     @DeleteMapping(
             path = "/{id}/destroy",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @HasPermission("USER_DELETE")

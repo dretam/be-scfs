@@ -1,7 +1,7 @@
 package bank_mega.corsys.infrastructure.config.security;
 
-import bank_mega.corsys.application.accesslog.command.CreateAccessLogCommand;
-import bank_mega.corsys.application.accesslog.usecase.CreateAccessLogUseCase;
+import bank_mega.corsys.application.activitylog.command.CreateActivityLogCommand;
+import bank_mega.corsys.application.activitylog.usecase.CreateActivityLogUseCase;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import java.time.Instant;
 public class AccessLogFilter extends OncePerRequestFilter {
 
     private static final int REQUEST_BODY_CACHE_LIMIT = 4096; // 4 KB
-    private final CreateAccessLogUseCase createAccessLogUseCase;
+    private final CreateActivityLogUseCase createAccessLogUseCase;
 
     @Override
     protected void doFilterInternal(
@@ -44,65 +44,65 @@ public class AccessLogFilter extends OncePerRequestFilter {
 
         long startTime = System.currentTimeMillis();
         Exception exception = null;
-//
-//        try {
+
+        try {
             filterChain.doFilter(wrappedRequest, response);
-//        } catch (Exception ex) {
-//            exception = ex;
-//            throw ex;
-//        } finally {
-//            long responseTimeMs = System.currentTimeMillis() - startTime;
-//
-//            // =========================
-//            // REQUEST INFO
-//            // =========================
-//            String httpMethod = request.getMethod();
-//            String uri = request.getRequestURI();
-//            String queryParams = request.getQueryString();
-//            String ipAddress = resolveClientIp(request);
-//            String userAgent = request.getHeader("User-Agent");
-//
-//            // =========================
-//            // REQUEST BODY
-//            // =========================
-//            String requestBody = null;
-//            if (wrappedRequest instanceof ContentCachingRequestWrapper cachingRequest) {
-//                requestBody = extractRequestBody(cachingRequest);
-//            }
-//
-//            // =========================
-//            // RESPONSE INFO
-//            // =========================
-//            int statusCode = response.getStatus();
-//            String errorMessage = extractErrorMessage(exception, statusCode);
-//
-//            // =========================
-//            // USER Principle (JWT)
-//            // =========================
-//            Authentication authentication =
-//                    SecurityContextHolder.getContext().getAuthentication();
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            long responseTimeMs = System.currentTimeMillis() - startTime;
+
+            // =========================
+            // REQUEST INFO
+            // =========================
+            String httpMethod = request.getMethod();
+            String uri = request.getRequestURI();
+            String queryParams = request.getQueryString();
+            String ipAddress = resolveClientIp(request);
+            String userAgent = request.getHeader("User-Agent");
+
+            // =========================
+            // REQUEST BODY
+            // =========================
+            String requestBody = null;
+            if (wrappedRequest instanceof ContentCachingRequestWrapper cachingRequest) {
+                requestBody = extractRequestBody(cachingRequest);
+            }
+
+            // =========================
+            // RESPONSE INFO
+            // =========================
+            int statusCode = response.getStatus();
+            String errorMessage = extractErrorMessage(exception, statusCode);
+
+            // =========================
+            // USER Principle (JWT)
+            // =========================
+            Authentication authentication =
+                    SecurityContextHolder.getContext().getAuthentication();
 
             // =========================
             // SAVE LOG
             // =========================
-//            if (authentication instanceof UserTokenAuthentication userAuth) {
-//                this.createAccessLogUseCase.execute(
-//                        CreateAccessLogCommand.builder()
-//                                .user(userAuth.getPrincipal())
-//                                .httpMethod(httpMethod)
-//                                .uri(uri)
-//                                .queryParams(queryParams)
-//                                .ipAddress(ipAddress)
-//                                .requestBody(requestBody)
-//                                .responseTimeMs(responseTimeMs)
-//                                .statusCode(statusCode)
-//                                .errorMessage(errorMessage)
-//                                .userAgent(userAgent)
-//                                .createdAt(Instant.now())
-//                                .build()
-//                );
-//            }
-//        }
+            if (authentication instanceof UserTokenAuthentication userAuth) {
+                this.createAccessLogUseCase.execute(
+                        CreateActivityLogCommand.builder()
+                                .user(userAuth.getPrincipal())
+                                .httpMethod(httpMethod)
+                                .uri(uri)
+                                .queryParams(queryParams)
+                                .ipAddress(ipAddress)
+                                .requestBody(requestBody)
+                                .responseTimeMs(responseTimeMs)
+                                .statusCode(statusCode)
+                                .errorMessage(errorMessage)
+                                .userAgent(userAgent)
+                                .createdAt(Instant.now())
+                                .build()
+                );
+            }
+        }
     }
 
     // =====================================================

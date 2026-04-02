@@ -1,6 +1,6 @@
 package bank_mega.corsys.infrastructure.adapter.out.jpa.entity;
 
-import bank_mega.corsys.domain.model.accesslog.AccessLogHttpMethod;
+import bank_mega.corsys.domain.model.activitylog.ActivityLogHttpMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcType;
@@ -16,8 +16,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "access_logs")
-public class AccessLogJpaEntity {
+@Table(name = "activity_logs")
+public class ActivityLogJpaEntity {
 
     @Id
     @GeneratedValue
@@ -32,8 +32,8 @@ public class AccessLogJpaEntity {
     @Column(name = "uri", nullable = false)
     private String uri;
 
-    @Column(name = "query_params")
-    private String queryParams;
+    @Column(name = "query_param")
+    private String queryParam;
 
     @Column(name = "request_body")
     private String requestBody;
@@ -50,7 +50,7 @@ public class AccessLogJpaEntity {
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(name = "http_method", nullable = false)
-    private AccessLogHttpMethod httpMethod;
+    private ActivityLogHttpMethod httpMethod;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

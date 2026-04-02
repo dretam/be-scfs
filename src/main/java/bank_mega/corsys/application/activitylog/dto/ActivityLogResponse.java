@@ -1,14 +1,14 @@
-package bank_mega.corsys.application.accesslog.dto;
+package bank_mega.corsys.application.activitylog.dto;
 
 import bank_mega.corsys.application.user.dto.UserResponse;
-import bank_mega.corsys.domain.model.accesslog.AccessLogHttpMethod;
+import bank_mega.corsys.domain.model.activitylog.ActivityLogHttpMethod;
 import lombok.Builder;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Builder
-public record AccessLogResponse(
+public record ActivityLogResponse(
         UUID id,
         UserResponse user,
         String ipAddress,
@@ -19,7 +19,7 @@ public record AccessLogResponse(
         Integer statusCode,
         Long responseTimeMs,
         String errorMessage,
-        AccessLogHttpMethod httpMethod,
+        ActivityLogHttpMethod httpMethod,
         Instant createdAt
 ) {
 }

@@ -66,6 +66,12 @@ public class User {
         }
     }
 
+    public void changeFullName(UserFullName newFullName) {
+        if (newFullName != null) {
+            this.fullName = newFullName;
+        }
+    }
+
     public void changeEmail(UserEmail newEmail) {
         if (newEmail != null) {
             this.email = newEmail;

@@ -1,6 +1,6 @@
-package bank_mega.corsys.domain.model.accesslog;
+package bank_mega.corsys.domain.model.activitylog;
 
-public enum AccessLogHttpMethod {
+public enum ActivityLogHttpMethod {
     GET,
     POST,
     PUT,

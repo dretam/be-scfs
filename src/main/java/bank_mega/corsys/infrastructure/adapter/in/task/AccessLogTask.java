@@ -1,6 +1,6 @@
 package bank_mega.corsys.infrastructure.adapter.in.task;
 
-import bank_mega.corsys.application.accesslog.usecase.HousekeepingAccessLogUseCase;
+import bank_mega.corsys.application.activitylog.usecase.HousekeepingActivityLogUseCase;
 import com.github.kagkarlsson.scheduler.task.TaskDescriptor;
 import com.github.kagkarlsson.scheduler.task.helper.RecurringTask;
 import com.github.kagkarlsson.scheduler.task.helper.Tasks;
@@ -20,7 +20,7 @@ public class AccessLogTask {
     );
 
     @Bean
-    public RecurringTask<Void> housekeeping(HousekeepingAccessLogUseCase useCase) {
+    public RecurringTask<Void> housekeeping(HousekeepingActivityLogUseCase useCase) {
         return Tasks
                 .recurring(HK, Schedules.cron("0 0 0 1 * *", ZoneId.systemDefault()))
                 .execute((instance, ctx) -> useCase.execute(Instant.now()));

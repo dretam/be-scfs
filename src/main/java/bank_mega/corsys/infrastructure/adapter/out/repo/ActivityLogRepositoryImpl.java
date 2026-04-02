@@ -1,12 +1,12 @@
 package bank_mega.corsys.infrastructure.adapter.out.repo;
 
-import bank_mega.corsys.domain.model.accesslog.AccessLog;
-import bank_mega.corsys.domain.model.accesslog.AccessLogId;
-import bank_mega.corsys.domain.repository.AccessLogRepository;
-import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.AccessLogJpaEntity;
-import bank_mega.corsys.infrastructure.adapter.out.mapper.AccessLogMapper;
-import bank_mega.corsys.infrastructure.adapter.out.predicate.AccessLogPredicate;
-import bank_mega.corsys.infrastructure.adapter.out.jpa.repository.SpringDataAccessLogJpaRepository;
+import bank_mega.corsys.domain.model.activitylog.ActivityLog;
+import bank_mega.corsys.domain.model.activitylog.ActivityLogId;
+import bank_mega.corsys.domain.repository.ActivityLogRepository;
+import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.ActivityLogJpaEntity;
+import bank_mega.corsys.infrastructure.adapter.out.mapper.ActivityLogMapper;
+import bank_mega.corsys.infrastructure.adapter.out.predicate.ActivityLogPredicate;
+import bank_mega.corsys.infrastructure.adapter.out.jpa.repository.SpringDataActivityLogJpaRepository;
 import bank_mega.corsys.infrastructure.util.ParserUtil;
 import bank_mega.corsys.infrastructure.util.PersistenceUtil;
 import jakarta.persistence.EntityManager;
@@ -32,7 +32,7 @@ import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
-public class AccessLogRepositoryImpl implements AccessLogRepository {
+public class ActivityLogRepositoryImpl implements ActivityLogRepository {
 
     private final String[] availableSort = {
             "createdAt",
@@ -43,12 +43,12 @@ public class AccessLogRepositoryImpl implements AccessLogRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private final SpringDataAccessLogJpaRepository springDataAccessLogJpaRepository;
+    private final SpringDataActivityLogJpaRepository springDataAccessLogJpaRepository;
 
     @Override
-    public AccessLog save(AccessLog accessLog) {
-        return AccessLogMapper.toDomain(springDataAccessLogJpaRepository.save(
-                AccessLogMapper.toJpaEntity(accessLog)
+    public ActivityLog save(ActivityLog accessLog) {
+        return ActivityLogMapper.toDomain(springDataAccessLogJpaRepository.save(
+                ActivityLogMapper.toJpaEntity(accessLog)
         ));
     }
 
@@ -63,31 +63,31 @@ public class AccessLogRepositoryImpl implements AccessLogRepository {
     }
 
     @Override
-    public Page<@NonNull AccessLog> findAllPageable(int page, int size, Set<String> expand, String sort, String filter) {
+    public Page<@NonNull ActivityLog> findAllPageable(int page, int size, Set<String> expand, String sort, String filter) {
         int pageIndex = page - 1;
         Sort sortBy = ParserUtil.sortParse(this.availableSort, sort, this.availableSort[0]);
         CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
 
-        CriteriaQuery<AccessLogJpaEntity> cQuery = cBuilder.createQuery(AccessLogJpaEntity.class);
-        Root<AccessLogJpaEntity> root = cQuery.from(AccessLogJpaEntity.class);
+        CriteriaQuery<ActivityLogJpaEntity> cQuery = cBuilder.createQuery(ActivityLogJpaEntity.class);
+        Root<ActivityLogJpaEntity> root = cQuery.from(ActivityLogJpaEntity.class);
 
         // Expands fetching
         if (expand.contains("user")) root.fetch("user", JoinType.LEFT);
 
         // Filter and Sorting
-        cQuery.where(AccessLogPredicate.listBuild(cBuilder, root, filter));
+        cQuery.where(ActivityLogPredicate.listBuild(cBuilder, root, filter));
         cQuery.orderBy(ParserUtil.toOrders(sortBy, cBuilder, root));
 
-        TypedQuery<AccessLogJpaEntity> query = entityManager.createQuery(cQuery);
+        TypedQuery<ActivityLogJpaEntity> query = entityManager.createQuery(cQuery);
 
         // Pagination Offset
         query.setFirstResult(pageIndex * size);
         query.setMaxResults(size);
-        List<AccessLogJpaEntity> resultList = query.getResultList();
+        List<ActivityLogJpaEntity> resultList = query.getResultList();
 
         // Mapping ke domain
-        List<AccessLog> list = resultList.stream()
-                .map(jpa -> AccessLogMapper.toDomain(jpa, expand))
+        List<ActivityLog> list = resultList.stream()
+                .map(jpa -> ActivityLogMapper.toDomain(jpa, expand))
                 .toList();
 
         return new PageImpl<>(
@@ -96,31 +96,31 @@ public class AccessLogRepositoryImpl implements AccessLogRepository {
                 PersistenceUtil.count(
                         entityManager,
                         cBuilder,
-                        AccessLogJpaEntity.class,
+                        ActivityLogJpaEntity.class,
                         (cBuilderCount, rootJpaCount) -> List.of(
-                                AccessLogPredicate.listBuild(cBuilderCount, rootJpaCount, filter)
+                                ActivityLogPredicate.listBuild(cBuilderCount, rootJpaCount, filter)
                         )
                 )
         );
     }
 
     @Override
-    public Optional<AccessLog> findFirstById(AccessLogId id, Set<String> expand) {
+    public Optional<ActivityLog> findFirstById(ActivityLogId id, Set<String> expand) {
         CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
 
-        CriteriaQuery<AccessLogJpaEntity> cQuery = cBuilder.createQuery(AccessLogJpaEntity.class);
-        Root<AccessLogJpaEntity> root = cQuery.from(AccessLogJpaEntity.class);
+        CriteriaQuery<ActivityLogJpaEntity> cQuery = cBuilder.createQuery(ActivityLogJpaEntity.class);
+        Root<ActivityLogJpaEntity> root = cQuery.from(ActivityLogJpaEntity.class);
 
         // Expands fetching
         if (expand.contains("user")) root.fetch("user", JoinType.LEFT);
 
         // Filter Primary Key
-        cQuery.where(AccessLogPredicate.retrieveBuild(cBuilder, root, id));
+        cQuery.where(ActivityLogPredicate.retrieveBuild(cBuilder, root, id));
 
-        TypedQuery<AccessLogJpaEntity> query = entityManager.createQuery(cQuery);
-        List<AccessLogJpaEntity> resultList = query.getResultList();
+        TypedQuery<ActivityLogJpaEntity> query = entityManager.createQuery(cQuery);
+        List<ActivityLogJpaEntity> resultList = query.getResultList();
         if (resultList.isEmpty()) return Optional.empty();
-        return Optional.of(AccessLogMapper.toDomain(resultList.getFirst(), expand));
+        return Optional.of(ActivityLogMapper.toDomain(resultList.getFirst(), expand));
     }
 
 }

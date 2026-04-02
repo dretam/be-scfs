@@ -8,6 +8,7 @@ import bank_mega.corsys.domain.exception.CompanyNotFoundException;
 import bank_mega.corsys.domain.exception.PermissionNotFoundException;
 import bank_mega.corsys.domain.exception.RoleNotFoundException;
 import bank_mega.corsys.domain.exception.UserNotFoundException;
+import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.company.Company;
 import bank_mega.corsys.domain.model.company.CompanyId;
 import bank_mega.corsys.domain.model.permission.Permission;
@@ -58,6 +59,30 @@ public class UpdateUserUseCase {
         if(command.password() != null) {
             user.changePassword(
                     new UserPassword(userRepository.hashPassword(command.password()))
+            );
+        }
+
+        if(command.fullName() != null) {
+            user.changeFullName(
+                    new UserFullName(command.fullName())
+            );
+        }
+
+        if(command.email() != null) {
+            user.changeEmail(
+                    new UserEmail(command.email())
+            );
+        }
+
+        if(command.isActive() != null) {
+            user.changeIsActive(
+                    new UserIsActive(command.isActive())
+            );
+        }
+
+        if(command.photoPath() != null) {
+            user.changePhotoPath(
+                    new UserPhotoPath(command.photoPath())
             );
         }
 

@@ -1,19 +1,19 @@
-package bank_mega.corsys.domain.model.accesslog;
+package bank_mega.corsys.domain.model.activitylog;
 
 import bank_mega.corsys.domain.exception.DomainRuleViolationException;
 
 import java.util.UUID;
 
-public record AccessLogId(UUID value) {
+public record ActivityLogId(UUID value) {
 
-    public AccessLogId {
+    public ActivityLogId {
         if (value == null) {
             throw new DomainRuleViolationException("AccessLogId value cannot be null");
         }
     }
 
-    public static AccessLogId of(UUID value) {
-        return new AccessLogId(value);
+    public static ActivityLogId of(UUID value) {
+        return new ActivityLogId(value);
     }
 
 }

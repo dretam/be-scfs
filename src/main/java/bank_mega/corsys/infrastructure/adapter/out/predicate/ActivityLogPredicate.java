@@ -1,7 +1,7 @@
 package bank_mega.corsys.infrastructure.adapter.out.predicate;
 
-import bank_mega.corsys.domain.model.accesslog.AccessLogId;
-import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.AccessLogJpaEntity;
+import bank_mega.corsys.domain.model.activitylog.ActivityLogId;
+import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.ActivityLogJpaEntity;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
@@ -9,9 +9,9 @@ import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccessLogPredicate {
+public class ActivityLogPredicate {
 
-    public static Predicate[] listBuild(CriteriaBuilder cb, Root<AccessLogJpaEntity> root, String filter) {
+    public static Predicate[] listBuild(CriteriaBuilder cb, Root<ActivityLogJpaEntity> root, String filter) {
         List<Predicate> predicates = new ArrayList<>();
 
         if (filter != null && !filter.isBlank()) {
@@ -29,7 +29,7 @@ public class AccessLogPredicate {
         return predicates.toArray(Predicate[]::new);
     }
 
-    public static Predicate[] retrieveBuild(CriteriaBuilder cb, Root<AccessLogJpaEntity> root, AccessLogId id) {
+    public static Predicate[] retrieveBuild(CriteriaBuilder cb, Root<ActivityLogJpaEntity> root, ActivityLogId id) {
         List<Predicate> predicates = new ArrayList<>();
 
         predicates.add(

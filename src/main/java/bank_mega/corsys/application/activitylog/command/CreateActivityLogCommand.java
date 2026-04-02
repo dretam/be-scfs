@@ -1,4 +1,4 @@
-package bank_mega.corsys.application.accesslog.command;
+package bank_mega.corsys.application.activitylog.command;
 
 import bank_mega.corsys.domain.model.user.User;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.time.Instant;
 
 @Builder
-public record CreateAccessLogCommand(
+public record CreateActivityLogCommand(
         User user,
         String httpMethod,
         String uri,

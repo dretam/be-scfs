@@ -1,7 +1,7 @@
 package bank_mega.corsys.application.assembler;
 
-import bank_mega.corsys.application.accesslog.dto.AccessLogResponse;
-import bank_mega.corsys.domain.model.accesslog.AccessLog;
+import bank_mega.corsys.application.activitylog.dto.ActivityLogResponse;
+import bank_mega.corsys.domain.model.activitylog.ActivityLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,17 +9,17 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class AccessLogAssembler {
+public class ActivityLogAssembler {
 
     private final UserAssembler userAssembler;
 
-    public AccessLogResponse toResponse(AccessLog saved) {
+    public ActivityLogResponse toResponse(ActivityLog saved) {
         return toResponse(saved, null);
     }
 
-    public AccessLogResponse toResponse(AccessLog saved, Set<String> expands) {
+    public ActivityLogResponse toResponse(ActivityLog saved, Set<String> expands) {
         if (saved == null) return null;
-        AccessLogResponse.AccessLogResponseBuilder builder = AccessLogResponse.builder()
+        ActivityLogResponse.ActivityLogResponseBuilder builder = ActivityLogResponse.builder()
                 .id(saved.getId().value())
                 .ipAddress(saved.getIpAddress().value())
                 .userAgent(saved.getUserAgent().value())
