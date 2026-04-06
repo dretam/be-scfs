@@ -6,13 +6,18 @@ import bank_mega.corsys.domain.model.user.UserId;
 import bank_mega.corsys.domain.model.user.UserName;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@Repository
 public interface UserRepository {
 
     User save(User user);
+
+    void saveAll(List<User> userList);
 
     void delete(User user);
 

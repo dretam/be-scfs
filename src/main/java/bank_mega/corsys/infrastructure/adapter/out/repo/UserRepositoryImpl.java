@@ -24,9 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
 @Repository
@@ -50,6 +48,15 @@ public class UserRepositoryImpl implements UserRepository {
         return UserMapper.toDomain(springDataUserJpaRepository.save(
                 UserMapper.toJpaEntity(user)
         ));
+    }
+
+    @Override
+    public void saveAll(List<User> userList) {
+        for (User user : userList) {
+            UserMapper.toDomain(springDataUserJpaRepository.save(
+                    UserMapper.toJpaEntity(user)
+            ));
+        }
     }
 
     @Override

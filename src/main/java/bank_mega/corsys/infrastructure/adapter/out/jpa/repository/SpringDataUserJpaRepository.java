@@ -1,11 +1,13 @@
 package bank_mega.corsys.infrastructure.adapter.out.jpa.repository;
 
+import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.UserJpaEntity;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,6 +15,8 @@ import java.util.UUID;
 public interface SpringDataUserJpaRepository extends JpaRepository<@NonNull UserJpaEntity, @NonNull UUID>, PagingAndSortingRepository<@NonNull UserJpaEntity, @NonNull UUID> {
 
     long count();
+
+    void save(User user);
 
     Optional<UserJpaEntity> findFirstById(UUID id);
 

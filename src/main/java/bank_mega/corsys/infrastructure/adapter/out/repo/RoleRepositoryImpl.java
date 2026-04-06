@@ -109,6 +109,12 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
+    public List<@NonNull Role> findAllByAuditDeletedAtIsNull() {
+        return springDataRoleJpaRepository.findAllByAuditDeletedAtIsNull().stream()
+                .map(RoleMapper::toDomain).toList();
+    }
+
+    @Override
     public Optional<Role> findFirstById(RoleCode id) {
         return springDataRoleJpaRepository
                 .findFirstByCode(id.value())

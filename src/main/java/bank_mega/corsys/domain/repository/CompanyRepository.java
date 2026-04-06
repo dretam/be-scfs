@@ -6,6 +6,7 @@ import bank_mega.corsys.domain.model.company.CompanyId;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CompanyRepository {
@@ -16,6 +17,8 @@ public interface CompanyRepository {
     long count();
 
     Page<@NonNull Company> findAllPageable(int page, int size, String sort, String filter);
+
+    List<@NonNull Company> findAllByAuditDeletedAtIsNull();
 
     Optional<Company> findFirstById(CompanyId companyId);
 

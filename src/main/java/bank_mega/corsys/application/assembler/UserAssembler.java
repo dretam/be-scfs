@@ -1,6 +1,7 @@
 package bank_mega.corsys.application.assembler;
 
 import bank_mega.corsys.application.user.dto.UserResponse;
+import bank_mega.corsys.application.user.dto.UserUploadResponse;
 import bank_mega.corsys.domain.model.company.Company;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.user.User;
@@ -54,6 +55,17 @@ public class UserAssembler {
         if (expands != null && expands.contains("userPermission") && saved.getUserPermissionOverride() != null) {
             builder = builder.userPermissionOverride(saved.getUserPermissionOverride().stream().map(UserPermissionAssembler::toResponse).toList());
         }
+
+        return builder.build();
+    }
+
+    public UserUploadResponse toResponseUserUpload(UserUploadResponse saved) {
+        if (saved == null) return null;
+        UserUploadResponse.UserUploadResponseBuilder builder = UserUploadResponse.builder()
+                .success(saved.success())
+                .failed(saved.failed())
+                .total(saved.total())
+                .errors(saved.errors());
 
         return builder.build();
     }

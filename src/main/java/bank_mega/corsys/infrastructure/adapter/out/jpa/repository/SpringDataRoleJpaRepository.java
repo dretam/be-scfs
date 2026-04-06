@@ -1,5 +1,6 @@
 package bank_mega.corsys.infrastructure.adapter.out.jpa.repository;
 
+import bank_mega.corsys.domain.model.role.Role;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.RoleJpaEntity;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,6 +21,8 @@ public interface SpringDataRoleJpaRepository extends JpaRepository<@NonNull Role
     Optional<RoleJpaEntity> findFirstByCode(String code);
 
     Optional<RoleJpaEntity> findFirstByName(String name);
+
+    List<@NonNull RoleJpaEntity> findAllByAuditDeletedAtIsNull();
 
     @Query("SELECT r FROM RoleJpaEntity r LEFT JOIN FETCH r.permissions WHERE r.name = :name")
     Optional<RoleJpaEntity> findFirstByNameWithFetch(@Param("name") String name);

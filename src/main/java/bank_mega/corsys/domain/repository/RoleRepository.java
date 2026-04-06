@@ -6,6 +6,7 @@ import bank_mega.corsys.domain.model.role.RoleName;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,6 +19,8 @@ public interface RoleRepository {
     long count();
 
     Page<@NonNull Role> findAllPageable(int page, int size, Set<String> expands, String sort, String filter);
+
+    List<@NonNull Role> findAllByAuditDeletedAtIsNull();
 
     Optional<Role> findFirstById(RoleCode id);
 

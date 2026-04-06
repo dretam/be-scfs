@@ -2,6 +2,8 @@ package bank_mega.corsys.infrastructure.adapter.in.api.v1;
 
 import bank_mega.corsys.application.assembler.UserAssembler;
 import bank_mega.corsys.application.common.dto.PaginationResponse;
+import bank_mega.corsys.application.user.command.ChangePassUserCommand;
+import bank_mega.corsys.application.user.dto.UserUploadResponse;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.infrastructure.adapter.in.validation.user.UserIdExist;
 import bank_mega.corsys.infrastructure.config.security.HasPermission;
@@ -18,6 +20,7 @@ import bank_mega.corsys.domain.model.user.UserId;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
@@ -28,6 +31,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -91,6 +95,21 @@ public class UserApi {
     }
 
     @GetMapping(
+            value = "/downloadUserExcelTemplate",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @HasPermission("USER_READ")
+    public ReadRetrieveResponse<Boolean> downloadUserExcelTemplate(@AuthenticationPrincipal User authPrincipal, HttpServletResponse response) {
+        Boolean result = createUserUseCase.prepareDataUserForDownloadExcelTemplate(authPrincipal, response);
+
+        return ReadRetrieveResponse.<Boolean>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(result)
+                .build();
+    }
+
+    @GetMapping(
             path = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -108,6 +127,24 @@ public class UserApi {
     }
 
     @PostMapping(
+            value = "/upload",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @HasPermission("USER_CREATE")
+    public ReadRetrieveResponse<UserUploadResponse> uploadUsers(
+            @RequestParam("file") MultipartFile file,
+            @AuthenticationPrincipal User authPrincipal
+    ) {
+        UserUploadResponse result = createUserUseCase.uploadUsers(file, authPrincipal);
+        return ReadRetrieveResponse.<UserUploadResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(userAssembler.toResponseUserUpload(result))
+                .build();
+    }
+
+    @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -117,6 +154,24 @@ public class UserApi {
             @Valid @RequestBody CreateUserCommand command
     ) {
         UserResponse data = this.createUserUseCase.execute(command, authPrincipal);
+        return ReadRetrieveResponse.<UserResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .build();
+    }
+
+    @PutMapping(
+            value = "changePass",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @HasPermission("USER_UPDATE")
+    public ReadRetrieveResponse<UserResponse> changePas(
+            @AuthenticationPrincipal User authPrincipal,
+            @Valid @RequestBody ChangePassUserCommand command
+    ) {
+        UserResponse data = this.updateUserUseCase.executeChangePassword(command, authPrincipal);
         return ReadRetrieveResponse.<UserResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

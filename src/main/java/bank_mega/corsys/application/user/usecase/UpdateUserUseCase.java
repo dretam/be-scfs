@@ -1,13 +1,12 @@
 package bank_mega.corsys.application.user.usecase;
 
+import bank_mega.corsys.application.assembler.CompanyAssembler;
 import bank_mega.corsys.application.assembler.UserAssembler;
 import bank_mega.corsys.application.common.annotation.UseCase;
+import bank_mega.corsys.application.user.command.ChangePassUserCommand;
 import bank_mega.corsys.application.user.command.UpdateUserCommand;
 import bank_mega.corsys.application.user.dto.UserResponse;
-import bank_mega.corsys.domain.exception.CompanyNotFoundException;
-import bank_mega.corsys.domain.exception.PermissionNotFoundException;
-import bank_mega.corsys.domain.exception.RoleNotFoundException;
-import bank_mega.corsys.domain.exception.UserNotFoundException;
+import bank_mega.corsys.domain.exception.*;
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.company.Company;
 import bank_mega.corsys.domain.model.company.CompanyId;
@@ -20,6 +19,7 @@ import bank_mega.corsys.domain.model.userpermission.Effect;
 import bank_mega.corsys.domain.model.userpermission.UserPermission;
 import bank_mega.corsys.domain.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -34,6 +34,7 @@ public class UpdateUserUseCase {
     private final PermissionRepository permissionRepository;
     private final UserPermissionRepository userPermissionRepository;
     private final UserAssembler userAssembler;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponse execute(UpdateUserCommand command, User authPrincipal) {
@@ -91,6 +92,37 @@ public class UpdateUserUseCase {
         User saved = userRepository.save(user);
 
         handlePermissionOverrides(saved, command);
+
+        return userAssembler.toResponse(saved);
+    }
+
+    @Transactional
+    public UserResponse executeChangePassword(ChangePassUserCommand command, User authPrincipal) {
+
+        User user = findUser(command.id());
+
+        if(command.password() != null) {
+            if(!command.password().trim().equals(command.passwordConfirmation().trim())) {
+                throw new UserComparePasswordException();
+            }
+
+            boolean isMatch = passwordEncoder.matches(
+                    command.oldPassword().trim(),
+                    user.getPassword().value()
+            );
+
+            if(!isMatch) {
+                throw new UserExistingPasswordException();
+            } else {
+                user.changePassword(
+                    new UserPassword(userRepository.hashPassword(command.password()))
+                );
+            }
+        }
+
+        user.updateAudit(authPrincipal.getId().value());
+
+        User saved = userRepository.save(user);
 
         return userAssembler.toResponse(saved);
     }

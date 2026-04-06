@@ -38,7 +38,7 @@ public record CreateUserCommand(
         @NotNull
         Boolean isActive,
 
-        @NotNull
+        @Nullable
         @Size(min = 3, max = 255, message = "Photo path must be between 3 and 255 characters")
         @Pattern(regexp = "^[a-zA-Z0-9/._-]+$", message = "Photo path can only contain letters and numbers")
         String photoPath,

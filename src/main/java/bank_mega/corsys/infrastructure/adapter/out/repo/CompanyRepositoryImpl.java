@@ -104,6 +104,12 @@ public class CompanyRepositoryImpl implements CompanyRepository {
     }
 
     @Override
+    public List<@NonNull Company> findAllByAuditDeletedAtIsNull() {
+        return springDataCompanyJpaRepository.findAllByAuditDeletedAtIsNull().stream()
+                .map(CompanyMapper::toDomain).toList();
+    }
+
+    @Override
     public Optional<Company> findFirstById(CompanyId companyId) {
         return springDataCompanyJpaRepository
                 .findFirstById(companyId.value())
