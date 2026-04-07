@@ -180,6 +180,13 @@
             <version>3.20.0</version>
         </dependency>
 
+        <!-- ================= EMAIL ================= -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <!-- ================= EMAIL ================= -->
+
         <!-- ================= UPLOAD EXCEL ================= -->
         <dependency>
             <groupId>org.apache.poi</groupId>

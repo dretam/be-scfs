@@ -2,7 +2,7 @@ package bank_mega.corsys.infrastructure.adapter.in.api.v1;
 
 import bank_mega.corsys.application.assembler.UserAssembler;
 import bank_mega.corsys.application.common.dto.PaginationResponse;
-import bank_mega.corsys.application.user.command.ChangePassUserCommand;
+import bank_mega.corsys.application.user.command.*;
 import bank_mega.corsys.application.user.dto.UserUploadResponse;
 import bank_mega.corsys.domain.model.user.User;
 import bank_mega.corsys.infrastructure.adapter.in.validation.user.UserIdExist;
@@ -11,9 +11,6 @@ import bank_mega.corsys.infrastructure.util.ParserUtil;
 import bank_mega.corsys.application.common.dto.DeleteResponse;
 import bank_mega.corsys.application.common.dto.ReadListResponse;
 import bank_mega.corsys.application.common.dto.ReadRetrieveResponse;
-import bank_mega.corsys.application.user.command.CreateUserCommand;
-import bank_mega.corsys.application.user.command.SoftDeleteUserCommand;
-import bank_mega.corsys.application.user.command.UpdateUserCommand;
 import bank_mega.corsys.application.user.dto.UserResponse;
 import bank_mega.corsys.application.user.usecase.*;
 import bank_mega.corsys.domain.model.user.UserId;
@@ -50,6 +47,7 @@ public class UserApi {
     private final RetrieveUserUseCase retrieveUserUseCase;
     private final CreateUserUseCase createUserUseCase;
     private final UpdateUserUseCase updateUserUseCase;
+    private final SendTokenChangePassUserUseCase sendTokenChangePassUserUseCase;
     private final SoftDeleteUserUseCase softDeleteUserUseCase;
     private final DeleteUserUseCase deleteUserUseCase;
     private final UserAssembler userAssembler;
@@ -161,17 +159,31 @@ public class UserApi {
                 .build();
     }
 
+    @PostMapping(
+            value = "sendTokenChangePass",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ReadRetrieveResponse<Boolean> sendTokenChangePass(
+            @Valid @RequestBody SendTokenChangePassUserCommand command
+    ) {
+        Boolean result = this.sendTokenChangePassUserUseCase.sendTokenChangePassUserViaEmail(command);
+        return ReadRetrieveResponse.<Boolean>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(result)
+                .build();
+    }
+
     @PutMapping(
             value = "changePass",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @HasPermission("USER_UPDATE")
     public ReadRetrieveResponse<UserResponse> changePas(
-            @AuthenticationPrincipal User authPrincipal,
             @Valid @RequestBody ChangePassUserCommand command
     ) {
-        UserResponse data = this.updateUserUseCase.executeChangePassword(command, authPrincipal);
+        UserResponse data = this.updateUserUseCase.executeChangePassword(command);
         return ReadRetrieveResponse.<UserResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -215,7 +227,7 @@ public class UserApi {
 
     @DeleteMapping(
             path = "/{id}/destroy",
-//            consumes = MediaType.APPLICATION_JSON_VALUE,
+            // consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @HasPermission("USER_DELETE")

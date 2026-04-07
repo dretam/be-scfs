@@ -1,5 +1,6 @@
 package bank_mega.corsys.application.user.command;
 
+import bank_mega.corsys.infrastructure.adapter.in.validation.user.ForgotPasswordTokenHashExist;
 import bank_mega.corsys.infrastructure.adapter.in.validation.user.UserCompareExistingPassword;
 import bank_mega.corsys.infrastructure.adapter.in.validation.user.UserIdExist;
 import bank_mega.corsys.infrastructure.adapter.in.validation.user.UserPasswordConfirmation;
@@ -15,6 +16,10 @@ public record ChangePassUserCommand(
         @NotNull
         @UserIdExist
         UUID id,
+
+        @NotNull
+        @ForgotPasswordTokenHashExist
+        String forgotPasswordTokenHash,
 
         @NotNull
         String username,

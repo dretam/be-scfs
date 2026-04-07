@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "Hexagonal Architecture",
+                title = "SCFS",
                 version = "1.0.0",
-                description = "Hexagonal architecture project for Spring Boot",
+                description = "SCFS project for Spring Boot",
                 contact = @Contact(
                         name = "Yusuf Abdillah Putra",
                         email = "yusuf.putra@bankmega.com"

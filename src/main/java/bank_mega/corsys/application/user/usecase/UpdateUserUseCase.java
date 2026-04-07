@@ -10,6 +10,8 @@ import bank_mega.corsys.domain.exception.*;
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.company.Company;
 import bank_mega.corsys.domain.model.company.CompanyId;
+import bank_mega.corsys.domain.model.forgotpasstoken.ForgotToken;
+import bank_mega.corsys.domain.model.forgotpasstoken.ForgotTokenHash;
 import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.permission.PermissionId;
 import bank_mega.corsys.domain.model.role.Role;
@@ -31,6 +33,7 @@ public class UpdateUserUseCase {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
+    private final ForgotTokenRepository forgotTokenRepository;
     private final PermissionRepository permissionRepository;
     private final UserPermissionRepository userPermissionRepository;
     private final UserAssembler userAssembler;
@@ -97,9 +100,11 @@ public class UpdateUserUseCase {
     }
 
     @Transactional
-    public UserResponse executeChangePassword(ChangePassUserCommand command, User authPrincipal) {
+    public UserResponse executeChangePassword(ChangePassUserCommand command) {
 
         User user = findUser(command.id());
+
+        ForgotToken forgotToken = findForgotPasswordToken(command.forgotPasswordTokenHash());
 
         if(command.password() != null) {
             if(!command.password().trim().equals(command.passwordConfirmation().trim())) {
@@ -120,9 +125,15 @@ public class UpdateUserUseCase {
             }
         }
 
-        user.updateAudit(authPrincipal.getId().value());
+        user.updateAudit(user.getId().value());
 
         User saved = userRepository.save(user);
+
+        forgotToken.updateUsed(true);
+
+        forgotToken.updateAudit(user.getId().value());
+
+        ForgotToken savedForgotToken = forgotTokenRepository.save(forgotToken);
 
         return userAssembler.toResponse(saved);
     }
@@ -131,6 +142,12 @@ public class UpdateUserUseCase {
         return userRepository
                 .findFirstByIdAndAuditDeletedAtIsNull(new UserId(userId))
                 .orElseThrow(() -> new UserNotFoundException(new UserId(userId)));
+    }
+
+    private ForgotToken findForgotPasswordToken(String forgotPasswordTokenHash) {
+        return forgotTokenRepository
+                .findFirstValidByForgotTokenHash(new ForgotTokenHash(forgotPasswordTokenHash))
+                .orElseThrow(() -> new ForgotTokenNotFoundException(new ForgotTokenHash(forgotPasswordTokenHash)));
     }
 
     private void handlePermissionOverrides(User user, UpdateUserCommand command) {

@@ -67,6 +67,8 @@ public class SecurityConfiguration {
                                         "/v3/api-docs/**",
                                         "/api/*/auth/login",
                                         "/api/*/auth/refresh",
+                                        "/api/*/users/changePass",
+                                        "/api/*/users/sendTokenChangePass",
                                         "/db-scheduler-api/**"
                                 )
                                 .permitAll()
