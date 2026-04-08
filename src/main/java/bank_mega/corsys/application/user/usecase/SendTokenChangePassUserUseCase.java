@@ -55,7 +55,12 @@ public class SendTokenChangePassUserUseCase {
 
                     forgotTokenRepository.save(forgotToken);
 
-                    String text = "Link Change Password: https://fescfs.bankmegadev.local/changePass?token=" + generateToken;
+                    // dev
+                    // String text = "Link Change Password: https://fescfs.bankmegadev.local/changePass?token=" +
+                    // generateToken;
+
+                    // local
+                    String text = "Link Change Password: http://localhost:3000/changePass?token=" + generateToken;
 
                     SimpleMailMessage message = new SimpleMailMessage();
                     message.setFrom(fromEmail);
