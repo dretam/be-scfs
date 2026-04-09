@@ -159,6 +159,22 @@ public class UserApi {
                 .build();
     }
 
+    @GetMapping(
+            path = "/getUserByToken/{token}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ReadRetrieveResponse<UserResponse> getUserByToken(
+            @PathVariable @NotNull String token,
+            @RequestParam(value = "expands", required = false) String expand
+    ) {
+        User data = this.retrieveUserUseCase.execute(token, ParserUtil.expandParse(expand));
+        return ReadRetrieveResponse.<UserResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(userAssembler.toResponse(data, ParserUtil.expandParse(expand)))
+                .build();
+    }
+
     @PostMapping(
             value = "sendTokenChangePass",
             consumes = MediaType.APPLICATION_JSON_VALUE,
