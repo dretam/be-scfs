@@ -83,6 +83,8 @@ public class UserRepositoryImpl implements UserRepository {
 
         if (expands.contains("company")) root.fetch("company", JoinType.LEFT);
 
+        if (expands.contains("roleChildren")) root.fetch("roleChildren", JoinType.LEFT);
+
         // Filter and Sorting
         cQuery.where(UserPredicate.listBuild(cBuilder, root, filter));
         cQuery.orderBy(ParserUtil.toOrders(sortBy, cBuilder, root));
@@ -136,6 +138,7 @@ public class UserRepositoryImpl implements UserRepository {
         Root<UserJpaEntity> root = cq.from(UserJpaEntity.class);
 
         boolean role = expands != null && expands.contains("role");
+        boolean roleChildren = expands != null && expands.contains("roleChildren");
         boolean company = expands != null && expands.contains("company");
         boolean permissions = expands != null && expands.contains("permissions");
         boolean menus = expands != null && expands.contains("menus");
@@ -151,6 +154,10 @@ public class UserRepositoryImpl implements UserRepository {
             if (menus) {
                 roleFetch.fetch("menus", JoinType.LEFT);
             }
+        }
+
+        if (roleChildren) {
+            root.fetch("roleChildren", JoinType.LEFT);
         }
 
         if (company) {

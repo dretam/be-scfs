@@ -3,6 +3,7 @@ package bank_mega.corsys.domain.model.user;
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.company.Company;
 import bank_mega.corsys.domain.model.role.Role;
+import bank_mega.corsys.domain.model.rolechildren.RoleChildren;
 import bank_mega.corsys.domain.model.userpermission.UserPermission;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class User {
     private UserType type;
     private AuditTrail audit;
     private Set<UserPermission> userPermissionOverride;
+    private RoleChildren roleChildren;
 
     public User(
             UserId id,
@@ -38,6 +40,7 @@ public class User {
             UserPhotoPath photoPath,
             Company company,
             Role role,
+            RoleChildren roleChildren,
             AuditTrail audit
     ) {
         this.id = id;
@@ -49,6 +52,7 @@ public class User {
         this.password = password;
         this.type = type;
         this.role = role;
+        this.roleChildren = roleChildren;
         this.company = company;
         this.audit = audit;
         this.userPermissionOverride = new HashSet<>();
@@ -99,6 +103,12 @@ public class User {
     public void changeRole(Role newRole) {
         if (newRole != null) {
             this.role = newRole;
+        }
+    }
+
+    public void changeRoleChildren(RoleChildren newRoleChildren) {
+        if (newRoleChildren != null) {
+            this.roleChildren = newRoleChildren;
         }
     }
 

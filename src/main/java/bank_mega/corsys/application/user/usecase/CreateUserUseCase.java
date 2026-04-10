@@ -5,10 +5,7 @@ import bank_mega.corsys.application.common.annotation.UseCase;
 import bank_mega.corsys.application.user.command.CreateUserCommand;
 import bank_mega.corsys.application.user.dto.UserResponse;
 import bank_mega.corsys.application.user.dto.UserUploadResponse;
-import bank_mega.corsys.domain.exception.CompanyNotFoundException;
-import bank_mega.corsys.domain.exception.PermissionNotFoundException;
-import bank_mega.corsys.domain.exception.RoleNotFoundException;
-import bank_mega.corsys.domain.exception.UserAlreadyExistsException;
+import bank_mega.corsys.domain.exception.*;
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.company.Company;
 import bank_mega.corsys.domain.model.company.CompanyCif;
@@ -17,6 +14,8 @@ import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.permission.PermissionId;
 import bank_mega.corsys.domain.model.role.Role;
 import bank_mega.corsys.domain.model.role.RoleCode;
+import bank_mega.corsys.domain.model.rolechildren.RoleChildren;
+import bank_mega.corsys.domain.model.rolechildren.RoleChildrenCode;
 import bank_mega.corsys.domain.model.user.*;
 import bank_mega.corsys.domain.model.userpermission.Effect;
 import bank_mega.corsys.domain.model.userpermission.UserPermission;
@@ -47,6 +46,7 @@ public class CreateUserUseCase {
     private final UserPermissionRepository userPermissionRepository;
     private final PermissionRepository permissionRepository;
     private final UserAssembler userAssembler;
+    private final RoleChildrenRepository roleChildrenRepository;
 
     @Transactional
     public UserResponse execute(CreateUserCommand command, User authPrincipal) {
@@ -86,12 +86,17 @@ public class CreateUserUseCase {
                     String email = getCell(row, 3);
                     String roleCode = getCell(row, 4);
                     String companyCif = getCell(row, 5);
+                    String roleChildrenCode = getCell(row, 6);
 
                     // --- VALIDATION ---
-                    validateRow(username, password, fullName, email, roleCode, companyCif, i);
+                    validateRow(username, password, fullName, email, roleCode, companyCif, roleChildrenCode, i);
 
                     Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleCode(roleCode))
                             .orElseThrow(() -> new RuntimeException("Invalid role"));
+
+                    RoleChildren roleChildren =
+                            roleChildrenRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleChildrenCode(roleChildrenCode))
+                            .orElseThrow(() -> new RuntimeException("Invalid role children"));
 
                     Company company = companyRepository.findFirstByCif(new CompanyCif(companyCif))
                             .orElseThrow(() -> new RuntimeException("Invalid company"));
@@ -106,6 +111,7 @@ public class CreateUserUseCase {
                         new UserPhotoPath(null),
                         company,
                         role,
+                        roleChildren,
                         AuditTrail.create(authPrincipal.getId().value())
                     );
 
@@ -153,6 +159,7 @@ public class CreateUserUseCase {
             String email,
             String role,
             String company,
+            String roleChildren,
             int row
     ) {
         if (fullName == null || fullName.length() < 3)
@@ -172,6 +179,9 @@ public class CreateUserUseCase {
 
         if (company == null)
             throw new RuntimeException("Company required");
+
+        if (roleChildren == null)
+            throw new RuntimeException("Role children required");
 
         if (userRepository.findFirstByEmail(new UserEmail(email)).isPresent())
             throw new RuntimeException("Email already exists");
@@ -351,6 +361,10 @@ public class CreateUserUseCase {
         Role role = roleRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleCode(command.roleId()))
                 .orElseThrow(() -> new RoleNotFoundException(new RoleCode(command.roleId())));
 
+        RoleChildren roleChildren =
+                roleChildrenRepository.findFirstByIdAndAuditDeletedAtIsNull(new RoleChildrenCode(command.roleChildrenId()))
+                .orElseThrow(() -> new RoleChildrenNotFoundException(new RoleChildrenCode(command.roleChildrenId())));
+
         Company company = companyRepository.findFirstByIdAndAuditDeletedAtIsNull(new CompanyId(command.companyId()))
                 .orElseThrow(() -> new CompanyNotFoundException(new CompanyId(command.companyId())));
 
@@ -364,6 +378,7 @@ public class CreateUserUseCase {
                 new UserPhotoPath(command.photoPath()),
                 company,
                 role,
+                roleChildren,
                 AuditTrail.create(authPrincipal.getId().value())
         );
 

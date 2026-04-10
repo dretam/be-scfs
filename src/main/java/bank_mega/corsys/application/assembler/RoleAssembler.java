@@ -26,6 +26,7 @@ public class RoleAssembler {
 
         boolean includePermissions = expands == null || expands.contains("permissions");
         boolean includeMenus = expands == null || expands.contains("menus");
+        boolean includeRoleChildren = expands == null || expands.contains("roleChildren");
 
         return RoleResponse.builder()
                 .id(role.getCode().value())
@@ -40,6 +41,11 @@ public class RoleAssembler {
                 .deletedBy(role.getAudit().deletedBy())
                 .permissions(includePermissions
                         ? getPermissionsToShow(role, effectivePermissions)
+                        : Collections.emptyList())
+                .roleChildren(includeRoleChildren
+                        ? role.getRoleChildren().stream()
+                        .map(RoleChildrenAssembler::toResponse)
+                        .toList()
                         : Collections.emptyList())
                 .menus(includeMenus && role.getMenus() != null
                         ? role.getMenus().stream()

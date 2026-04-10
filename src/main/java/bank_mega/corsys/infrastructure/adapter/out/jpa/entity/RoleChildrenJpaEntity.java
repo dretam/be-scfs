@@ -1,5 +1,6 @@
 package bank_mega.corsys.infrastructure.adapter.out.jpa.entity;
 
+import bank_mega.corsys.domain.model.role.Role;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.embeddable.AuditTrailEmbeddable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,8 +14,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "roles")
-public class RoleJpaEntity {
+@Table(name = "role_children")
+public class RoleChildrenJpaEntity {
 
     @Id
     @Column(unique = true)
@@ -28,18 +29,16 @@ public class RoleJpaEntity {
 
     private String description;
 
-    @OneToMany(
-            mappedBy = "role",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "parent_code",
+        referencedColumnName = "code"
     )
-    @Builder.Default
-    private Set<RoleChildrenJpaEntity> roleChildren = new HashSet<>();
+    private RoleJpaEntity role;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "role_permissions",
+            name = "role_children_permissions",
             joinColumns = @JoinColumn(name = "role_code"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
@@ -48,7 +47,7 @@ public class RoleJpaEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "role_menus",
+            name = "role_children_menus",
             joinColumns = @JoinColumn(name = "role_code"),
             inverseJoinColumns = @JoinColumn(name = "menu_id")
     )

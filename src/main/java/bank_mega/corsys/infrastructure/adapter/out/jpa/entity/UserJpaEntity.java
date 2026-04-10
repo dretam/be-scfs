@@ -48,6 +48,13 @@ public class UserJpaEntity {
     private RoleJpaEntity role;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "role_children_code",
+        referencedColumnName = "code"
+    )
+    private RoleChildrenJpaEntity roleChildren;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private CompanyJpaEntity company;
 

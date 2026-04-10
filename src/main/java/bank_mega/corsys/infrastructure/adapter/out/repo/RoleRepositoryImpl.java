@@ -78,6 +78,12 @@ public class RoleRepositoryImpl implements RoleRepository {
             }
         }
 
+        if (expands != null) {
+            if (expands.contains("roleChildren")) {
+                root.fetch("roleChildren", JoinType.LEFT);
+            }
+        }
+
         // Filter and Sorting
         cQuery.where(RolePredicate.listBuild(cBuilder, root, filter));
         cQuery.orderBy(ParserUtil.toOrders(sortBy, cBuilder, root));

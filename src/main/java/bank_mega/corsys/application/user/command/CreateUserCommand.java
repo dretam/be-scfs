@@ -2,6 +2,7 @@ package bank_mega.corsys.application.user.command;
 
 import bank_mega.corsys.infrastructure.adapter.in.validation.company.CompanyIdExist;
 import bank_mega.corsys.infrastructure.adapter.in.validation.role.RoleIdExist;
+import bank_mega.corsys.infrastructure.adapter.in.validation.roleChildren.RoleChildrenIdExist;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -46,6 +47,10 @@ public record CreateUserCommand(
         @NotNull
         @RoleIdExist
         String roleId,
+
+        @NotNull
+        @RoleChildrenIdExist
+        String roleChildrenId,
 
         @NotNull
         @CompanyIdExist

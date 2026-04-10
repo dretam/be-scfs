@@ -48,6 +48,15 @@ public class UserAssembler {
             builder = builder.role(RoleAssembler.toResponse(saved.getRole(), expands, effectivePermissions));
         }
 
+        if (expands == null || expands.contains("roleChildren")) {
+            Set<Permission> effectivePermissions = (expands != null && expands.contains("permissions"))
+                    ? permissionEvaluator.getEffectivePermissions(saved)
+                    : null;
+
+            builder = builder.roleChildren(RoleChildrenAssembler.toResponse(saved.getRoleChildren(), expands,
+                    effectivePermissions));
+        }
+
         if (expands == null || expands.contains("company")) {
             builder = builder.company(CompanyAssembler.toResponse(saved.getCompany()));
         }

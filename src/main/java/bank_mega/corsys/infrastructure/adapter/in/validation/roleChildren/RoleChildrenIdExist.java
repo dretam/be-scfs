@@ -1,6 +1,6 @@
-package bank_mega.corsys.infrastructure.adapter.in.validation.role;
+package bank_mega.corsys.infrastructure.adapter.in.validation.roleChildren;
 
-import bank_mega.corsys.infrastructure.adapter.in.validation.role.impl.RoleIdExistImpl;
+import bank_mega.corsys.infrastructure.adapter.in.validation.roleChildren.impl.RoleChildrenIdExistImpl;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -15,11 +15,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = {
-        RoleIdExistImpl.class
+        RoleChildrenIdExistImpl.class
 })
-public @interface RoleIdExist {
+public @interface RoleChildrenIdExist {
 
-    String message() default "Role data doesn't exist";
+    String message() default "Role children data doesn't exist";
 
     Class<?>[] groups() default {};
 

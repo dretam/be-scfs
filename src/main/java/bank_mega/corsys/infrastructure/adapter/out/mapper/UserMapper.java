@@ -23,6 +23,7 @@ public class UserMapper {
                 new UserPhotoPath(jpaEntity.getPhotoPath()),
                 CompanyMapper.toDomain(jpaEntity.getCompany()),
                 RoleMapper.toDomain(jpaEntity.getRole()),
+                RoleChildrenMapper.toDomain(jpaEntity.getRoleChildren()),
                 AuditTrailEmbeddableMapper.toDomain(jpaEntity.getAudit())
         );
     }
@@ -43,6 +44,9 @@ public class UserMapper {
                         : null,
                 expands.contains("role") && jpaEntity.getRole() != null
                         ? RoleMapper.toDomain(jpaEntity.getRole(), expands)
+                        : null,
+                expands.contains("roleChildren") && jpaEntity.getRoleChildren() != null
+                        ? RoleChildrenMapper.toDomain(jpaEntity.getRoleChildren(), expands)
                         : null,
                 AuditTrailEmbeddableMapper.toDomain(jpaEntity.getAudit())
         );
@@ -69,6 +73,7 @@ public class UserMapper {
         jpaEntity.setPhotoPath(user.getPhotoPath().value());
         jpaEntity.setCompany(CompanyMapper.toJpaEntity(user.getCompany()));
         jpaEntity.setRole(RoleMapper.toJpaEntity(user.getRole()));
+        jpaEntity.setRoleChildren(RoleChildrenMapper.toJpaEntity(user.getRoleChildren()));
         jpaEntity.setAudit(AuditTrailEmbeddableMapper.toJpa(user.getAudit()));
         return jpaEntity;
     }

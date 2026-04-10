@@ -1,31 +1,38 @@
-package bank_mega.corsys.domain.model.role;
+package bank_mega.corsys.domain.model.rolechildren;
 
 import bank_mega.corsys.domain.model.common.AuditTrail;
 import bank_mega.corsys.domain.model.menu.Menu;
 import bank_mega.corsys.domain.model.permission.Permission;
-import bank_mega.corsys.domain.model.rolechildren.RoleChildren;
+import bank_mega.corsys.domain.model.role.Role;
+import bank_mega.corsys.domain.model.role.RoleCode;
+import bank_mega.corsys.domain.model.role.RoleIcon;
+import bank_mega.corsys.domain.model.role.RoleName;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
-public class Role {
+public class RoleChildren {
 
-    private RoleName name;
-    private RoleCode code;
-    private RoleIcon icon;
+    private RoleChildrenName name;
+    private RoleChildrenCode code;
+    private RoleChildrenIcon icon;
+    private Role role;
     private String description;
-    private Set<RoleChildren> roleChildren;
     private Set<Permission> permissions;
     private Set<Menu> menus;
     private AuditTrail audit;
 
-    public Role(
-            RoleName name,
-            RoleCode code,
-            RoleIcon icon,
+    public RoleChildren(
+            RoleChildrenName name,
+            RoleChildrenCode code,
+            RoleChildrenIcon icon,
+            Role role,
             String description,
             AuditTrail audit
     ) {
@@ -34,7 +41,7 @@ public class Role {
         this.icon = icon;
         this.description = description;
         this.audit = audit;
-        this.roleChildren = new HashSet<>();
+        this.role = role;
         this.permissions = new HashSet<>();
         this.menus = new HashSet<>();
     }
@@ -47,17 +54,14 @@ public class Role {
         return Collections.unmodifiableSet(menus);
     }
 
-    public Set<RoleChildren> getRoleChildren() {
-        return Collections.unmodifiableSet(roleChildren);
-    }
 
-    public void changeName(RoleName newName) {
+    public void changeName(RoleChildrenName newName) {
         if (newName != null) {
             this.name = newName;
         }
     }
 
-    public void changeIcon(RoleIcon newIcon) {
+    public void changeIcon(RoleChildrenIcon newIcon) {
         if (newIcon != null) {
             this.icon = newIcon;
         }
@@ -66,6 +70,12 @@ public class Role {
     public void changeDescription(String description) {
         if (description != null) {
             this.description = description;
+        }
+    }
+
+    public void addRole(Role role) {
+        if (role != null) {
+            this.role = role;
         }
     }
 
@@ -90,18 +100,6 @@ public class Role {
     public void removeMenu(Menu menu) {
         if (menu != null) {
             this.menus.remove(menu);
-        }
-    }
-
-    public void addRoleChildren(RoleChildren roleChildren) {
-        if (roleChildren != null) {
-            this.roleChildren.add(roleChildren);
-        }
-    }
-
-    public void removeRoleChildren(RoleChildren roleChildren) {
-        if (roleChildren != null) {
-            this.roleChildren.remove(roleChildren);
         }
     }
 

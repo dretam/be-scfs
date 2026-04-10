@@ -16,6 +16,8 @@ import bank_mega.corsys.domain.model.permission.Permission;
 import bank_mega.corsys.domain.model.permission.PermissionId;
 import bank_mega.corsys.domain.model.role.Role;
 import bank_mega.corsys.domain.model.role.RoleCode;
+import bank_mega.corsys.domain.model.rolechildren.RoleChildren;
+import bank_mega.corsys.domain.model.rolechildren.RoleChildrenCode;
 import bank_mega.corsys.domain.model.user.*;
 import bank_mega.corsys.domain.model.userpermission.Effect;
 import bank_mega.corsys.domain.model.userpermission.UserPermission;
@@ -38,19 +40,21 @@ public class UpdateUserUseCase {
     private final UserPermissionRepository userPermissionRepository;
     private final UserAssembler userAssembler;
     private final PasswordEncoder passwordEncoder;
+    private final RoleChildrenRepository roleChildrenRepository;
 
     @Transactional
     public UserResponse execute(UpdateUserCommand command, User authPrincipal) {
 
         User user = findUser(command.id());
 
-        command.roleId().ifPresent(roleId -> {
+        if(command.roleId() != null) {
             Role role = roleRepository
-                    .findFirstByIdAndAuditDeletedAtIsNull(new RoleCode(roleId))
-                    .orElseThrow(() -> new RoleNotFoundException(new RoleCode(roleId)));
+                    .findFirstByIdAndAuditDeletedAtIsNull(new RoleCode(command.roleId()))
+                    .orElseThrow(() -> new RoleNotFoundException(new RoleCode(command.roleId())));
 
             user.changeRole(role);
-        });
+        }
+
 
         if(command.companyId() != null) {
             Company company = companyRepository
@@ -58,6 +62,14 @@ public class UpdateUserUseCase {
                     .orElseThrow(() -> new CompanyNotFoundException(new CompanyId(command.companyId())));
 
             user.changeCompany(company);
+        }
+
+        if(command.roleChildrenId() != null) {
+            RoleChildren roleChildren = roleChildrenRepository
+                    .findFirstByIdAndAuditDeletedAtIsNull(new RoleChildrenCode(command.roleChildrenId()))
+                    .orElseThrow(() -> new RoleChildrenNotFoundException(new RoleChildrenCode(command.roleChildrenId())));
+
+            user.changeRoleChildren(roleChildren);
         }
 
         if(command.password() != null) {

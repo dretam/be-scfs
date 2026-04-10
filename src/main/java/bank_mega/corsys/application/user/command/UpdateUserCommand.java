@@ -2,6 +2,7 @@ package bank_mega.corsys.application.user.command;
 
 import bank_mega.corsys.infrastructure.adapter.in.validation.company.CompanyIdExist;
 import bank_mega.corsys.infrastructure.adapter.in.validation.role.RoleIdExist;
+import bank_mega.corsys.infrastructure.adapter.in.validation.roleChildren.RoleChildrenIdExist;
 import bank_mega.corsys.infrastructure.adapter.in.validation.user.UserIdExist;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
@@ -52,7 +53,11 @@ public record UpdateUserCommand(
 
         @NotNull
         @RoleIdExist
-        Optional<String> roleId,
+        String roleId,
+
+        @NotNull
+        @RoleChildrenIdExist
+        String roleChildrenId,
 
         @NotNull
         @CompanyIdExist

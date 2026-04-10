@@ -7,30 +7,37 @@ import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.role.RoleIcon;
 import bank_mega.corsys.domain.model.role.RoleName;
 import bank_mega.corsys.domain.model.rolechildren.RoleChildren;
+import bank_mega.corsys.domain.model.rolechildren.RoleChildrenCode;
+import bank_mega.corsys.domain.model.rolechildren.RoleChildrenIcon;
+import bank_mega.corsys.domain.model.rolechildren.RoleChildrenName;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.MenuJpaEntity;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.PermissionJpaEntity;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.RoleChildrenJpaEntity;
 import bank_mega.corsys.infrastructure.adapter.out.jpa.entity.RoleJpaEntity;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RoleMapper {
+public class RoleChildrenMapper {
 
-    public static Role toDomain(@NotNull RoleJpaEntity jpaEntity) {
+    public static RoleChildren toDomain(@NotNull RoleChildrenJpaEntity jpaEntity) {
         return toDomain(jpaEntity, null);
     }
 
-    public static Role toDomain(RoleJpaEntity entity, Set<String> expands) {
+    public static RoleChildren toDomain(RoleChildrenJpaEntity entity, Set<String> expands) {
         if (entity == null) {
             return null;
         }
 
-        Role role = new Role(
-                new RoleName(entity.getName()),
-                new RoleCode(entity.getCode()),
-                entity.getIcon() != null ? new RoleIcon(entity.getIcon()) : null,
+        RoleChildren roleChildren = new RoleChildren(
+                new RoleChildrenName(entity.getName()),
+                new RoleChildrenCode(entity.getCode()),
+                entity.getIcon() != null ? new RoleChildrenIcon(entity.getIcon()) : null,
+                RoleMapper.toDomain(entity.getRole()),
                 entity.getDescription(),
                 AuditTrailEmbeddableMapper.toDomain(entity.getAudit())
         );
@@ -40,7 +47,7 @@ public class RoleMapper {
                 Set<Permission> permissions = entity.getPermissions().stream()
                         .map(PermissionMapper::toDomain)
                         .collect(Collectors.toSet());
-                role.setPermissions(permissions);
+                roleChildren.setPermissions(permissions);
             }
 
             if (expands.contains("menus") && entity.getMenus() != null) {
@@ -49,27 +56,19 @@ public class RoleMapper {
                         .toList();
 
                 List<Menu> treeMenus = MenuMapper.buildMenuTree(flatMenus);
-                role.setMenus(new HashSet<>(treeMenus));
-            }
-
-            if (expands.contains("roleChildren") && entity.getRoleChildren() != null) {
-                List<RoleChildren> flatRoleChildren = entity.getRoleChildren().stream()
-                        .map(RoleChildrenMapper::toDomain)
-                        .toList();
-
-                role.setRoleChildren(new HashSet<>(flatRoleChildren));
+                roleChildren.setMenus(new HashSet<>(treeMenus));
             }
         }
 
-        return role;
+        return roleChildren;
     }
 
-    public static RoleJpaEntity toJpaEntity(Role domainEntity) {
+    public static RoleChildrenJpaEntity toJpaEntity(RoleChildren domainEntity) {
         if (domainEntity == null) {
             return null;
         }
 
-        RoleJpaEntity jpaEntity = new RoleJpaEntity();
+        RoleChildrenJpaEntity jpaEntity = new RoleChildrenJpaEntity();
 
         if (domainEntity.getCode() != null) {
             jpaEntity.setCode(domainEntity.getCode().value());
@@ -85,6 +84,8 @@ public class RoleMapper {
             jpaEntity.setIcon(domainEntity.getIcon().value());
         }
 
+        jpaEntity.setRole(RoleMapper.toJpaEntity(domainEntity.getRole()));
+
         jpaEntity.setAudit(AuditTrailEmbeddableMapper.toJpa(domainEntity.getAudit()));
 
         // Map permissions
@@ -94,15 +95,6 @@ public class RoleMapper {
                     .map(PermissionMapper::toJpaEntity)
                     .collect(Collectors.toSet());
             jpaEntity.setPermissions(permissionJpaEntities);
-        }
-
-        // Map roleChildren
-        if (domainEntity.getRoleChildren() != null && !domainEntity.getRoleChildren().isEmpty()) {
-            Set<RoleChildrenJpaEntity> roleChildrenJpaEntity = domainEntity.getRoleChildren().stream()
-                    .filter(Objects::nonNull)
-                    .map(RoleChildrenMapper::toJpaEntity)
-                    .collect(Collectors.toSet());
-            jpaEntity.setRoleChildren(roleChildrenJpaEntity);
         }
 
         // Map menus if present in domain entity

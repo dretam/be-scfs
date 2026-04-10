@@ -1,17 +1,15 @@
-package bank_mega.corsys.application.role.dto;
+package bank_mega.corsys.application.rolechildren.dto;
 
 import bank_mega.corsys.application.menu.dto.MenuResponse;
 import bank_mega.corsys.application.permission.dto.PermissionResponse;
-import bank_mega.corsys.application.rolechildren.dto.RoleChildrenResponse;
 import lombok.Builder;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
 @Builder
-public record RoleResponse(
+public record RoleChildrenResponse(
         String id,
         String name,
         String icon,
@@ -22,7 +20,6 @@ public record RoleResponse(
         UUID updatedBy,
         Instant deletedAt,
         UUID deletedBy,
-        List<RoleChildrenResponse> roleChildren,
         List<PermissionResponse> permissions,
         List<MenuResponse> menus
 ) {

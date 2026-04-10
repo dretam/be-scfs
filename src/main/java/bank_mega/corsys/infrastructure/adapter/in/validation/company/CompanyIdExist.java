@@ -1,8 +1,6 @@
 package bank_mega.corsys.infrastructure.adapter.in.validation.company;
 
 import bank_mega.corsys.infrastructure.adapter.in.validation.company.impl.CompanyIdExistImpl;
-import bank_mega.corsys.infrastructure.adapter.in.validation.role.impl.RoleIdExistImpl;
-import bank_mega.corsys.infrastructure.adapter.in.validation.role.impl.RoleIdOptionalExistImpl;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

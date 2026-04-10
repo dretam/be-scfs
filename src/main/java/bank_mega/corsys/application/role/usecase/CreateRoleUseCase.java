@@ -10,6 +10,7 @@ import bank_mega.corsys.domain.model.role.RoleCode;
 import bank_mega.corsys.domain.model.role.RoleIcon;
 import bank_mega.corsys.domain.model.role.RoleName;
 import bank_mega.corsys.domain.model.user.User;
+import bank_mega.corsys.domain.repository.RoleChildrenRepository;
 import bank_mega.corsys.domain.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
