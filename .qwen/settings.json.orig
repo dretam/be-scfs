@@ -3,6 +3,5 @@
     "allow": [
       "Bash(mvn *)"
     ]
-  },
-  "$version": 3
+  }
 }
