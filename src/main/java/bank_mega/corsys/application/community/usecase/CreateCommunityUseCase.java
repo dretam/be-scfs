@@ -29,7 +29,7 @@ public class CreateCommunityUseCase {
         if (command.pricingTiers() != null && !command.pricingTiers().isEmpty()) {
             pricingTiers = command.pricingTiers().stream()
                     .map(ptCommand -> new CommunityPricingTier(
-                            new PricingTierId(UUID.randomUUID()),
+                            null,
                             ptCommand.logic(),
                             new PricingTierNominal(ptCommand.nominal()),
                             new PricingTierQuantity(ptCommand.quantity()),
@@ -39,7 +39,7 @@ public class CreateCommunityUseCase {
         }
 
         Community newCommunity = new Community(
-                new CommunityId(UUID.randomUUID()),
+                null,
                 new CommunityName(command.name()),
                 new CommunityDescription(command.description()),
                 command.productType(),

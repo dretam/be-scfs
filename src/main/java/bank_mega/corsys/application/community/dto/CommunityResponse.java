@@ -4,6 +4,7 @@ import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -31,7 +32,7 @@ public record CommunityResponse(
         Integer penaltyRate,
         String earlyPaymentFeeType,
         Long earlyPaymentFeeAmount,
-        PricingTierResponse pricingTier,
+        List<PricingTierResponse> pricingTiers,
         Instant createdAt,
         UUID createdBy,
         Instant updatedAt,

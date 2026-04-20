@@ -23,7 +23,7 @@ import java.util.UUID;
 public class CommunityJpaEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false, unique = true)
@@ -109,7 +109,7 @@ public class CommunityJpaEntity {
     @Embedded
     private AuditTrailEmbeddable audit;
 
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<CommunityPricingTierJpaEntity> pricingTiers = new HashSet<>();
 }

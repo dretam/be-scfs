@@ -75,7 +75,7 @@ public class UpdateCommunityUseCase {
                                     .orElseThrow(() -> new IllegalArgumentException("Pricing tier quantity is required when creating new tier"));
 
                             return new CommunityPricingTier(
-                                    new PricingTierId(UUID.randomUUID()),
+                                    null,
                                     logic,
                                     new PricingTierNominal(nominal),
                                     new PricingTierQuantity(quantity),
